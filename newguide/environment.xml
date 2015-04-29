@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
+<appendix>
+
+	<title>Environment Variables</title>
+
+		<table frame='all' condition="html;fo">
+			<title>TAU Environment Variables</title>
+			<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+				<colspec colname='c1'/>
+					<colspec colname='c2'/>
+						<thead>
+							<row>
+							  <entry>VARIABLE NAME</entry>
+								<entry>DESCRIPTION</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>TAU_PROFILE</entry>
+								<entry>Set to 1 to have TAU profile your code</entry>
+							</row>
+							<row>
+								<entry>TAU_TRACE</entry>
+								<entry>Set to 1 to have TAU trace your code</entry>
+							</row>
+							<row>
+								<entry>TAU_METRICS</entry>
+								<entry>Colon delimited list of TAU/PAPI metrics to profile</entry>
+							</row>
+							<row>
+								<entry>PAPI_EVENT</entry>
+								<entry>Sets the hardware counter to use when TAU is
+								configured with -PAPI. See <xref
+								linkend="HardwarePerformanceCounters" /></entry>
+							</row>
+							<row>
+								<entry>PCL_EVENT</entry>
+								<entry>Sets the hardware counter to use when TAU is
+								configured with -PCL. See <xref
+								linkend="HardwarePerformanceCounters" /></entry>
+							</row>
+							<row>
+								<entry>PROFILEDIR</entry>
+								<entry>Selectively measure groups of routines and
+								statements. Use with -profile command line option. See
+								<xref linkend="Profiling" />
+								</entry>
+							</row>
+							<row>
+								<entry>TAU_CALLPATH</entry>
+								<entry>When set to 1 TAU will generate call-path data. Use with TAU_CALLPATH_DEPTH.							</entry></row>
+							<row>
+								<entry>TAU_CALLPATH_DEPTH</entry>
+								<entry>Sets the depth of the callpath profiling. Use
+								with TAU_CALLPATH environment variable.</entry>
+							</row>
+							<row>
+								<entry>TAU_TRACK_MESSAGE</entry>
+								<entry>Track MPI message  statistics (profiling), messages lines
+								(tracing).</entry>
+							</row>
+							<row>
+								<entry>TAU_COMM_MATRIX</entry>
+								<entry>Generate MPI communication matrix data.</entry>
+							</row>
+							<row>
+								<entry>TAU_COMPENSATE</entry>
+								<entry>Attempt to compensate for profiling overhead in profiles.</entry>
+							</row>
+							<row>
+								<entry>TAU_COMPENSATE_ITERATIONS</entry>
+								<entry>Set the number of iterations TAU uses to estimate
+								the measurement overhead. A larger number of iteration will
+								increases profiling precision (default 1000).</entry>
+							</row>
+							<row>
+								<entry>TAU_KEEP_TRACEFILES</entry>
+								<entry>Retains the intermediate trace files. Use with
+								-TRACE TAU configuration option. See <xref
+								linkend="GeneratingEventTraces" /></entry>
+							</row>
+							<row>
+								<entry>TAU_MUSE_PACKAGE</entry> 
+								<entry>Sets the MAGNET/MUSE package name. Use with the
+								-muse TAU configuration option. See <xref
+								linkend="MultipleHardwareCounters" /></entry>
+							</row>
+							<row>
+								<entry>TAU_THROTTLE</entry>
+								<entry>Enables the runtime throttling of events that are
+								lightweight. See <xref linkend="SelectiveProfiling" /></entry>
+							</row>
+							<row>
+								<entry>TAU_THROTTLE_NUMCALLS</entry>
+								<entry>Set the maximum number of calls that will be profiled
+								for any function when TAU_THROTTLE is enabled. See <xref
+								linkend="SelectiveProfiling" /></entry>
+							</row>
+							<row>
+								<entry>TAU_THROTTLE_PERCALL</entry>
+								<entry>Set the minimum inclusive time (in milliseconds)
+								a function has to have to be instrumented when TAU_THROTTLE is enabled. 
+								See <xref linkend="SelectiveProfiling"/></entry>
+							</row>
+							<row>
+								<entry>TAU_TRACEFILE</entry>
+								<entry>Specifies the name of Vampir trace file. Use with
+								-TRACE TAU configuration option. See <xref
+								linkend="GeneratingEventTraces" /></entry>
+							</row>
+							<row>
+								<entry>TRACEDIR</entry>
+								<entry>Specifies the directory where trace file are to
+								be stored. See <xref linkend="GeneratingEventTraces" /></entry>
+							</row>
+							<row>
+								<entry>TAU_VERBOSE</entry>
+								<entry>When set TAU will print out information about the
+                its configuration when running a instrumented application.
+								</entry>
+							</row>
+							<row>
+								<entry>TAU_PROFILE_FORMAT</entry>
+								<entry>When set to <literal>snapshot</literal> TAU will
+                generate condensed snapshot profiles (they merge together different
+                metrics so there is only one file per node.) Instead of the default
+                kind. When set to <literal>merged</literal>, TAU will pre-compute mean 
+                and std. dev. at the end of execution. 
+								</entry>
+							</row>
+							<row>
+								<entry>TAU_SYNCHRONIZE_CLOCKS</entry>
+								<entry>When set TAU will correct for any time discrepancies
+                between nodes because of their CPU clock lag. This should
+                produce more reliable trace data.
+                </entry>
+							</row>
+							<row>
+								<entry>TAU_SAMPLING</entry>
+								<entry>
+
+<para>Default value is 0 (off). When TAU_SAMPLING is set, we collect
+additional profile or trace information (depending on whether
+TAU_PROFILE or TAU_TRACE is set respectively) via periodic sampling at
+runtime. Metrics collected and sampling period is controlled by
+TAU_EBS_SOURCE and TAU_EBS_PERIOD variables respectively. The
+TAU_EBS_UNWIND variable determines if callstack unwinding is enabled
+at each sample.
+</para><para> For TAU_PROFILE, in addition to regular TAU instrumented profile
+output, samples will show up as additional events prefixed by [SAMPLE]
+for each unique function, file and source line number combination.
+These events are grouped under [INTERMEDIATE] event nodes for the
+instrumented TAU context where the samples occured. In addition, if
+TAU_EBS_UNWIND is active, [UNWIND] event nodes may be generated for
+each discovered callstack entry found by the callstack unwinder.
+</para><para> TAU_SAMPLING is dependent on the availability of BFD as determined by
+the -bfd configuration option when building TAU. Its ability to
+resolve sample addresses into function, file name and source line
+number information may be limited or missing if BFD is missing or is
+installed with limited functionality. If in doubt, please try building
+TAU with "-bfd=download". Any one of function, file name and source
+line number may be missing. In the event all three are, the event is
+marked as "UNRESOLVED". The TAU_EBS_KEEP_UNRESOLVED_ADDR variable
+enables addresses to be retained for unresolved results.
+</para>
+                </entry>
+							</row>
+							<row>
+								<entry>TAU_EBS_SOURCE</entry>
+								<entry>
+Default value is "itimer". This variable sets the metric that
+determines the period of sampling.  If the value is "itimer"
+(default), it represents the number of microseconds between samples
+(as determined by TAU_EBS_PERIOD). If the value is a PAPI metric
+(eg. PAPI_FP_INS), then it represents the number of counts of that
+metric between samples (eg. every 10,000 floating-point instructions
+if PAPI_FP_INS is used). For "itimer", the samples occur as a result
+of system timer interrupts while for PAPI they occur in response to
+PAPI counter overflow interrupts set to the value of the
+TAU_EBS_PERIOD.
+
+                </entry>
+							</row>
+							<row>
+								<entry>TAU_EBS_PERIOD</entry>
+								<entry>
+Default value is 1,000. This variable sets the period between
+samples. The semantics of this value is discussed in the section above
+on TAU_EBS_SOURCE.
+</entry>
+</row>
+							<row>
+								<entry>TAU_EBS_UNWIND</entry>
+								<entry>
+Default value is 0 (off). This enables callstack unwinding for each
+sample using the callstack unwinder specified at TAU configuration
+time. As of this writing, only the libunwind tool is
+supported. Support for other callstack unwinders like StackwalkerAPI
+will be included. The TAU_EBS_UNWIND_DEPTH variable is used to control
+how many times the TAU sampling framework will be allowed to unwind
+the callstack.
+								</entry>
+							</row>
+							<row>
+								<entry>TAU_EBS_UNWIND_DEPTH</entry>
+								<entry>Default value is 10. This controls how many layers of the callstack
+TAU should unwind before attaching the result to the appropriate TAU
+event context.
+								</entry>
+							</row>
+							<row>
+								<entry>TAU_EBS_KEEP_UNRESOLVED_ADDR</entry>
+								<entry>Default value is 0 (off). When set, this variable allows sample
+addresses that fail to be resolved by BFD to be recorded as
+"UNRESOLVED &lt;modulename&gt; ADDR &lt;addr&gt; instead of "UNRESOLVED
+&lt;modulename&gt;". This provides nominally more information than the
+default scenario in light of missing BFD information.
+                </entry>
+							</row>
+				      <row>
+                 <entry>TAU_TRACK_SIGNALS</entry>
+                 <entry>Set this variables to 1 to capture callstack as metadata at
+                 point of failure.
+                </entry>
+             </row>
+ 				     <row>
+                <entry>TAU_SUMMARY</entry>
+                <entry>Set this variables to 1 to generate just min/max/stddev/mean 
+								statistics instead of per-node data.  Use paraprof -dumpsummary and 
+								then pprof -f profile.Max/Min to see the data. 
+           					
+                </entry>
+             </row>
+ 				     
+						 <row>
+                <entry>TAU_IBM_BG_HWP_COUNTERS</entry>
+                <entry>Set this variables to 1 to include IBM's UPC
+								Hardware Performance counters in the metadata for process 0.
+								Requires the use of MPI.
+                </entry>
+             </row>
+
+
+							<row>
+								<entry>TAU_CUPTI_API</entry>
+								<entry>Default: <literal>runtime</literal>, options:
+								<literal>runtime,driver,both</literal>.
+								Controls which layer of CUDA is tracked within the CUPTI
+								measurement system. See for example: <literal>tau_exec -T
+								serial,cupti -cupti ./matmult</literal>. Option should be set
+								basied on which layer the CUDA program
+								uses&mdash;<literal>runtime</literal> when the program uses the
+								CUDA runtime API, <literal>driver</literal> when the program
+								uses the driver API. NOTE: Both the PGI accelerator and the HMPP
+								compilers use the driver API.</entry>
+							</row>
+					</tbody>
+			</tgroup>
+		</table>
+</appendix>
+																										

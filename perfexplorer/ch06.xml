@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="CorrelationAnalysis">
+	<title>Correlation Analysis</title>
+	<para>Correlation analysis in PerfExplorer is used to explore relationships
+	between events in a profile.  Each event is pairwise plotted with the other
+	events, and a correlation coefficient is calcuated for the relationship.
+	When the events are highly positively correlated (coefficient of close to
+	1.0) or highly negatively correlated (coefficient close to -1.0), then the
+	relationships will show up as linear groupings in the results.  Clusters
+	may also be apparent.
+	</para>
+    <sect1 id="DimensionReduction2">
+        <title>Dimension Reduction</title>
+        <para>Often, many hundreds of events are instrumented when
+        profile data is collected.  Clustering works best with
+        dimensions less than 10, so dimension reduction is often
+        necessary to get meaningful results.  Currently, there is
+        only one type of dimension reduction available in
+        PerfExplorer.  To reduce dimensions, the user specifies a
+        minimum exclusive percentage for an event to be considered
+        "significant".
+		</para>
+        <para>To reduce dimensions, select the "Select Dimension
+        Reduction" item under the "Analysis" main menu bar item.
+		The following dialog will appear:  
+        </para>
+    <figure id="perfexplorer.mainwindow.dimensionreduction1b">
+	<title>Selecting a dimension reduction method</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="dimensionreduction1.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+			<para>
+			Select "Over X Percent".  The following dialog will appear:  
+            </para>
+
+    <figure id="perfexplorer.mainwindow.dimensionreduction2b">
+	<title>Entering a minimum threshold for exclusive percentage</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="dimensionreduction2.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+			<para>
+			Enter a value, for example "1".
+            </para>
+        </sect1>
+
+        <sect1 id="PerformingCorrelationAnalysis">
+			<title>Performing Correlation Analysis</title>
+		<para>To perform correlation analysis, you first need to select a
+		metric.  To select a metric, navigate through the tree of
+		applications, experiments and trials, and expand the trial of
+		interest, showing the available metrics, as shown in the figure
+		below:
+		</para>
+
+    <figure id="perfexplorer.mainwindow.correlation"> <title>Selecting a
+	Metric to Cluster</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="clusteringselection.gif"
+	   scalefit="0" width="6in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+		<para>After selecting the metric of interest, select the "Do
+		Correlation Analysis" item under the "Analysis" main menu bar item.
+		A confirmation dialog will appear, and you can either confirm
+		the correlation request or cancel it.  After confirming the
+		correlation, the analysis will begin.  When the analysis results
+		are available, you can view them in the "Correlation Results" tab.
+		</para>
+
+    <figure id="perfexplorer.correlation.results"> <title>Correlation
+	Results</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="correlationresults.gif"
+	   scalefit="0" width="6in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+		<para>There are a number of images in the "Correlation Results"
+		window.  Each thumbnail represents a pairwise correlation plot
+		of two events.  Clicking on a thumbnail image
+		in the main window will bring up the images, as shown below:
+		</para>
+
+    <figure id="perfexplorer.correlation.example"> <title>Correlation
+	Example</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="correlationexample.gif"
+	   scalefit="0" width="6in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+        </sect1>
+</chapter>

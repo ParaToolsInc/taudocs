@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.intro">
+  
+  <title>Introduction</title>
+  
+  <para>ParaProf is a portable, scalable performance analysis tool
+  included with the TAU distribution.
+  </para>
+  
+  
+  <important>
+	<para>ParaProf requires <emphasis>Oracle / Sun's</emphasis> Java 1.5
+	Runtime Environment for basic functionality.  Java JOGL (included) is
+    required for 3d visualization and image export.  Additionally, OpenGL is
+    required for 3d visualization.</para>
+  </important>
+  
+  
+  <note><para>Most windows in ParaProf can export bitmap (png/jpg) and vector
+  (svg/eps) images to disk (png/jpg) or print directly to a printer.  This are
+  available through the <emphasis>File</emphasis> menu.</para>
+  </note>
+
+  
+  <sect1 id="paraprof.usage">
+    
+    <title>Using ParaProf from the command line</title>
+    
+    <para>ParaProf is a java program that is run from the supplied
+      <command>paraprof</command> script (<command>paraprof.bat</command> for
+      windows binary release).
+    </para>
+    
+    <screen>% paraprof --help
+Usage: paraprof [options] &lt;files/directory&gt;
+
+Options:
+
+  -f, --filetype &lt;filetype&gt;       Specify type of performance data, options are:
+                                    profiles (default), pprof, dynaprof, mpip,
+                                    gprof, psrun, hpm, packed, cube, hpc, ompp
+                                    snap, perixml, gptl, ipm, google
+  --range a-b:c                   Load only profiles from the given range(s) of processes
+                                    Seperate individual ids or dash-defined ranges with colons
+  -h, --help                      Display this help message
+
+The following options will run only from the console (no GUI will launch):
+
+  --merge &lt;file.gz&gt;               Merges snapshot profiles
+  --pack &lt;file&gt;                   Pack the data into packed (.ppk) format
+  --dump                          Dump profile data to TAU profile format
+  --dumprank &lt;rank&gt;               Dump profile data for &lt;rank&gt; to TAU profile format
+  -v, --dumpsummary               Dump derived statistical data to TAU profile format
+  --overwrite                     Allow overwriting of profiles
+  -o, --oss                       Print profile data in OSS style text output
+  -q, --dumpmpisummary            Print high level time and communication summary
+  -d, --metadump                  Print profile metadata (works with --dumpmpisummary)
+  -x, --suppressmetrics           Exclude child calls and exclusive time from --dumpmpisummary
+  -s, --summary                   Print only summary statistics
+                                    (only applies to OSS output)
+
+Notes:
+  For the TAU profiles type, you can specify either a specific set of profile
+files on the commandline, or you can specify a directory (by default the current
+directory).  The specified directory will be searched for profile.*.*.* files,
+or, in the case of multiple counters, directories named MULTI_* containing
+profile data.
+
+</screen>
+
+  </sect1>
+  
+  <sect1 id="paraprof.formats">
+    <title>Supported Formats</title>
+    
+    <para>ParaProf can load profile date from many sources.  The types
+      currently supported are:
+    </para>
+    
+	<!--  This is an include, because it is also used in TAUdb manual -->
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../perfdmf/dataformats.xml" />
+
+  </sect1>
+  
+  
+  <sect1 id="paraprof.options">
+    <title>Command line options</title>
+    
+    <para>In addition to specifying the profile format, the user can also
+      specify the following options</para>
+    
+    <itemizedlist>
+      
+      <listitem>
+	<para><emphasis role="bold">--fixnames</emphasis> - Use the fixnames option
+	  for gprof.  When C and Fortran code are mixed, the C routines have to be mapped
+	  to either .function or function_.  Strip the leading period or trailing underscore, if it is there.  
+	</para>
+      </listitem>
+      
+      <listitem>
+	<para><emphasis role="bold">--pack &lt;file&gt;</emphasis> - Rather
+	  than load the data and launch the GUI, pack the data into the specified file.
+	</para>
+      </listitem>
+      
+      <listitem>
+	<para><emphasis role="bold">--dump</emphasis> - Rather than
+	  load the data and launch the GUI, dump the data to TAU Profiles.
+	  This can be used to convert supported formats to TAU Profiles.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">--oss</emphasis> - Outputs profile
+	  data in OSS Style.  Example:
+
+	  <screen>
+-------------------------------------------------------------------------------
+Thread: n,c,t 0,0,0
+-------------------------------------------------------------------------------
+ excl.secs  excl.%   cum.%    PAPI_TOT_CYC     PAPI_FP_OPS     calls  function
+     0.005   56.0%   56.0%        13475345         4194518         1  foo
+     0.003   40.1%   96.1%         9682185         4205367         1  bar
+         0    3.6%   99.7%          223173           17445         1  baz
+   2.2E-05    0.3%  100.0%           14663             206         1  main
+</screen>
+
+	</para>
+      </listitem>
+
+
+      <listitem>
+	<para><emphasis role="bold">--summary</emphasis> - Output only summary
+	  information for OSS style output.
+	</para>
+      </listitem>
+
+
+    </itemizedlist>
+    
+  </sect1>
+  
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

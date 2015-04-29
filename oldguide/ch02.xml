@@ -1,0 +1,621 @@
+<chapter id="tau.compiling">
+
+  <title>Compiling</title>
+
+  <simplesect>
+    <para> Source-based instrumentation with TAU measurement code requires compilation. At compile time, the TAU system provides several options and configuration alternatives. This chapter explains compilation options to enable profiling or tracing. </para>
+
+  </simplesect>
+
+  <sect1 id="TAUMakefile.tau">
+
+    <title>TAU Stub Makefile</title>
+
+    <para>TAU configuration generates a Makefile stub as well as a library. The Makefile name has the form</para> 
+    
+    <screen>
+Makefile.tau-&lt;options&gt;.
+</screen>
+
+    <para>the library name the form</para>
+
+    <screen>
+libtau-&lt;options&gt;.a.
+</screen>
+
+    <para>For example,</para>
+
+    <screen>
+%./configure -TRACE -c++=KCC -arc=sgin32
+</screen>
+
+    <para>generates</para>
+
+    <screen>
+Makefile.tau-trace-kcc libtau-trace-kcc.a
+in tau-2.x/sgin32/lib
+</screen>
+    <itemizedlist>
+
+    <para>Using different configuration options, several modular libraries can be built and   co-exist even in the same architecture. To choose a particular version of the library, the corresponding Makefile stub must be included in the application Makefile. The stub Makefile defines the following variables: </para>
+
+    <listitem>
+     <literal>TAU_CXX</literal> 
+    for the C++ compiler
+    </listitem>
+
+    <listitem>
+     <literal>TAU_CC</literal> 
+    for the C compiler
+    </listitem>
+
+    <listitem>
+     <literal>TAU_F90</literal> 
+    for the F90 compiler
+    </listitem>
+
+    <listitem>
+     <literal>TAU_LINKER</literal> 
+    for the Linker
+    </listitem>
+
+    <listitem>
+     <literal>TAU_INCLUDE</literal> 
+    for the include directories 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_DEFS</literal> 
+    for the defines on the command-line 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_LIBS</literal> 
+     for the TAU static library 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_SHLIBS</literal> 
+    for the TAU shared object (dynamic library) 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_MPI_INCLUDE</literal> 
+    for the directory where MPI header files reside 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_MPI_LIBS</literal> 
+    for the TAU MPI library with the MPI libraries for C/C++ 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_MPI_FLIBS</literal> 
+     for the TAU MPI library with MPI libraries for Fortran
+    </listitem>
+
+    <listitem>
+     <literal>TAU_FORTRANLIBS</literal> 
+      for additional fortran libraries for linking with C++
+    </listitem>
+
+    <listitem>
+     <literal>TAU_CXXLIBS</literal> 
+      for linking with C++ libraries when native f90 linker is used
+    </listitem>
+
+    <listitem>
+     <literal>TAU_TRACE_INPUT_LIB</literal> 
+     for linking with the TAU trace reader library to process binary TAU traces (typically used for making a trace converter) 
+    </listitem>
+
+    <listitem>
+     <literal>TAU_DISABLE</literal> 
+     for the default TAU stub library for Fortran
+    </listitem>
+
+    <listitem>
+     <literal>TAU_USER_OPT</literal> 
+    for any user defined options specified during configuration 
+    </listitem>
+
+    </itemizedlist>
+
+    <para>In addition to these options, the stub makefile also contains information about other packages configured with TAU. The stub makefile defines the following variables:</para>
+
+    <itemizedlist>
+      
+      <listitem>
+       <literal>PDTDIR</literal> 
+      for the location of the PDT root directory
+      </listitem>
+
+      <listitem>
+       <literal>OPARIDIR</literal> 
+      for the location of the Opari root directory
+      </listitem>
+
+      <listitem>
+       <literal>TULIPDIR</literal> 
+      for the location of the Tulip root directory
+      </listitem>
+
+      <listitem>
+       <literal>PCLDIR</literal> 
+      for the location of the PCL root directory
+      </listitem>
+
+      <listitem>
+       <literal>PAPIDIR</literal> 
+      for the location of the PAPI root directory
+      </listitem>
+
+      <listitem>
+       <literal>EPILOGER</literal> 
+      for the location of the EPILOG root directory
+      </listitem>
+
+      <listitem>
+       <literal>JDKDIR</literal> 
+      for the location of the JDK root directory
+      </listitem>
+
+      <listitem>
+       <literal>DYNINSTDIR</literal> 
+      for the location of the DyninstAPI root directory
+      </listitem>
+
+    </itemizedlist>
+
+    <para>It should be noted that the TAU library is written in C++. It may be linked with a Fortran or a C object file in two ways. Either the TAU_LINKER (typically C++ compiler) may be used or the native linker (C, F90 compiler) may be used. For Fortran programs that use the C++ linker, the TAU_FORTRANLIBS macro contains additional Fortran libraries that need to be linked in to create the executable. If the F90 linker is used, TAU_CXXLIBS should be added to the link line which links in the necessary C++ libraries.</para>
+    
+    <para>A typical makefile that uses these Makefile variables is shown below:</para>
+
+     <literal>TAUROOTDIR</literal>  = /usr/local/packages/tau-2.x
+
+    <screen>
+include $(TAUROOTDIR)/sgin32/lib/Makefile.tau-trace-kcc
+CXX             = $(TAU_CXX)
+CC              = $(TAU_CC)
+CFLAGS          = $(TAU_INCLUDE) $(TAU_DEFS)
+LIBS            = $(TAU_LIBS) -lm
+LDFLAGS         = $(USER_OPT)
+
+RM              = /bin/rm -f
+TARGET          = matrix
+##############################################
+all:            $(TARGET)
+install:        $(TARGET)				     
+$(TARGET):      $(TARGET).o
+      $(CXX) $(LDFLAGS) $(TARGET).o -o $@ $(LIBS)
+$(TARGET).o : $(TARGET).cpp
+      $(CXX) $(CFLAGS) -c $(TARGET).cpp
+clean:
+        $(RM) $(TARGET).o $(TARGET)
+##############################################
+</screen>
+
+    <para>To use a different configuration, simply change the included makefile to some other. For example, for</para>
+    <screen>
+% ./configure -pthread -arch=sgi64 
+</screen>
+    
+    <para>subsitute</para>
+    
+    <screen>
+include $(TAUROOTDIR)/sgi64/lib/Makefile.tau-pthread
+</screen>
+
+    <para>in the makefile above. Also,</para>
+
+    <screen>
+$(TAUROOTDIR)/include/Makefile
+</screen>
+
+    <para>points to the most recently configured version of the library.</para>
+
+
+  </sect1>
+
+  <sect1 id="EnablingDisablingInstrumentation">
+
+    <title>Enabling and Disabling the Instrumentation</title>
+
+    <para>Using the TAU stub makefile variable  <literal>TAU_DEFS</literal> 
+while compiling C++ and C source code enables profiling (or tracing)
+instrumentation and generates the performance data files. To disable the
+instrumentation,  <literal>TAU_DEFS</literal>  should not be used. In its absence, all the
+TAU profiling macros defined in the source code for instrumentation
+purposes are automatically defined to null (the default behavior). Thus,
+the instrumentation can be retained in the source code, since it has no
+overhead when it is disabled.  For Fortran however, the instrumentation
+can be disabled in the program by using the TAU stub makefile variable
+ <literal>TAU_DISABLE</literal>  on the link command line. This points to a library that
+contains empty TAU instrumentation routines.</para>
+
+  </sect1>
+
+  <sect1 id="UsingWithMPI">
+    
+    <title>Using TAU with MPI</title>
+
+    <para>TAU MPI wrapper library (libTauMpi.a) uses the MPI Profiling Interface for instrumentation. To use the library,</para>
+ 
+    <orderedlist>
+
+	<listitem>Configure TAU with -mpiinc=&lt;dir&gt; and -mpilib=&lt;dir&gt;
+        command-line options that specify the location of MPI header files and 
+        the directory where MPI libraries reside. Example:
+
+        <screen>
+% ./configure -mpiinc=/usr/local/packages/mpich/include \
+     -mpilib=/usr/local/packages/mpich/lib/LINUX/ch_p4 \
+     -c++=KCC -cc=cc 
+</screen>
+
+        </listitem>
+        <listitem>Include the TAU stub Makefile generated in the
+        application makefile.
+        <screen>
+TAUROOTDIR=/usr/local/packages/tau2
+include $(TAUROOTDIR)/i386_linux/Makefile.tau-kcc 
+</screen>   
+        
+        </listitem>
+        <listitem>Use the Makefile variables <screen>$(TAU_MPI_LIBS)</screen> for C/C++
+        applications and <screen>$(TAU_MPI_FLIBS)</screen> for Fortran 90 applications, to 
+        specify the TAU MPI libraries before the <screen>$(TAU_LIBS)</screen> in the link command
+        line. Also, use <screen>$(TAU_MPI_INCLUDE)</screen> in the compiler command line to
+        specifies the MPI include directory to be used.  Example:
+
+        <screen>
+CXX     = $(TAU_CXX)
+CFLAGS  = $(TAU_INCLUDE) $(TAU_DEFS) $(TAU_MPI_INCLUDE)
+LIBS    = $(TAU_MPI_LIBS) $(TAU_LIBS)
+</screen>
+        </listitem>
+        <listitem>Compile and run the MPI application as usual to generate the performance data.</listitem>
+
+ </orderedlist>
+
+  </sect1>
+
+  <sect1 id="EnvironmentVariables">
+
+    <title>Environment Variables</title>
+
+    <para>When the program has been compiled, it can be executed as it
+    normally would be (for example, using mpirun for an MPI task). TAU
+    generates profile data files or trace files in the current working
+    directory. One file for each context and thread is generated. To better 
+    manage different experiments, set the environment variables</para>
+
+    <itemizedlist>
+
+      <listitem> <literal>PROFILEDIR</literal>  to name the directory that should contain the
+      profile data files and</listitem>
+
+      <listitem> <literal>TRACEDIR</literal>  the directory where event traces should be stored.
+      </listitem> 
+
+      <listitem> <literal>LD_LIBRARY_PATH</literal>  (or LIBPATH for IBM)
+      should include the &lt;tauroot&gt;/&lt;tauarch&gt;/lib directory if TAU is used with
+      JAVA 2 (using the -jdk=&lt;dir&gt; configuration option) or dyninstAPI (using
+      the -dyninst=&lt;dir&gt; configuration option).</listitem>
+
+      </itemizedlist>
+
+      <para>Example:</para>
+
+      <screen>
+% make 
+% setenv TRACEDIR /users/foo/tracedata/experiment1
+% mpirun -np 4 matrix
+</screen>
+
+      <para><emphasis>Note:</emphasis> TAU also uses the environment
+      variable  <literal>PCL_EVENT</literal>  and  <literal>PAPI_EVENT</literal>  to specify the hardware performance
+      counter to be used when -pcl=&lt;dir&gt; or -papi=&lt;dir&gt; configuration options
+      are used, respectively. See section <link linkend="HardwarePerformaceCounters" >Using Hardware Performance Counters"</link> in Chapter 4 for further details.</para>
+
+  </sect1>
+
+  <sect1 id="ApplicationScenarios">
+
+    <title>Application Scenarios</title>
+
+    <para>TAU  <literal>examples</literal>  directory contains programs that
+    illustrate the use of TAU instrumentation and measurement options.
+    </para>
+    <itemizedlist mark='none'>
+    <listitem>
+      instrument
+
+      <para>This contains a simple C++ example that shows how TAU API
+      can be used for manually instrumenting a C++ program.</para>
+
+    </listitem>
+   
+    <listitem> 
+     threads
+
+      <para>A simple multi-threaded program that shows how the main
+      function of a thread is instrumented. Performance data is generated for
+      each thread of execution. Uses pthread library and TAU must be 
+      configured with the  <literal>-pthread</literal>  option.</para>
+
+    </listitem>
+
+    <listitem>
+      cthreads
+  
+    <para>Same as threads above, but for a C program. An instrumented C
+    program may be compiled with a C compiler, but needs to be linked with a
+    C++ linker.</para>
+
+    </listitem>
+
+    <listitem>
+      sproc
+
+      <para>SGI sproc threads example. TAU should be configured with the
+       <literal>-sproc</literal>  option to use this. </para>
+
+    </listitem>
+
+    <listitem>
+      pi
+
+      <para>An MPI program that calculates the value of pi and e. It
+      highlights the use of TAU's MPI wrapper library. TAU needs to be
+      configured with -mpiinc=&lt;dir&gt; and -mpilib=&lt;dir&gt; to use this.
+      </para>
+    
+    </listitem>
+
+    <listitem>
+      mpishlib
+
+      <para>Demonstrates the use of MPI wrapper library in instrumenting
+      a shared object. The MPI application is instrumented is instrumented as
+      well. TAU needs to be configured with -mpiinc=&lt;dir&gt; and
+      mpilib=&lt;dir&gt; flags.</para>
+
+    </listitem>
+
+    <listitem>
+      python
+      <para>Instrumentation of a python application can be done
+      automatically or manually using the TAU Python bindings. Two examples,
+       <literal>auto.py</literal>  and  <literal>manual.py</literal>  demonstrate this respectively. TAU needs to be
+      con-figured with-pythoninc=&lt;dir that contains Python.h&gt; option and the
+      user needs to set  <literal>PYTHONPATH</literal>  to &lt;taudir&gt;/&lt;arch&gt;/lib to use this feature.
+      </para>
+      
+    </listitem>
+
+    <listitem>
+      traceinput
+      
+      <para>To build a trace converter/trace reader application, we provide the 
+      TAU trace input library. This directory contains two examples (in c 
+      and c++ subdirectories) that illustrate how an application can use 
+      the trace input API to read online or post-mortem TAU binary 
+      traces. It shows how the user can register routines with the callback 
+      interface and how TAU invokes these routines when events take 
+      place. </para>
+ 
+    </listitem>
+
+    <listitem>
+      papi
+      
+      <para>A matrix multiply example that shows how to use TAU
+      statement level timers for comparing the performance of two algorithms
+      for matrix multiplication. When used with PAPI or PCL, this can
+      highlight the cache behaviors of these algorithms. TAU should be 
+      configured with -papi=&lt;dir&gt; or -pcl=&lt;dir&gt; and the user should set
+       <literal>PAPI_EVENT</literal>  or  <literal>PCL_EVENT</literal> 
+      respective environment variables, to use this.</para>
+
+    </listitem>
+
+    <listitem>
+      papithreads
+      <para>Same as papi, except uses threads to highlight how hardware
+      performance counters may be used in a multi-threaded application. When
+      it is used with PAPI, TAU should be configured with -papi=&lt;dir&gt;
+      -pthread autoinstrument Shows the use of Program Database Toolkit (PDT)
+      for automating the insertion of TAU macros in the source code. It
+      requires configuring TAU with the -pdt=&lt;dir&gt; option. The Makefile
+      is modified to illustrate the use of a source to source translator
+      (tau_instrumentor). </para>
+
+    </listitem>
+
+    <listitem>
+      reduce
+    
+      <para>Shows the use of tau_reduce, a utility that can read
+      profiles and a set of rules and determine which routines should not be 
+      instrumented (for frequently called light-weight routines). See
+       <literal>&lt;tau&gt;/utils/TAU_REDUCE.README</literal>  file for further details.
+      It requires configuring TAU with -pdt=&lt;dir&gt; option.</para>
+
+    </listitem>
+
+    <listitem>
+      cinstrument
+
+      <para> Shows the use of PDT for C. Requires configuring TAU with
+      -pdt=&lt;dir&gt; option.</para>
+
+    </listitem>
+
+    <listitem>
+      mixedmode
+
+      <para>This example illustrates the use of PDT,
+      hand-instrumentation (for threads), MPI library instrumentation and TAU
+      system call wrapper library instrumentation. Requires configuring TAU
+      with -mpiinc=&lt;dir&gt; -mpilib=&lt;dir&gt; -pdt=&lt;dir&gt; -pthread
+      options.</para>
+
+      </listitem>
+
+      <listitem>
+        pdt_mpi
+
+        <para>This directory contains C, C++ and F90 examples that
+        illustrate how TAU/PDT can be used with MPI.  Requires configuring TAU
+        with -pdt=&lt;dir&gt; -mpiinc=&lt;dir&gt; -mpilib=&lt;dir&gt; options.
+        You may also try this with the  <literal>-TRACE -epilog=&lt;dir&gt;</literal> 
+        options to use the EPI-LOG tracing package (from FZJ).</para>
+      
+      </listitem>   
+  
+      <listitem>
+        callpath
+      
+        <para>Shows the use of callpath profiling. Requires configuring
+        TAU with the  <literal>-PROFILECALLPATH</literal>  option. Setting the
+        environment variable  <literal>TAU_CALLPATH_DEPTH</literal>  changes the
+        depth of the callpath recorded by TAU. The default value of this
+        variable is 2.</para>
+  
+    </listitem>
+   
+    <listitem>
+      selective
+
+      <para>This example illustrates the use of PDT, and selective
+      profiling using profile groups in the tau_instrumentor. Requires
+      configuring TAU with -pdt=&lt;dir&gt; -fortran=&lt;...&gt;
+      options.</para>
+
+    </listitem>
+ 
+    <listitem>
+      NPB2.3
+
+      <para>The NAS Parallel Benchmark 2.3 [NPB-URL]. It shows how to
+      use TAU's MPI wrapper with a manually instrumented Fortran program. LU
+      and SP are the two benchmarks. LU is instrumented completely, while only
+      parts of the SP program are instrumented to contrast the coverage of
+      routines. In both cases MPI level instrumentation is complete. TAU needs
+      to be configured with -mpi-inc=&lt;dir&gt; and -mpilib=&lt;dir&gt; to use
+      this.</para>
+
+    </listitem>
+
+    <listitem>
+      dyninst
+
+      <para>An example that shows the use of DyninstAPI [DYNINST-URL] to
+      insert TAU instrumentation. Using Dyninst, no modifications are needed
+      and tau_run, a runtime instrumentor, inserts TAU calls at routine
+      transitions in the program. [This represents work in progress].</para>
+   
+    </listitem>
+
+    <listitem>
+      dyninstthreads
+      <para>The above example with threads.</para>
+
+    </listitem>
+
+    <listitem>
+      java/pi
+
+      <para>Shows a java program for calculating the value of pi. It
+      illustrates the use of the TAU JVMPI layer for instrumenting a Java
+      program without any modifications to its source code, byte-code or the
+      JVM. It requires a Java 2 compliant JVM and TAU needs to be configured
+      with the -jdk=&lt;dir&gt; option to use this.</para>
+     
+    </listitem>
+
+    <listitem>
+      java/api
+
+      <para>The same Pi program as above that illustrates the use of the
+      TAU API. There are subdirectories for C, C++ and F90 to show the
+      differences in instrumentation and Makefiles. TAU needs to be configured
+      with the -openmp option to use this.</para>
+
+    </listitem>
+
+    <listitem>
+      openmp
+
+      <para>Shows how to manually instrument an OpenMP program using the
+      TAU API. There are subdirectories for C, C++ and F90 to show the
+      differences in instrumentation and Makefiles. TAU needs to be configured
+      with the -openmp option to use this. </para>
+
+    </listitem>
+
+    <listitem>
+      opari
+
+      <para>Opari is an OpenMP directive rewriting tool that works with
+      TAU. Configure TAU with -opari=&lt;dir&gt; option to use this. This provides
+      detailed instrumentation of OpenMP constructs. There are subdirectories
+      for C++, pdt_f90, and OpenMPI to demonstrate the use of this tool. The
+      pdt_f90 directory contains an example that shows the use of PDT with
+      Opari for a Fortran 90 program. </para>
+
+    </listitem>
+ 
+    <listitem>
+      openmpi
+
+      <para>Illustrates TAU's support for hybrid execution models in the
+      form of MPI for message passing and OpenMP threads. TAU needs to be
+      configured with -mpiinc=&lt;dir&gt; -mpilib=&lt;dir&gt; -openmp options to use this.
+      fork Illustrates how to register a forked process with TAU. TAU provides
+      two options:  <literal>TAU_INCLUDE_PARENT_DATA</literal>  and
+       <literal>TAU_EXCLUDE_PARENT_DATA</literal>  which allows the child
+      process to inherit or clear the performance data when the fork
+      takes place. </para>
+
+    </listitem>
+
+    <listitem>
+      mapping
+
+      <para>Illustrates two examples in the embedded and external
+      subdirectories. These correspond to profiling at the object level, where
+      the time spent in a method is displayed for a specific object. There are
+      two ways to achieve this using an embedded association. The first method
+      requires an extension of the class definition with a TAU pointer and the
+      second scheme uses external hash-table lookup that relies on looking at
+      the object address at each method invocation. Both of these examples
+      illustrate the use of the TAU Mapping API.</para>
+
+    </listitem>
+
+    <listitem>
+      multicounters
+
+      <para>Illustrates the use of multiple measurement options
+      configured simultaneously in TAU. See README file for instructions on
+      setting the env. variables  <literal>COUNTERS&lt;1-25&gt;</literal>  for specifying measurements.
+      Requires configuring TAU with  <literal>-MULTIPLECOUNTERS.</literal> </para>
+
+    </listitem>
+
+    <listitem>
+      selectiveAccess
+
+      <para>Illustrates the use of TAU API for runtime access of TAU
+      performance data. A program can get information about routines executing
+      in its context. This can be used in conjunction with multiple
+      counters.</para>
+
+    </listitem>
+    </itemizedlist>
+  </sect1>
+
+</chapter>
+

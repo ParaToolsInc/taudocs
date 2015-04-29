@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "../tools/docbook-xml-4.4/docbookx.dtd">
+
+
+<article>
+  <title>KTAU Installation</title>
+
+  <articleinfo> 
+
+    <edition>1.0</edition>
+ 
+    <date>10/2005</date>
+
+    <authorgroup>
+
+      <author>
+        <firstname>University of</firstname>
+        <surname>Oregon</surname>
+      </author>
+
+    </authorgroup>
+
+    <editor>
+      <firstname>Suravee</firstname>     
+      <surname>Suthikulpanit</surname>
+      <firstname>Aroon</firstname>     
+      <surname>Nataraj</surname>
+    </editor>
+
+
+    <copyright>
+      <year>2005</year>
+      <holder>University of Oregon Performance Research Lab</holder>
+    </copyright>
+  </articleinfo>
+
+
+  <!-- Content -->
+
+
+<sect1 id="KTAU_Installation">
+	<title>KTAU Installation</title>
+	<para> 
+	KTAU installation comprises 2 parts, kernel modification and user-API 
+	library and utilities installation. KTAU distribution is organized as 
+	in following hierarchy.
+	</para>
+	<itemizedlist>
+		<listitem><para>ktau/patches/ : Contains patches for various version of Linux kernel.</para></listitem>
+		<listitem><para>ktau/src/     : Contains extension to Linux kernel which is 
+						independent from version of the kernel.</para></listitem>
+		<listitem><para>ktau/usr-src/ : Contains user-space libraries and utilities.</para></listitem>
+		<listitem><para>ktau/misc/    : Contains works in progress.</para></listitem>
+	</itemizedlist>
+
+	<sect2 id="part1">
+	<title>Linux Kernel Modification</title>
+	<orderedlist>
+		<listitem><para>
+		Obtain a distribution of KTAU from KTAU website. 
+		<ulink url="http://www.cs.uoregon.edu/research/ktau/downloads.php">(http://www.cs.uoregon.edu/research/ktau/downloads.php)</ulink>
+		</para></listitem>
+		<listitem><para>
+		Obtain a distribution of Linux kernel from 
+		<ulink url="http://www.kernel.org">http://www.kernel.org</ulink>.    
+		KTAU is ported to several versions of Linux. Please check in 
+		<literal>ktau/patches/</literal> directory for supported kernel versions
+		</para></listitem>
+		<listitem><para>
+		At <literal>ktau/src/linux-2.X/</literal>, run 
+		<screen>sh INSTALL-kernel.sh &lt;path to Linux kernel source&gt; &lt;patch name&gt;</screen>
+		This script will patch the kernel with the specified KTAU 
+		patch and install necessary files inside the kernel source tree.
+		</para></listitem>
+		<listitem><para>
+		At the root of Linux source tree, run <literal>make menuconfig</literal> 
+		and configure the kernel to enable KTAU.  Save the configuration.
+		</para></listitem>
+		<listitem><para>
+		At the root of Linux source tree, run 
+		<screen>make clean dep bzImage modules moduels_install (for Linux-2.4)</screen>	
+		<screen>make clean bzImage modules modules_install     (for Linux-2.6)</screen>
+		This will compile the kernel and install kernel.  
+		Then, configure system to boot with the new kernel, and reboot.
+		</para></listitem>
+		<figure>
+		<title>Figure 1: KTAU Linux kernel configuration.</title>
+		<graphic fileref="ktau_kernel_config.gif"/>
+		</figure>
+	</orderedlist>
+	</sect2>
+	
+	<sect2 id="part2">
+	<title>KTAU User-API Library and Utilities Installation</title>
+	<orderedlist>
+		<listitem><para>
+		At <literal>ktau/usr-src/src</literal> directory, run <literal>make clean all install</literal>.  
+		The user-API library will be installed in <literal>ktau/lib/</literal> directory, 
+		and utilities will be installed in <literal>ktau/bin/</literal> directory.
+		</para></listitem>
+	</orderedlist>
+	</sect2>
+</sect1>
+</article>

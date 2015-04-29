@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<book id="TAUAPIS">
+  <title>Tau API</title>
+
+
+
+<xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="tauapis.xml" /> 
+<xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="taumapping.xml" /> 
+
+
+<!--  &tauapi; -->
+
+</book>

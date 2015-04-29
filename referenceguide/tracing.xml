@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<chapter id="tracingReference">
+  <title>Tracing</title>
+
+	<sect1>
+	  <title>How to configure tracing</title>
+
+<para>TAU must be configured with the <literal>-TRACE</literal>
+    option to generate event traces. This can be used in conjunction with
+    <literal>-PROFILE</literal> to generate both profiles and traces. The
+    traces are stored in a directory specified by the environment variable
+    <literal>TRACEDIR</literal>, or the current directory, by default.
+    The environment variables <literal>TAU_TRACEFILE</literal> may be used to
+    specify the name of Vampir trace file. When this variable is set, 
+    trace files are automatically merged and the tau2vtf is invoked to convert
+    the merged trace file to VTF3 trace format. This conversion takes place on 
+    node 0, thread 0. The intermediate trace files are deleted. To retain the
+    trace files, the user can set the environment variable 
+    <literal>TAU_KEEP_TRACEFILES</literal> to true. When 
+    <literal>TAU_TRACEFILE</literal> is not specified, the user needs to merge
+    and convert the traces as below. 
+    
+Example:</para>
+
+    <screen>
+% ./configure -arch=sgi64 -TRACE  -mpi -vtf=/usr/local/vtf3-1.34 -slog2
+% make clean; make install
+% setenv TRACEDIR /users/sameer/tracedata/experiment56
+% mpirun -np 4 matrix
+    </screen>
+
+    <para>This generates files named</para>
+
+    <screen>
+tautrace.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.trc and events.&lt;node&gt;.edf 
+    </screen>
+
+    <para>When generating a Vampir Trace Format (otf or vtf) these
+    environment variables maybe helpful:</para>
+
+    <itemizedlist>
+      <listitem><para><literal>VT_FILE_PREFIX</literal>Prefix used for trace
+        filenames. Default is "a".</para></listitem>
+      <listitem><para><literal>VT_COMPRESSION</literal>Write compressed trace
+      files? Default is "yes"</para></listitem>
+    </itemizedlist>
+    <para>Using the utility tau_treemerge.pl, these traces are then merged as shown below:</para>
+
+    <screen>
+% tau_treemerge.pl
+</screen>
+
+    <para>This generates tau.trc as the merged trace file and tau.edf as the
+    merged event description file.</para>
+
+    <para> tau_treemerge.pl can take an optional argument (with -n
+    &lt;value&gt;) to specify the maximum number of trace files to merge in
+    each invocation of tau_merge. If we need to merge 2000 trace files and if
+    the maximum number of open files specified by unix is 250, tau_treemerge.pl
+    will incrementally merge the trace files so as not to exceed the number of
+    open file descriptors. This is important for the IBM BlueGene/L machine
+    where such restrictions are present on the front-end node. </para>
+
+
+
+    <para>To convert merged or per-thread traces to another trace format, the
+    utilities, tau2otf, tau_convert, tau2vtf, or tau2slog2 are used as shown
+    below:</para>
+    <screen>
+Usage: tau2otf [ -n  streams  ] [ -nomessage  ] [ -v  ] [ -z ]
+ -n streams : Specifies the number of output streams (default is 1)
+ -nomessage : Suppresses printing of message information in the trace
+ -v         : Verbose mode sends trace event descriptions to the standard output
+ as they are converted
+ -z         : Compressed output
+</screen>
+    <para>Here is an example:</para>
+    <screen>
+%> tau2otf tau.trc tau.edf out.otf
+</screen>
+
+    <para>Converting to Vampir's VTF format:</para>
+
+    <screen>
+% tau2vtf
+Usage: tau2vtf &lt;TAU trace&gt; &lt;edf file&gt; &lt;out file&gt; [-a|-fa] 
+               [-nomessage] [-v]
+ -a         : ASCII VTF3 file format
+ -fa        : FAST ASCII VTF3 file format
+ -nomessage : Suppress printing of message information in the trace
+ -v         : Verbose
+ Default trace format of &lt;out file&gt; is VTF3 binary
+ e.g.,
+ tau2vtf merged.trc tau.edf app.vpt.gz
+% tau2vtf matrix.trc tau.edf matrix.vpt.gz
+% vampir matrix.vpt.gz
+  </screen>
+    
+    <para>To generate slog2 trace files that may be visualized using Jumpshot,
+          we recommend using the slog2 SDK and Jumpshot bundled with TAU. </para>
+    <screen>
+% configure -slog2 -TRACE ...
+% tau2slog2 
+tau2slog2 converts a TAU formatted trace file to the SLOG2 format 
+          for Jumpshot trace visualizer
+Usage: tau2slog2 &lt;tau_tracefile&gt; &lt;edf_file&gt; -o &lt;slog_tracefile&gt;
+For e.g., 
+% tau2slog2 app.trc tau.edf -o app.slog2
+    </screen>
+
+    <para>To generate traces that may be visualized using Vampir, we recommend 
+          using tau2vtf over the older tau_convert tool. tau2vtf can produce
+          binary traces with user-defined events  (hardware performance counters
+          from PAPI etc.) while tau_convert cannot do this. Binary traces load
+          faster in Vampir. </para>
+  <screen>
+% tau_convert
+usage: tau_convert [-alog | -SDDF | -dump | -paraver [-t] | -pv | 
+       -vampir [-longsymbolbugfix] [-compact] [-user|-class|-all] 
+       [-nocomm]] inputtrc edffile [outputtrc]
+ Note: -vampir option assumes multiple threads/node
+ Note: -t option used in conjunction with -paraver option assumes 
+       multiple threads/node
+</screen>
+
+    <para>To view the dump of the trace in text form, use</para>
+
+    <screen>
+% tau_convert -dump matrix.trc tau.edf 
+</screen>
+
+    <para>tau_convert can also be used to convert traces to the <ulink
+    url="http://www.vampir-ng.de/">Vampir</ulink> trace format. For
+    single-threaded applications (such as the MPI application above), the
+    <literal>-pv</literal> option is used to generate Vampir traces as
+    follows:</para>
+
+    <screen>
+% tau_convert -pv matrix.trc tau.edf matrix.pv
+% vampir matrix.vpt.gz &amp;
+</screen>
+
+    <para>To convert TAU traces to <literal>SDDF</literal> or
+    <literal>ALOG</literal> trace formats, <literal>-SDDF</literal> and
+    <literal>-alog</literal> options may be used. When multiple threads are
+    used on a node (as with <literal>-jdk, -pthread or
+    -tulipthread</literal> options during configure), the
+    <literal>-vampir</literal> option is used to convert the traces to the
+    vampir trace format, as shown below:</para>
+
+    <screen>
+
+% tau_convert -vampir smartsapp.trc tau.edf smartsapp.pv
+% vampir smartsapp.pv &amp;
+</screen>
+
+    <para>To convert to the Paraver trace format, use the
+    <literal>-paraver</literal> option for single threaded programs and
+    <literal>-paraver -t</literal> option for multi-threaded programs.
+    </para>
+
+    <para><emphasis>NOTE:</emphasis> To ensure that inter-process
+    communication events are recorded in the traces, in addition to the
+    routine transitions, it is necessary to insert
+    <literal>TAU_TRACE_SENDMSG</literal> and
+    <literal>TAU_TRACE_RECVMSG</literal> macro calls in the source code
+    during instrumentation. This is not needed when the TAU MPI wrapper
+    library is used. </para>
+
+    <para> Vampir format traces may be converted to TAU profiles using the
+    vtf2profile tool.</para>
+<screen>
+% vtf2profile -f matrix.vpt.gz -p profiledatadir
+% vtf2profile
+Usage: vtf2profile [options] 
+***************************HELP***************************
+* '-h' display this help text.                         *
+* '-c' open command line interface.                    *
+* '-f' used as -f &lt;VTF File&gt; where                     *
+*        VTF File is the name of the trace file          *
+*        to be converted to TAU profiles.                *
+* '-p' used as -p &lt;path&gt; where 'path' is the relative  *
+*        path to the directory where profiles are to     *
+*        stored.                                         *
+* '-i' used as -i &lt;from&gt; &lt;to&gt; where 'from' and 'to' are*
+*        integers to mark the desired profiling interval.*
+**********************************************************
+</screen>
+
+</sect1>
+</chapter>

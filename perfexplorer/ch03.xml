@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+    <chapter id="RunningPerfExplorer">
+        <title>Running PerfExplorer</title>
+
+        <para>To run PerfExplorer type: <screen>
+%>perfexplorer
+</screen>
+
+        When PerfExplorer loads you will see on the left window all the 
+        experiments that where loaded into PerfDMF. You can select which 
+        performance data you are interested by navigating the tree structure. 
+        PerfExplorer will allow you to 
+        run analysis operations on these experiments. Also the cluster analysis
+        results are visible on the right side of the window.  Various types of
+        comparative analysis are available from the drop down menu
+        selected.</para>
+
+        <para>To run an analysis operation, first select the metric of interest
+        form the experiments on the left. Then perform the operation by selecting it
+        from the <literal>Analysis</literal> menu. If you would like you can set 
+        the <literal> clustering method, dimension reduction, normalization method
+		</literal> and the <literal> number of clusters </literal>from the same
+		menu.</para>
+
+		<para>The options under the Charts menu provide analysis over one or
+		more applications, experiments, views or trials. To view these charts
+		first choose a metric of interest by selecting a trial form the tree on
+		the left. Then optionally choose the <literal>Set Metric of
+        Interest</literal> or <literal>Set Event of Interest</literal> form the 
+        <literal>Charts</literal> menu (if you don't, and you need to, you will
+		be prompted). Now you can view a chart by selecting it
+        from the <literal>Charts</literal> menu.</para> 
+
+</chapter>

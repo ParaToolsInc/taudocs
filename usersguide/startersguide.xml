@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<chapter id="StartersGuide">
+  <title>Quick Reference</title>
+
+
+  <variablelist>
+	  <?dbfo list-presentation="blocks"?> 
+		<varlistentry>
+			<term><literal><link linkend="tauex">tau_run</link></literal></term>
+			<listitem>TAU's binary instrumentation tool</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>tau_cc.sh -tau_options=-optCompInst / tau_cxx.sh -tau_options=-optCompInst / tau_f90.sh -tau_options=-optCompInst</literal></term>
+			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (Compiler instrumentation)</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>tau_cc.sh / tau_cxx.sh / tau_f90.sh</literal></term>
+			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (PDT instrumentation)</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_MAKEFILE</literal></term>
+			<listitem>Set instrumentation definition file</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_OPTIONS</literal></term>
+			<listitem>Set instrumentation options</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>dynamic phase name=<emphasis>'name'</emphasis>
+		  file=<emphasis>'filename'</emphasis>
+			line=<emphasis>start_line_#</emphasis> to
+			line=<emphasis>end_line_#</emphasis>	
+			</literal></term>
+			<listitem>Specify dynamic Phase</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>loops file=<emphasis>'filename'</emphasis>
+			routine=<emphasis>'routine name'</emphasis>	
+			</literal></term>
+			<listitem>Instrument outer loops</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>memory file=<emphasis>'filename'</emphasis>
+			routine=<emphasis>'routine name'</emphasis>	
+			</literal></term>
+			<listitem>Track memory</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>io file=<emphasis>'filename'</emphasis>
+			routine=<emphasis>'routine name'</emphasis>	
+			</literal></term>
+			<listitem>Track IO</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_PROFILE / TAU_TRACE</literal></term>
+			<listitem>Enable profiling and/or tracing</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>PROFILEDIR / TRACEDIR</literal></term>
+			<listitem>Set profile/trace output directory</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_CALLPATH=1 / TAU_CALLPATH_DEPTH</literal></term>
+			<listitem>Enable Callpath profiling, set callpath depth</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_THROTTLE=1 / TAU_THROTTLE_NUMCALLS / TAU_THROTTLE_PERCALL</literal></term>
+			<listitem>Enable event throttling, set number of call, percall (us)
+			threshold</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal>TAU_METRICS</literal></term>
+			<listitem>List of PAPI metrics to profile</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal><link linkend="tau_treemerge.pl">tau_treemerge.pl</link></literal></term>
+			<listitem>Merge traces to one file</listitem>
+    </varlistentry>
+		<varlistentry>
+			<term><literal><link linkend="tau2otf">tau2otf</link> / <link
+			linkend="tau2vtf">tau2vtf</link> / <link
+			linkend="tau2slog2">tau2slog2</link></literal></term>
+			<listitem>Trace conversion tools</listitem>
+    </varlistentry>
+  </variablelist>
+
+</chapter>

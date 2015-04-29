@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+ "../tools/docbook-xml-4.4/docbookx.dtd">
+<article>
+    <articleinfo>
+        <title>PDT's ductape API Tutorial</title>
+        <author>
+            <firstname></firstname>
+            <surname></surname>
+        </author>
+    </articleinfo>
+
+	<sect1 id="pdtarch">
+		<title>Overview of PDT's Architecture</title>
+
+		<para>In this tutorial you will learn how to use PDT's ductape API to read
+		PDB files. A PDB file is created by parsing a C/C++ or Fortran source with
+		the include parser: cparse, cxxparse, f90parse and f95parse. To use these
+		parsers type:
+		<literal>
+%> export PATH=[path-to-pdt]/[arch]/bin/
+%> cxxparse program.cpp
+%> ls 
+program.ccp			program.pdb
+</literal>
+			</para>
+			<para>The Ductape API is organized as a heiarchy of classes. Here is an
+			picture repersent some of those classes. More detail can be found at
+			<ulink
+				url="http://www.cs.uoregon.edu/research/pdt/docs/ductape/index.html">API
+				documentation</ulink>
+
+				<figure>
+				<title>Partial heiarchy of the classes in the ductape API</title>
+				<graphic fileref="classes.png" />
+			</figure>
+			</para>	
+		</sect1>
+		<sect1 id="iterators">
+			<title>Using Iterators</title>
+
+			<para>Ductape API allows iterators to used in many of its classes.
+			Using iterators will allow you to access member of a datastructor without
+			needing to know the underlying implementation.</para>
+
+			<para>One place where you can use iterators is in the pdb class, here is a
+			simple function that iterates over every class in the file printing its
+			name. 
+			File to be parsed and analyized:
+			<literal>
+class bar
+{
+	int foo(int v)
+	{
+		return v + 2;
+	}	
+	class bar2 
+	{
+		int rountine(bool t) {return 0;}
+	};
+	int a;
+};
+</literal>
+
+			C source file:
+			<literal>
+#include "pdbAll.h"
+#include "stdio.h"
+	
+	int main(int argc, char *argv[]) {
+  	
+		// Read the pdb file as input for this program.
+		PDB p(argv[1]); if ( !p ) return 1;
+ 
+		// Iterate through each class in the pdb file and print its name.
+		for (PDB::classvec::iterator r = p.getClassVec().begin();
+			r!=p.getClassVec().end(); r++)
+		{
+			 cout &lt;&lt; (*r)->name() &lt;&lt; endl;
+		}
+		return 0;
+	}
+</literal>
+
+			To run type:
+			<literal>
+%> g++ -I../inc/ -o vector vector.cc ../lib/libpdb.a 
+%> cxxparse testApp.cc 
+%> ./vector testApp.pdb 
+bar
+bar2
+</literal>
+
+		There is a collection of example source code in the <ulink
+			url="http://www.cs.uoregon.edu/research/pdt/docs/ductape/examples.html">API
+			documentation</ulink>.
+
+ 		</para>
+	</sect1>
+	
+			
+</article>
+	
+
+

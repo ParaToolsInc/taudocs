@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.trialmanagement">
+
+  <title>Profile Data Management</title>
+
+  <para>ParaProf uses <firstterm>PerfDMF</firstterm> to manage profile
+  data.  This enables it to read the various profile formats as well as
+  store and retrieve them from a database.</para>
+
+  <sect1 id="paraprof.mainwindow">
+
+    <title>ParaProf Manager Window</title>
+    <para>Upon launching ParaProf, the user is greeted with the ParaProf Manager Window.</para>    
+
+    <figure id="paraprof.mainwindow.figure"> <title>ParaProf Manager Window</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="manager.gif" scalefit="0" width="4.8in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+
+    <para>This window is used to manage profile data.  The user can
+      upload/download profile data, edit meta-data, launch visual displays,
+      export data, derive new metrics, etc.
+    </para>
+
+  </sect1>
+
+  <sect1 id="paraprof.loading">
+    <title>Loading Profiles</title> 
+
+    <para>To load profile data, select File->Open, or right click on the
+    Application's tree and select "Add Trial".
+    </para>
+
+    <figure> <title>Loading Profile Data</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="loadtrial.gif" scalefit="0" width="2.4in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+ 
+    <para>Select the type of data from the "Trial Type" drop-down box.  For TAU
+    Profiles, select a directory, for other types, files.
+    </para>
+  </sect1>
+
+
+  <sect1 id="paraprof.database">
+    <title>Database Interaction</title> 
+
+    <para>
+      Database interaction is done through the tree view of the ParaProf
+      Manager Window.  Applications expand to Experiments, Experiments to
+      Trials, and Trials are loaded directly into ParaProf just as if they were
+      read off disk.  Additionally, the meta-data associated with each element
+      is show on the right, as in <xref linkend="paraprof.mainwindow.figure"
+      />.  A trial can be exported by right clicking on it and selecting
+      "Export as Packed Profile".
+    </para>
+
+    <para>
+      New trials can be uploaded to the database by either right-clicking on an
+      entity in the database and selecting "Add Trial", or by right-clicking
+      on an Application/Experiment/Trial hierarchy from the "Standard
+      Applications" and selecting "Upload Application/Experiment/Trial to DB".
+    </para>
+
+  </sect1>
+
+  <sect1 id="paraprof.derivedmetrics">
+    <title>Creating Derived Metrics</title>
+
+    <para>ParaProf can created derived metrics using the <emphasis>Derived
+	Metric Panel</emphasis>, available from the <emphasis>Options</emphasis>
+      menu of the ParaProf Manager Window.
+    </para>
+
+
+    <figure id="paraprof.derivedmetrics.figure"> <title>Creating Derived Metrics</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="derivedmetric.gif" scalefit="0"
+		       width="4.8in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>In <xref linkend="paraprof.derivedmetrics.figure"/>, we have just
+      divided Floating Point Instructions by Wall-clock time, creating FLOPS
+      (Floating Point Operations per Second).  The 2nd argument is a user
+      editable text-box and can be filled in with scalar values by using the
+      keyword 'val' (e.g. "val 1.5").
+    </para>
+  </sect1>
+
+  
+  <sect1 id="paraprof.maindatawindow">
+
+    <title>Main Data Window</title> 
+
+      <para>Upon loading a profile, or double-clicking on a metric, the
+        <firstterm>Main Data Window</firstterm> will be displayed.</para>
+
+    <figure id="paraprof.maindatawindow.figure"> <title>Main Data Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="maindatawindow.gif" scalefit="0"
+		       width="3.78in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>This window shows each thread as well as statistics as a combined bar
+      graph.  Each function is represented by a different color (though
+      possibly cycled).  From anywhere in ParaProf, you can right-click on
+      objects representing threads or functions to launch displays associated
+      with those objects.  For example, in <xref
+      linkend="paraprof.maindatawindow.figure"/>, right click on the text
+      <emphasis>n,c,t, 8,0,0</emphasis> to launch thread based displays for
+      node 8.
+    </para>
+
+    <figure> <title>Unstacked Bars</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="unstacked.gif" scalefit="0"
+		       width="4.8in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      You may also turn off the stacking of bars so that individual functions
+      can be compared across threads in a global display.
+    </para>
+
+
+  </sect1>
+
+
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

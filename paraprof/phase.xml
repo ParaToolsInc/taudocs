@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.phasedisplays">
+
+  <title>Phase Based Displays</title>
+
+  <para>When a profile contains phase data, ParaProf will automatically run in
+  phase mode.  Most displays will show data for a particular phase.  This phase
+  will be displayed in teh top left corner in the meta data panel.</para>
+  
+  <sect1 id="paraprof.phase.mainwindow">
+
+    <title>Using Phase Based Displays</title> 
+
+    <para>The initial window will default to top level phase, usually <emphasis>main</emphasis></para>
+
+
+
+    <figure> <title>Initial Phase Display</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="phase_main.gif" scalefit="0"
+		       width="4.45in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>To access other phases, either right click on the phase and select,
+    "Open Profile for this Phase", or go to the <emphasis>Phase
+    Ledger</emphasis> and select it there.
+    </para>
+
+    <figure> <title>Phase Ledger</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="phase_ledger.gif" scalefit="0"
+		       width="2.10in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+
+    <para>ParaProf can also display a particular function's value across all of
+    the phases.  To do so, right click on a function and select, "Show Function Data over Phases".
+    </para>
+
+    <figure> <title>Function Data over Phases</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="phase_function.gif" scalefit="0"
+		       width="3.61in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+
+    <para>Because Phase information is implemented as callpaths, many of the
+    callpath displays will show phase data as well.  For example, the Call Path
+    Text Window is useful for showing how functions behave across phases.
+    </para>
+
+    
+  </sect1>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

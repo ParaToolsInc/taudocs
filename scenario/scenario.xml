@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="ApplicationScenario">
+  <title>Some Common Application Scenario</title>
+
+  <sect1>
+	  <title>Q. What routines account for the most time? How much?</title>
+
+      <para>A. Create a flat profile with wallclock time.</para>
+
+    <figure> <title>Flat Profile</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="flat_profile.png" scalefit="0"
+		       width="3in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+		  <simplesect>
+			  <title>Here is how to generate a flat profile with MPI</title>
+
+				<screen>
+% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-<emphasis>pdt</emphasis>-pgi
+ 
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+% qsub  run.job
+% paraprof -–pack app.ppk
+	Move the app.ppk file to your desktop. 
+
+% paraprof app.ppk
+</screen>
+			</simplesect>
+		</sect1>
+  
+	<sect1>
+	  <title>Q. What loops account for the most time? How much?</title>
+
+      <para>A. Create a flat profile with wallclock time with loop instrumentation.</para>
+
+    <figure> <title>Flat Profile with Loops</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="loop_profile.png" scalefit="0"
+		       width="3in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+		  <simplesect>
+			  <title>Here is how to instrument loops in an application</title>
+
+				<screen>
+% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
+<emphasis>% setenv TAU_OPTIONS ‘-optTauSelectFile=select.tau –optVerbose’</emphasis>
+% cat select.tau
+  BEGIN_INSTRUMENT_SECTION
+  <emphasis>loops routine=“#”</emphasis>
+  END_INSTRUMENT_SECTION
+
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+% qsub  run.job
+% paraprof -–pack app.ppk
+	Move the app.ppk file to your desktop. 
+
+% paraprof app.ppk
+</screen>
+			</simplesect>
+		</sect1>
+	<sect1>
+	  <title>Q. What MFlops am I getting in all loops?</title>
+
+      <para>A. Create a flat profile with PAPI_FP_INS/OPS and time with loop instrumentation.</para>
+
+    <figure> <title>MFlops per loop</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="mflops_profile.png" scalefit="0"
+		       width="3in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+		  <simplesect>
+			  <title>Here is how to generate a flat profile with FP operations</title>
+
+				<screen>
+% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-<emphasis>papi</emphasis>-mpi-pdt-pgi
+% setenv TAU_OPTIONS ‘-optTauSelectFile=select.tau –optVerbose’
+% cat select.tau
+  BEGIN_INSTRUMENT_SECTION
+  loops routine=“#”
+  END_INSTRUMENT_SECTION
+
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+<emphasis>% setenv TAU_METRICS GET_TIME_OF_DAY\:PAPI_FP_INS</emphasis>
+% qsub  run.job
+% paraprof -–pack app.ppk
+	Move the app.ppk file to your desktop. 
+% paraprof app.ppk
+  Choose 'Options' -&gt; 'Show Derived Panel' -&gt; Arg 1 = PAPI_FP_INS, Arg 2 =
+	GET_TIME_OF_DAY, Operation = Divide -&gt; Apply, close.
+</screen>
+			</simplesect>
+		</sect1>
+
+<sect1>
+	<title>Q. Who calls MPI_Barrier() Where?</title>
+
+		<para>A. Create a callpath profile with given depth.</para>
+
+	<figure> <title>Callpath Profile</title>
+		<mediaobject>
+<imageobject><imagedata fileref="callpath_profile.png" scalefit="0"
+				 width="3in" align="center"/></imageobject>
+		</mediaobject>
+	</figure>
+
+		<simplesect>
+			<title>Here is how to generate a callpath profile with MPI</title>
+
+			<screen>
+% setenv TAU_MAKEFILE
+% /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+<emphasis>% setenv TAU_CALLPATH 1</emphasis>
+<emphasis>% setenv TAU_CALLPATH_DEPTH 100</emphasis>
+
+% qsub  run.job
+% paraprof -–pack app.ppk
+	Move the app.ppk file to your desktop. 
+% paraprof app.ppk
+(Windows -> Thread -> Call Graph)
+</screen>
+		</simplesect>
+	</sect1>
+<sect1>
+	<title>Q. How do I instrument Python Code?</title>
+
+		<para>A. Create an python wrapper library.</para>
+
+
+		<simplesect>
+			<title>Here to instrument python code</title>
+
+			<screen>
+% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-icpc-python-mpi-pdt
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% setenv TAU_OPTIONS ‘<emphasis>-optShared</emphasis> -optVerbose'
+(Python needs shared object based TAU library)
+% make F90=tau_f90.sh CXX=tau_cxx.sh CC=tau_cc.sh  (build pyMPI w/TAU)
+% cat <emphasis>wrapper.py</emphasis>
+  import tau
+  def OurMain():
+      import App
+  tau.run(‘OurMain()’)
+Uninstrumented:
+% mpirun.lsf /pyMPI-2.4b4/bin/pyMPI ./App.py
+Instrumented:
+<emphasis>% setenv PYTHONPATH&lt;taudir&gt;/x86_64/&lt;lib&gt;/bindings-python-mpi-pdt-pgi</emphasis>
+(same options string as TAU_MAKEFILE)
+<emphasis>setenv LD_LIBRARY_PATH &lt;taudir&gt;/x86_64/lib/bindings-icpc-python-mpi-pdt-pgi\:$LD_LIBRARY_PATH
+% mpirun –np 4 &lt;dir&gt;/pyMPI-2.4b4-TAU/bin/pyMPI ./wrapper.py</emphasis>
+(Instrumented pyMPI with wrapper.py)
+</screen>
+		</simplesect>
+	</sect1>
+  <sect1>
+	<title>Q. What happens in my code at a given time?
+</title>
+
+		<para>A. Create an event trace.</para>
+
+	<figure> <title>Tracing with Vampir</title>
+		<mediaobject>
+<imageobject><imagedata fileref="vampir_trace.png" scalefit="0"
+				 width="3in" align="center"/></imageobject>
+		</mediaobject>
+	</figure>
+
+		<simplesect>
+			<title>How to create a trace</title>
+
+			<screen>
+% setenv TAU_MAKEFILE
+% /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt-pgi
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+<emphasis>% setenv TAU_TRACE 1</emphasis>
+% qsub  run.job
+% tau_treemerge.pl
+(merges binary traces to create tau.trc and tau.edf files)
+JUMPSHOT:
+% tau2slog2 tau.trc tau.edf –o app.slog2 
+% jumpshot app.slog2
+   OR
+VAMPIR:
+% tau2otf tau.trc tau.edf app.otf –n 4 –z
+(4 streams, compressed output trace)
+% vampir app.otf
+(or vng client with vngd server).
+</screen>
+		</simplesect>
+	</sect1>
+<sect1>
+<title>Q. How does my application scale?
+</title>
+
+	<para>A. Examine profiles in PerfExplorer.</para>
+
+<figure> <title>Scalability chart</title>
+	<mediaobject>
+<imageobject><imagedata fileref="scalability.png" scalefit="0"
+			 width="3in" align="center"/></imageobject>
+	</mediaobject>
+</figure>
+
+	<simplesect>
+		<title>How to examine a series of profiles in PerfExplorer</title>
+
+		<screen>
+% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
+% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% make F90=tau_f90.sh
+(Or edit Makefile and change F90=tau_f90.sh)
+% qsub  run1p.job
+% paraprof -–pack 1p.ppk
+% qsub run2p.job 
+% paraprof -–pack 2p.ppk ...and so on.
+On your client:
+% <emphasis>perfdmf_configure</emphasis>
+(Choose derby, blank user/password, yes to save password, defaults)
+% perfexplorer_configure
+(Yes to load schema, defaults)
+% paraprof 
+(load each trial: Right click on trial -><emphasis>Upload trial to DB</emphasis>
+<emphasis>% perfexplorer </emphasis>
+(Charts -> Speedup)
+</screen>
+	</simplesect>
+</sect1>
+</chapter>

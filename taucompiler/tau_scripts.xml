@@ -1,0 +1,99 @@
+<sect1 id="tau_scripts">
+
+	<title>TAU scripted compilation</title>
+
+	<simplesect>
+		<para>If you wish to avoid the use of Makefiles altogether, TAU provides
+		three script that will instrument your code from the command line. </para>
+	</simplesect>
+
+	<sect2>
+		<title>Usage</title>
+
+		<para>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
+		compile Fortan, C, and C++ programs respectively. These can the found in
+		the tools/src/ directory so you may wish to add it to your path. You might
+		use tau_cc.sh to compile a C program by typing: <screen>
+%>tau_cc.sh -tau_makefile=[path to makefile] sampleCprogram.c
+</screen>
+
+		The Makefile can usually be found in the /[arch]/lib directory, for example
+		<literal>/apple/lib/Makefile.tau-pdt</literal>.</para>
+
+		<para>Tau_cc.sh also has the ability to use a Makefile specified in an
+		environment variable. to run tau_cc.sh so it uses the Makefile specified by 
+		environment variable <literal>TAU_MAKEFILE</literal>, type:<screen>
+%>export TAU_MAKEFILE=[path to tau]/[arch]/lib/[makefile].
+%>tau_cc.sh sampleCprogram.c
+</screen>
+
+		Similarly, if you want to set tau option like selective instrumentation 
+		use the <literal>TAU_OPTIONS</literal> environment variable.</para>
+
+	</sect2>
+
+	<sect2>
+		<title>Reference</title>
+
+		<para>A complete list of option for these scripts:</para>
+<screen>
+																			 
+<screen>-optVerbose</screen>
+Turn on verbose debugging message
+<screen>-optPdtDir=""</screen>                 
+PDT architecture directory. Typically $(PDTDIR)/$(PDTARCHDIR)
+<screen>-optPdtF95Opts=""</screen>             
+Options for Fortran parser in PDT (f95parse)
+<screen>-optPdtF95Reset=""</screen>            
+Reset options to the Fortran parser to the given list
+<screen>-optPdtCOpts=""</screen>               
+Options for C parser in PDT (cparse). Typically $(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)
+<screen>-optPdtCReset=""</screen>              
+Reset options to the C parser to the given list
+<screen>-optPdtCxxOpts=""</screen>
+Options for C++ parser in PDT (cxxparse). Typically $(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)
+<screen>-optPdtCReset=""</screen>              
+Reset options to the C++ parser to the given list
+<screen>-optPdtF90Parser=""</screen>           
+Specify a different Fortran parser. For e.g., f90parse instead of f95parse
+<screen>-optPdtUser=""</screen>                
+Optional arguments for parsing source code
+<screen>-optTauInstr=""</screen>               
+Specify location of tau_instrumentor. Typically $(TAUROOT)/$(CONFIG_ARCH)/bin/tau_instrumentor
+<screen>-optTauSelectFile=""</screen>          
+Specify selective instrumentation file for tau_instrumentor
+<screen>-optPDBFile=""</screen>                
+Specify PDB file for tau_instrumentor. Skips parsing stage.
+<screen>-optTau=""</screen>                    
+Specify options for tau_instrumentor
+<screen>-optCompile=""</screen>                
+Options passed to the compiler. Typically $(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)
+<screen>-optReset=""</screen>                  
+Reset options to the compiler to the given list
+<screen>-optLinking=""</screen>                
+Options passed to the linker. Typically $(TAU_MPI_FLIBS) $(TAU_LIBS) $(TAU_CXXLIBS)
+<screen>-optLinkReset=""</screen>              
+Reset options to the linker to the given list
+<screen>-optTauCC="&lt;cc&gt;"</screen>
+Specifies the C compiler used by TAU
+<screen>-optOpariTool="&lt;path/opari7&gt;"</screen>  
+Specifies the location of the Opari tool
+<screen>-optOpariDir="&lt;path&gt;"</screen>
+Specifies the location of the Opari directory
+<screen>-optOpariOpts=""</screen>              
+Specifies optional arguments to the Opari tool
+<screen>-optOpariReset=""</screen>             
+Resets options passed to the Opari tool
+<screen>-optNoMpi</screen>                     
+Removes -l*mpi* libraries during linking (default)
+<screen>-optMpi</screen>                       
+Does not remove -l*mpi* libraries during linking
+<screen>-optKeepFiles</screen>
+Does not remove intermediate .pdb and .inst.* files
+
+</screen>
+
+	</sect2>
+
+</sect1>
+

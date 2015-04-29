@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"../tools/docbook-xml-4.4/docbookx.dtd">
+
+<!-- <article> -->
+
+<!--   <title>TAU Trace Writer</title> -->
+
+<!--   <articleinfo>  -->
+
+<!--     <edition>1.5</edition> -->
+
+<!--     <date>7/2005</date> -->
+
+<!--     <authorgroup> -->
+
+<!--       <author> -->
+<!--         <firstname>University of</firstname> -->
+<!--         <surname>Oregon</surname> -->
+<!--       </author> -->
+
+<!--     </authorgroup> -->
+
+<!--     <editor> -->
+<!--       <firstname>Wyatt</firstname>      -->
+<!--       <surname>Spear</surname> -->
+<!--     </editor> -->
+
+
+<!--     <copyright> -->
+<!--       <year>2005</year> -->
+<!--       <holder>University of Oregon Performance Research Lab</holder> -->
+<!--     </copyright> -->
+<!--   </articleinfo> -->
+
+
+<!-- Content -->
+
+<sect1>
+  <title>
+    TAU Trace Format Writer Library
+  </title>
+
+  <sect2 id='TAU_tf_API'>
+    <title>
+      Tau Writer Usage
+    </title>
+    <sect3>
+      <title>
+	SYNOPSIS
+      </title>
+      <para>
+	An API for writing TAU trace files
+      </para>
+      <para>
+	See TAU_tf.h
+      </para>
+    </sect3>
+
+    <sect3>
+      <title>
+	DESCRIPTION
+      </title>
+      <para>
+	The TAU Trace Format Writer system, defined in TAU_tf.h, operates as a series of
+	function calls that define the TAU trace file format.  A TAU trace file is
+	started with a call to the function:
+      </para>
+      
+      <screen>Ttf_FileHandleT Ttf_OpenFileForOutput( const char *name, const char *edf)</screen>
+
+      <para>    Where *name and *edf are the locations of the TAU trace and event definition
+      files to be written respectively.  The TtfFileHandleT returned is then used
+      to write the rest of the TAU trace.  e.g:
+      
+      fh = Ttf_OpenFileForInput( argv[1], argv[2]);
+      </para> 
+
+    </sect3>
+  </sect2>
+
+  <sect2>
+    <title>TAU Trace File Writer API</title>
+    
+    <sect3>
+      <title>int Ttf_DefClkPeriodT(Ttf_FileHandleT file, double clkPeriod );</title><para>
+      <parameter>
+	Arguments: Ttf_FileHandleT file, double clkPeriod
+      </parameter>
+    </para>
+    <para><parameter>
+      Returns: int status
+    </parameter></para>
+    <para>
+      This method is called to define the clock period of the trace being
+      written.  It should return 0 upon successful completion.
+    </para>
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_EndTraceT(Ttf_FileHandleT file, nodeToken, threadToken);
+      </title>
+      <para>
+	<parameter>
+	  Arguments: Ttf_FileHandleT file, unsigned int nodeToken, unsigned int threadToken
+	</parameter>
+      </para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      <para>
+	This method is called to mark an "End of Trace" event for a particular
+	node/thread pair. It should return 0 upon successful completion.
+      </para>
+    </sect3>
+    
+    <sect3>
+      <title>
+	int Ttf_DefStateGroupT(Ttf_FileHandleT file, stateGroupToken, stateGroupName );
+      </title>
+      <para>
+	<parameter>
+	  Arguments: Ttf_FileHandleT file, unsigned int stateGroupToken, const char *stateGroupName
+      </parameter></para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      
+      <para>
+	This method is called to define a state group.  It is called with the
+	trace file handler and the numeric ID of the state group being
+	defined, stateGroupToken, and the name of the group being defined,
+	stateGroupName.  It should return 0 upon successful completion.
+      </para>
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_DefStateT(Ttf_FileHandleT file, stateToken, stateName, stateGroupToken );
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT file, unsigned int stateToken, const char
+	*stateName, unsigned int stateGroupToken
+      </parameter></para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      <para>This method is called to write a state definition.  A state generally
+      represents a programmatic function.  It should return 0 upon successful
+      completion.
+      </para>
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_DefUserEvent(Ttf_FileHandleT file, userEventToken, userEventName,
+	monotonicallyIncreasing);
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT file, unsigned int userEventToken, const char
+	*userEventName, int monotonicallyIncreasing
+      </parameter></para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      <para> This method is called when writing a user
+      defined event definition.  It should return 0 upon successful completion.
+      </para>
+    </sect3>
+    
+    <sect3>
+<title>
+	int Ttf_EnterStateT(Ttf_FileHandleT file, time, nodeToken, threadToken, stateToken
+	);
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT file, double time, unsigned int nodeToken,
+	unsigned int threadToken, unsigned int stateToken
+      </parameter></para>
+      <para><parameter>Returns: int status
+      </parameter></para>
+      <para>
+	This method is called to write a state entry
+	event.  It is called with the trace file handler, the time
+	of the state entry, time, the numeric ID of the node and thread where
+	the entry is taking place, nodeToken and threadToken respectively, and
+	the numeric ID of the state that has been entered.  It should return 0
+	upon successful completion.
+      </para>
+      
+    </sect3>
+    
+    <sect3>
+      <title>
+	int Ttf_LeaveStateT(Ttf_FileHandleT file, time, nodeToken, threadToken );
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT file, double time, unsigned int nodeToken,
+	unsigned int threadToken
+      </parameter></para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      <para>
+	This method is called to finish writing to a state.  It is called with
+	the trace file handler, the time of the state exit, time
+	and the numeric IDs of the node and thread where the exit is taking
+	place, nodeToken and threadToken respectively.  It should return 0 upon
+	successful completion.
+      </para>
+      
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_SendMessageT(Ttf_FileHandleT file, time, sourceNodeToken,
+	sourceThreadToken,  destinationNodeToken, destinationThreadToken,
+	messageSize, int messageTag);
+	</title><para><parameter>
+	Arguments: Ttf_FileHandleT file, double time, unsigned int sourceNodeToken,
+	unsigned int sourceThreadToken, unsigned int destinationNodeToken,
+	unsigned int destinationThreadToken, unsigned int messageSize, unsigned
+	int messageTag
+      </parameter></para>
+      <para><parameter>
+	Returns: int status</parameter></para><para>This method is called write
+	a message send event.  It is called with
+	the trace file handler, the time of the transmission, time,
+	the numeric IDs of the node and thread from which the message was sent,
+	sourceNodeToken and sourceThreadToken respectively, the numeric IDs of
+	the node and thread to which the message was sent, destinationNodeToken
+	and destinationThreadToken respectively, the size of the message,
+	messageSize, and the numeric ID of the message, messageTag.  It should
+	return 0 upon successful completion.
+      </para>
+      
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_RecvMessageT(Ttf_FileHandleT file, time, sourceNodeToken,
+	sourceThreadToken,  destinationNodeToken, destinationThreadToken,
+	messageSize, int messageTag);
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT file, double time, unsigned int sourceNodeToken,
+	unsigned int sourceThreadToken, unsigned int destinationNodeToken,
+	unsigned int destinationThreadToken, unsigned int messageSize, unsigned
+	int messageTag
+      </parameter></para>
+      <para><parameter>
+	Returns: int status
+      </parameter></para>
+      <para>
+	This method is called to write a message receive event.  It is called
+	with the trace file handler, the time of the receipt, time,
+	the numeric IDs of the node and thread from which the message was sent,
+	sourceNodeToken and sourceThreadToken respectively, the numeric IDs of
+	the node and thread to which the message was sent, destinationNodeToken
+	and destinationThreadToken respectively, the size of the message,
+	messageSize, and the numeric ID of the message, messageTag.  It should
+	return 0 upon successful completion.
+      </para>
+      
+    </sect3>
+
+    <sect3>
+      <title>int Ttf_EventTrigger(Ttf_FileHandleT file, time, nodeToken, threadToken,
+      userEventToken, userEventValue);</title><para><parameter>
+      Arguments: Ttf_FileHandleT file, double time, unsigned int nodeToken,
+      unsigned int threadToken, unsigned int userEventToken, long long
+      userEventValue
+    </parameter></para>
+    <para><parameter>
+      Returns: int status
+    </parameter></para>
+    <para>
+      This method is called to write a user defined
+      event trigger.  It is called with the trace file handler, the time of the
+		event trigger, time, the numeric IDs of the
+      node and thread where the event was triggered, nodeToken and
+      threadToken respectively, the numeric ID of the user defined event
+      triggered, userEventToken and the value recorded by the user defined
+      event, userEventValue.  It should return 0 upon successful completion.
+    </para>
+    
+    </sect3>
+  </sect2>
+  
+  <sect2>
+    <title>
+      TauReader API
+    </title>
+    <sect3>
+      <title>
+	Ttf_FileHandleT TtfOpenFileForOutput(name, edf);
+      </title>
+      <para><parameter>
+	Arguments: const char *name, const char *edf
+      </parameter></para>
+      <para><parameter>
+	Returns: Ttf_FileHandleT fileHandle
+      </parameter></para>
+      <para>
+	Given the full name of the TAU trace file, name, and the corresponding
+	event file, edf, and returns a handle for the trace to be used with
+	other trace writing functions.
+      </para>
+    </sect3>
+
+    <sect3>
+      <title>
+	int Ttf_AbsSeek(handle, eventPosition);
+      </title>
+      <para><parameter>
+	Arguments: Ttf_FileHandleT handle, int eventPosition
+      </parameter></para>
+      <para><parameter>
+	Returns: int position
+      </parameter></para>
+      
+    </sect3>	
+  </sect2>
+  
+</sect1>

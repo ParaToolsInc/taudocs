@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.preferences">
+  <title>Preferences</title> 
+  <para>Preferences are modified from
+  the ParaProf Preferences Window, launched from the File menu. Preferences
+  are saved between sessions in the
+  <filename>.ParaProf/ParaProf.prefs</filename> 
+  </para> 
+  
+  <sect1 id="paraprof.preferences.window"> 
+    <title>Preferences Window</title>
+    <para>In addition to displaying the text statistics for User Defined
+      Events, ParaProf can also graph a particular User Event across all
+      threads. </para> 
+    <figure> <title>ParaProf Preferences Window</title>
+      <mediaobject> <imageobject><imagedata fileref="preferences.gif"
+				   scalefit="0" width="3.31in" align="center"/></imageobject>
+      </mediaobject> 
+    </figure> 
+    
+    <para>The preferences window allows the user to modify the behavior and
+      display style of ParaProf's windows.  The font size affects bar height, a
+      sample display is shown in the upper-right.
+    </para>
+    
+    <para>The Window defaults section will determine the initial settings for
+      new windows.  You may change the initial units selection and whether you
+      want values displayed as percentages or as raw values.
+    </para>
+
+    <para>The Settings section controls the following</para>
+    <itemizedlist>
+      <listitem><para>Show Path Title in Reverse - Path title will normally be
+	  shown in normal order (/home/amorris/data/etc).  They can be reverse
+	  using this option (etc/data/amorris/home).  This only affects loaded
+	  trials and the titlebars of new windows.</para>
+      </listitem>
+      
+      <listitem><para>Reverse Call Paths - This option will immediately change
+	  the display of all callpath functions between <literal>Root =&gt;
+	    Leaf</literal> and <literal>Leaf &lt;= Root</literal>.</para>
+      </listitem>
+
+      <listitem><para>Statistics Computation - Turning this option on causes
+	  the mean computation to take the sum of value for a function across all
+	  threads and divide it by the total number of threads.  With this option
+	  off the sum will only be divided by the number of threads that actively
+	  participated in the sum.  This way the user can control whether or not
+	  threads which do not call a particular function are consider as a
+	  <literal>0</literal> in the computation of statistics.</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Generate Reverse Calltree Data - This option will enable
+	  the generation of reverse callpath data necessary for the reverse callpath option of the statistics tree-table window.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Show Source Locations - This option will enable the display of source code locations in event names.
+	</para>
+      </listitem>
+      
+    </itemizedlist>
+
+  </sect1> 
+  
+  <sect1 id="paraprof.preferences.defaultcolors"> 
+    <title>Default Colors</title> 
+    
+    <figure> <title>Edit Default Colors</title> <mediaobject>
+	<imageobject><imagedata fileref="defaultcolors.gif" scalefit="0"
+		       width="4.92in" align="center"/></imageobject> </mediaobject> 
+    </figure>
+    
+    <para>The default color editor changes how colors are distributed to
+      functions whose color has not been specifically assigned.  It is
+      accessible from the File menu of the Preferences Window. 
+    </para> 
+  </sect1>
+  
+  <sect1 id="paraprof.preferences.colormap"> <title>Color Map</title> <figure>
+      <title>Color Map</title> <mediaobject> <imageobject><imagedata
+	    fileref="colormap.gif" scalefit="0" width="2.54in"
+	    align="center"/></imageobject> </mediaobject> </figure> 
+
+    <para>The color map shows specifically assigned colors.  These values are
+      used across all trials loaded so that the user can identify a particular
+      function across multiple trials.  In order to map an entire trial's
+      function set, Select "Assign Defaults from ->" and select a loaded trial.
+    </para> 
+    
+    <para>Individual functions can be assigned a particular color by
+      clicking on them in any of the other ParaProf Windows.
+    </para> 
+
+  </sect1>
+  
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

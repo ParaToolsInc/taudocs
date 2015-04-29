@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="Views">
+	<title>Views</title>
+	<para>Often times, data is loaded into the database with multiple
+	parametric cross-sections.  For example, the charts available in
+	PerfExplorer are primarily designed for scalability analysis,
+	however data might be loaded as a parametric study.  For example, in
+	the following example, the data has been loaded with three problem
+	sizes, MIN, HALF and FULL.</para>
+   	<figure id="perfexplorer.views.parametricexample"> <title>Potential
+	scalability data organized as a parametric study</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="parametricdata.gif"
+		scalefit="0" width="6in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+	<para>In order to examine this data in a scalability study, it is
+	necessary to reorganize the data.  However, it is not necessary to
+	re-load the data.  Using views in PerfExplorer, you can re-organize
+	the data based on values in the database.</para>
+	<sect1 id="CreatingViews">
+		<title>Creating Views</title>
+		<para>To create a view, select the "Create New View" item under
+		the "Views" main menu item.  The first step is to select the
+		table which will form the basis of the view.  The three possible
+		values are Application, Experiment and Trial:</para>
+   	<figure id="perfexplorer.views.viewslevel"> <title>Selecting a table</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="viewslevel.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>
+		After selecting the table, you need to select the column on
+		which to filter:
+		</para>
+   	<figure id="perfexplorer.views.viewscolumn"> <title>Selecting a
+	column</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="viewscolumn.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>
+		After selecting the column, you need to select the operator for
+		comparing to that column:
+		</para>
+   	<figure id="perfexplorer.views.viewsoperator"> <title>Selecting an
+	operator</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="viewsoperator.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>
+		After selecting the operator, you need to select the value for
+		comparing to the column:
+		</para>
+   	<figure id="perfexplorer.views.viewsvalue"> <title>Selecting a value</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="viewsvalue.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>
+		After selecting the value, you need to select a name for the
+		view:
+		</para>
+   	<figure id="perfexplorer.views.viewsname"> <title>Entering a name
+	for the view</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="viewsname.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>
+		After creating the view, you will need to exit PerfExplorer and
+		re-start it to see the view.  This is a known problem with the
+		application, and will be fixed in a future release.
+		</para>
+   	<figure id="perfexplorer.views.completedview"> <title>The completed
+	view</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="completedview.gif"
+		scalefit="0" width="6in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+	</sect1>
+	<sect1 id="CreatingSubviews">
+		<title>Creating Subviews</title>
+		<para>In order to create sub-views, you first need to select
+		the "Create New Sub-View" item from the "Views" main menu item.
+		The first dialog box will prompt you to select the view (or
+		sub-view) to base the new sub-view on:</para>
+   	<figure id="perfexplorer.views.subview"> <title>Selecting the base
+	view</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="subview.gif"
+		scalefit="0" width="2in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+		<para>After selecting the base view or sub-view, the options for
+		creating the new sub-view are the same as creating a new view.  
+		After creating the sub-view, you will need to exit PerfExplorer and
+		re-start it to see the sub-view.  This is a known problem with the
+		application, and will be fixed in a future release.
+		</para>
+   	<figure id="perfexplorer.views.completedsubview"> <title>Completed
+	sub-views</title>
+   		<mediaobject>
+   			<imageobject><imagedata fileref="completedsubview.gif"
+		scalefit="0" width="6in" align="center"/></imageobject>
+   		</mediaobject>
+   	</figure>
+	</sect1>
+</chapter>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "../tools/docbook-xml-4.4/docbookx.dtd"[]>
+
+<part id="TAUdbDoc">
+  <title>TAUdb</title>
+
+    <!-- Content references -->
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="ch01.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="ch02.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="ch03.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="ch04.xml" />
+	 
+
+</part>

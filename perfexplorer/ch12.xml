@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="CustomCharts">
+    <title>Custom Charts</title>
+	<para>In addition to the default charts available in the charts menu, there
+	are is a custom chart interface.  To access the interface, select the "Custom
+	Charts" tab on in the results pane of the main window, as shown:</para>
+
+	<figure id="perfexplorer.customcharts.interface"> <title>The Custom Charts
+	Interface</title>
+        <mediaobject>
+            <imageobject><imagedata fileref="customcharts.gif"
+        scalefit="0" width="6in" align="center"/></imageobject>
+        </mediaobject>
+    </figure>
+	
+	<para>There are a number of controls for the cusotom charts.  They are:</para>
+
+	<itemizedlist>
+	<listitem><para>Main Only - When selected, only the main event (the event with
+	the highest inclusive value) will be selected.  When deselected, the
+	"Events" control (see below) is activated, and one or all events can be
+	selected.</para></listitem>
+	<listitem><para>Call Paths - When selected, callpath events will be available in
+	the "Events" control (see below).</para></listitem>
+	<listitem><para>Log Y - When selected, the Y axis will be the log of the true
+	value.</para></listitem>
+	<listitem><para>Scalability - When selected, the chart will be interpreted as a
+	speedup chart.  The trial with the fewest number of threads of execution
+	will be considered the baseline trial.</para></listitem>
+	<listitem><para>Efficiency - When selected, the chart will be interpreted as a
+	relative efficiency chart.  The trial with the fewest number of threads of
+	execution will be considered the baseline trial.</para></listitem>
+	<listitem><para>Strong Scaling - When deselected, the speedup or efficiency chart
+	will be interpreted as a strong scaling study (the workload is the same for
+	all trials).  When selected, the button will change to "Weak Scaling", and
+	the chart will be interpreted as a weak scaling study (the workload is
+	proportional to the total number of threads in each trial).</para></listitem>
+	<listitem><para>Horizontal - when selected, the chart X and Y axes will be
+	swapped.</para></listitem>
+	<listitem><para>Show Y-Axis Zero - when selected, the chart will include the
+	value 0.  When deselected, the chart will only show the relevant values for
+	all data points.</para></listitem>
+	<listitem><para>Chart Title - value to use for the chart title</para></listitem>
+	<listitem><para>Series Name/Value - the field to be used to group the data points
+	as a series.</para></listitem>
+	<listitem><para>X Axis Value - the field to use as the X axis value.</para></listitem>
+	<listitem><para>X Axis Name - the name to put in the chart for the value along
+	the X axis.</para></listitem>
+	<listitem><para>Y Axis Value - the field to use as the Y axis value</para></listitem>
+	<listitem><para>Y Axis Name - the name to put in the chart for the value along
+	the X axis.</para></listitem>
+	<listitem><para>Dimension Reduction - whether or not to use dimension reduction.
+	This is only applicable when "Main Only" is disabled.</para></listitem>
+	<listitem><para>Cutoff - when the "Dimension Reduction" is enabled, the cutoff
+	value for selecting "All Events".</para></listitem>
+	<listitem><para>Metric - The metric of interest for the Y axis.</para></listitem>
+	<listitem><para>Units - The unit to be selected for the Y axis.</para></listitem>
+	<listitem><para>Event - The event of interest, or "All Events".</para></listitem>
+	<listitem><para>XML Field - When the X or Y axis is selected to be an XML field,
+	this is the field of interest.</para></listitem>
+	<listitem><para>Apply - build the chart.</para></listitem>
+	<listitem><para>Reset - restore the options back to the default
+	values.</para></listitem>
+	</itemizedlist>
+
+	<para>When the chart is generated, it can be saved as a vector image by
+	selecting "File -> Save As Vector Image".  The chart can also be saved
+	as a PNG by right clicking on the chart, and selecting "Save As...".</para>
+
+</chapter>

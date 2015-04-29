@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.otherdisplays">
+  
+  <title>Miscellaneous Displays</title>
+
+
+  <sect1 id="paraprof.userevent.bargraph">
+    
+    <title>User Event Bar Graph</title> 
+    
+    <para>In addition to displaying the text statistics for User Defined
+      Events, ParaProf can also graph a particular User Event across all
+      threads.</para>
+    
+    <figure> <title>User Event Bar Graph</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="usereventbargraph.gif" scalefit="0"
+		       width="3.16in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display graphs the value that the particular user event had for each thread.</para>
+
+  </sect1>
+
+
+
+  <sect1 id="paraprof.ledgers">
+    
+    <title>Ledgers</title> 
+    
+    <para>ParaProf has three ledgers that show the functions, groups, and user events.</para>
+    
+    <sect2 id="paraprof.ledgers.function">
+      <title>Function Ledger</title>
+	
+	
+	<figure> <title>Function Ledger</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="functionledger.gif" scalefit="0" width="2.76in" align="center"/> 
+	  </imageobject></mediaobject>
+      </figure>
+      
+      <para>The function ledger shows each function along with its current
+	color.  As with other displays showing functions, you may right-click on
+	a function to launch other function-specific displays.
+      </para>
+      
+    </sect2>
+
+    <sect2 id="paraprof.ledgers.group">
+      <title>Group Ledger</title>
+      
+      <figure> <title>Group Ledger</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="groupledger.gif" scalefit="0" width="2in" align="center"/> 
+	  </imageobject></mediaobject>
+      </figure>
+      
+      <para>The group ledger shows each group along with its current color.
+	This ledger is especially important because it gives you the ability to
+	mask all of the other displays based on group membership.  For example,
+	you can right-click on the <literal>MPI</literal> group and select
+	"Show This Group Only" and all of the windows will now mask to only
+	those functions which are members of the <literal>MPI</literal> group.
+	You may also mask by the inverse by selecting "Show All Groups Except
+	This One" to mask out a particular group.
+      </para>
+
+    </sect2>
+
+
+    <sect2 id="paraprof.ledgers.userevent">
+      <title>User Event Ledger</title>
+
+	<figure> <title>User Event Ledger</title>
+	  <mediaobject>
+            <imageobject>
+	      <imagedata fileref="usereventledger.gif" scalefit="0" width="2.06in" align="center"/> 
+            </imageobject></mediaobject>
+	</figure>
+	
+      <para>
+	The user event ledger shows each user event along with its current color.
+      </para>
+    </sect2>
+
+  </sect1>
+  
+	<sect1 id="paraprof.createselectivefile">
+    
+    <title>Selective Instrumentation File Generator</title> 
+    
+    <para>ParaProf can also help you refine your program performance by
+		excluding some functions from instrumentation. You can select rules to
+		determine which function get excluded; both rules must be true for a given
+		function to be excluded. Below each function that will be excluded based
+		on these rules are listed. 
+		</para>
+    <figure> <title>Selective Instrumentation Dialog</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="ParaProfSelectiveFile.gif" scalefit="0"
+		       width="3.16in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <note><para>Only the functions profilied in ParaProf can be excluded. If you
+		had previously setup selective instrumentation for this application the
+		functions that where previously excluded will not longer be excluded.</para></note>
+  </sect1>
+
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

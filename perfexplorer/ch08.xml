@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="Visualization">
+	<title>Visualization</title>
+	<para>Under the "Visualization" main menu item, there are five types
+	of raw data visualization. The five items are "3D Visualization",
+	"Data Summary", "Create Boxchart", "Create Histogram" and 
+	"Create Normal Probability Chart".  For the Boxchart, Histogram
+	and Normal Probability Charts, you can either select one metric
+	in the trial (which selects all events by default), or expand the metric
+	and select events of interest.</para>
+	<sect1 id="ThreeDVisualization">
+		<title>3D Visualization</title>
+		<para>When the "3D Visualization" is requested, PerfExplorer
+		examines the data to try to determine the most interesting
+		events in the trial.  That is, for the selected metric in the
+		selected trial, the database will calculate the weighted
+		relative variance for each event across all threads of
+		execution, in order to find the top four "significant" events.
+		These events are selected by calculating: stddev(exclusive) /
+		(max(exclusive) - min(exclusive)) * exclusive_percentage.  After
+		selecting the top four events, they are graphed in an OpenGL
+		window.</para>
+    	<figure id="perfexplorer.visualization.threed"> <title>3D
+		Visualization of multivariate data</title>
+     		<mediaobject>
+     			<imageobject><imagedata fileref="3dvisualization.gif"
+	   			scalefit="0" width="6in" align="center"/></imageobject>
+     		</mediaobject>
+    	</figure>
+	</sect1>
+
+	<sect1 id="DataSummary">
+		<title>Data Summary</title>
+		<para>In order to see a summary of the performance data in the
+		database, select the "Show Data Summary" item under the
+		"Visualization" main menu item.</para>
+    	<figure id="perfexplorer.visualization.datasummary"> <title>Data
+		Summary Window</title>
+     		<mediaobject>
+     			<imageobject><imagedata fileref="datasummary.gif"
+	   			scalefit="0" width="6in" align="center"/></imageobject>
+     		</mediaobject>
+    	</figure>
+	</sect1>
+
+	<sect1 id="CreateBoxchart">
+		<title>Creating a Boxchart</title>
+		<para>In order to see a boxchart summary of the performance data in the
+		database, select the "Create Boxchart" item under the "Visualization"
+		main menu item.</para>
+		<figure id="perfexplorer.visualization.boxchart"><title>Boxchart</title>
+     		<mediaobject>
+     			<imageobject><imagedata fileref="boxchart.gif"
+	   			scalefit="0" width="6in" align="center"/></imageobject>
+     		</mediaobject>
+    	</figure>
+	</sect1>
+
+	<sect1 id="CreateHistogram">
+		<title>Creating a Histogram</title>
+		<para>In order to see a histogram summary of the performance data in the
+		database, select the "Create Histogram" item under the "Visualization"
+		main menu item.</para>
+		<figure id="perfexplorer.visualization.histogram"><title>Histogram</title>
+     		<mediaobject>
+     			<imageobject><imagedata fileref="histogram2.gif"
+	   			scalefit="0" width="6in" align="center"/></imageobject>
+     		</mediaobject>
+    	</figure>
+	</sect1>
+
+	<sect1 id="CreateNormalProbability">
+		<title>Creating a Normal Probability Chart</title>
+		<para>In order to see a normal probability summary of the performance data in the
+		database, select the "Create NormalProbability" item under the "Visualization"
+		main menu item.</para>
+		<figure id="perfexplorer.visualization.normalprobability"><title>Normal
+		Probability</title>
+     		<mediaobject>
+     			<imageobject><imagedata fileref="normalprobability.gif"
+	   			scalefit="0" width="6in" align="center"/></imageobject>
+     		</mediaobject>
+    	</figure>
+	</sect1>
+
+</chapter>

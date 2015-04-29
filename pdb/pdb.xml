@@ -1,0 +1,851 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+ "../tools/docbook-xml-4.4/docbookx.dtd">
+<reference>
+    <referenceinfo>
+        <title>PDT's PDB file format definition</title>
+        <author>
+            <firstname></firstname>
+            <surname></surname>
+        </author>
+    </referenceinfo>
+
+		<sect1>
+			<title>PDB definitions</title>
+
+			<simplelist>
+				<member>Each item is decribed by a block of lines</member>
+				<member>First line is always [id] [name]
+				  where [id] consists of prefix as described aboved followed by '#'
+				  followed by an unsigned (&gt;=0) and unique number (unique inside the
+				  item category). The numbering has no other constraints (especially
+				  contiguous allocation or start with 0)</member>
+				<member>Each other line is of the form:  attribute value
+				value...</member>
+				<member>Attributes and values are separated by exactly one space (" ")
+				</member>
+				<member>Item description blocks are terminated by an empty line
+				</member>
+				<member>Values which are references to other items are done using IDs
+				</member>
+				<member>Values are never enclosed in ""
+				</member>
+				<member>Attributes with boolean value are only listed if true (value
+				== T) i.e. absence means false
+				</member>
+				<member>String "[...]" after attribute means "0 or more" instances
+				of this attribute line possible
+				</member>						
+			</simplelist>
+
+		</sect1>
+	
+		<refentry id="Header">
+			<refnamediv>
+			
+			<refname>File Header</refname>
+			<refpurpose>Header information included in each pdb file.</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+&lt;PDB [version]&gt;
+lang [language]
+
+					</literallayout>
+				</synopsis>
+			
+			</refsynopsisdiv>
+
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[version]</literal>which version of PDB file format
+					this file implements, version 3.0 includes statement level information.
+					</member>
+					<member><literal>[language]</literal>the programing language that was
+						parsed to generate this file.</member>
+				</simplelist>
+				
+			</refsect1>
+
+		</refentry>
+		
+		<refentry id="SourceFile">
+			<refnamediv>
+			
+			<refname>Source Files</refname>
+			<refpurpose>This tag records the each pdb files.</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+so#[id]
+[ssys]
+sinc so#[id]
+[...]
+scom co#[comID] [lang] <link linkend="Location">{Location}</link> <link linkend="Location">{Location}</link> [comment]
+[...]
+					</literallayout>
+				</synopsis>
+			
+			</refsynopsisdiv>
+
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[id]</literal> Unique number identifying this source file (used to
+					refer to this file elsewhere.)
+					</member>
+					<member><literal>[ssys]</literal> ssys tag is printed if this file is
+						a system include, otherwise ommit this line.</member>
+					<member><literal>[id]</literal>Id. of the files included by this
+						file.
+					</member>
+					<member><literal>[comID]</literal> Unique number identifying this
+						comment in the source file. <literal>[lang]</literal> the programing
+						language that was parsed to generate this file.</member>
+					<member><literal><link linkend="Location">{Location}</link> <link
+						linkend="Location">{Location}</link></literal> Two location tags,
+						the start of the comment and the end of the comment.
+						<literal>[comment]</literal> the contents of this comment.</member>
+				</simplelist>
+				
+			</refsect1>
+
+		</refentry>
+
+		<refentry id="Routine">
+			<refnamediv>
+				<refname>Routines</refname>
+				<refpurpose>This tag records each routine declared in the source
+				file.</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+ro#[id] [name]
+rloc <link linkend="Location">{Location}</link>
+rsig ty#[type]
+rlink [link]
+rkind [kind]
+rvirt [virtual]
+rgroup gr#[groupId]
+racs [access]
+rnspace na#[namespaceId]
+rroutine [parentRoutineId]
+ralias ro#[aliasId]
+rimpl ro#[implementsId]
+[rstatic]
+[rcrvo]
+[rinline]
+[rexpl]
+rtempl te#[templateId]
+[rspecl]
+[rarginfo]
+[rrec]
+[riselem]
+rstart <link linkend="Location">{Location}</link>
+rcall ro#[calleeId] [virtualCall] <link linkend="Location">{Location}</link>
+[...]
+rret <link linkend="Location">{Location}</link>
+[...]
+rstop <link linkend="Location">{Location}</link>
+[...]
+rbody st#[body]
+<link linkend="Statement">{Statements}</link>
+[...]
+rpos <link linkend="Location">{Location}</link> <link
+linkend="Location">{Location}</link> <link linkend="Location">{Location}</link>
+<link linkend="Location">{Location}</link>     
+					</literallayout>
+				</synopsis>
+			</refsynopsisdiv>
+		
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[id]</literal> Unique number identifying this routine.
+					<literal>[name]</literal> The name given this routine in the source
+					file.</member>
+				
+					<member><literal><link
+					linkend="Location">{Location}</link></literal> The location of this
+					routine in the source file.</member>	
+			
+					<member><literal>[type]</literal> The id of the tag in the pdb file
+					that defines the type of this Routine.</member>
+
+					<member><literal>[link]</literal> The kind of link this is either: NA,
+					INTERNAL, C, C++, FINT, F90.</member>
+
+					<member><literal>[kind]</literal> The kind of Routine this is either:
+					NA (not defined), ext (external), tproto (template/protoype), fext
+					(Fortran external), fprog (Fortran program), fbdat (Fortran block
+					data), fint (Fortran internal), fstfu (Fortran statement function),
+					fintrin (Fortran intrinsic), fmproc (Fortran module procedure),
+					funspec (Fortran unspecified).</member>
+
+					<member><literal>[virtual]</literal> Either yes or no.</member>
+
+					<member><literal>[groupId]</literal> The Id. for this routines parent
+						class.</member>
+					<member><literal>[access]</literal> The access level for this
+						routine.</member>
+					<member><literal>[namespaceId]</literal> Id. for the Parent
+						namespace.</member>
+					<member><literal>[parentRoutineId]</literal> Id. for the Parent
+						routine.</member>
+					<member><literal>[aliasId]</literal> Id. for this routines alias
+						(through interface). </member>
+					<member><literal>[implementsId]</literal> Id. for the routine this
+						routine implements (for Fortran alaised functions.)</member>
+					<member><literal>[rstatic]</literal> rstatic if this routine is
+						static. (Ommit line otherwise)</member>
+					<member><literal>[rcrvo]</literal> rcrvo if this routine has a
+						covarient return virtual override</member>
+					<member><literal>[rinline]</literal> rinline if this routine is
+						inlined, ommit this line otherwise.</member>
+					<member><literal>[rexpl]</literal> rexpl if this routine is explicit
+						ctor ommit otherwise.</member>
+					<member><literal>[templateId]</literal> Id for the template, if this
+						routine implements one, ommit otherwise.</member>
+					<member><literal>[rspecl]</literal> rspecl if this routine is
+						specialized</member>
+					<member><literal>[rarginfo]</literal> rarginfo if this routine explicatly
+						defined interface.</member>
+					<member><literal>[rrec]</literal> rrec if this routine is declared
+						recursive.</member>
+					<member><literal>[riselem]</literal> riselem if this routine is
+						elemental.</member>
+					<member><literal><link linkend="Location">{Location}</link></literal>
+						The location of the first executable statement.</member>
+					<member><literal>[calleeId]</literal>The Id. that defines the type
+						of the routine this routine calles.<literal>[virtualCall]</literal>
+						Is this call virtual. <literal><link
+						linkend="Location">{Location}</link></literal> The location of this
+						routine call in this routine.</member>
+					<member><literal><link linkend="Location">{Location}</link></literal>
+						Location of the return statements.</member>
+					<member><literal><link linkend="Location">{Location}</link></literal>
+						The location of the stop statements.</member>
+					<member><literal>[body]</literal>Id. of the first statement in the
+					body of this Routine.</member>
+
+					<member><literal><link
+					linkend="Statement">{statements}</link></literal> Each
+					statement inside the body of this Routine.</member>
+				
+					<member><literal><link linkend="Location">{Location}</link> <link
+					linkend="Location">{Location}</link> <link
+					linkend="Location">{Location}</link> <link
+					linkend="Location">{Location}</link></literal> Four location tags, in
+					order, the begining of the Routine declaration, the ending of the Routine
+					declaration, the begining of the Routine body, and lastly the
+					ending of the Routine body.</member>
+				
+				</simplelist>
+			</refsect1>
+		</refentry>
+
+		<refentry id="Type">
+			<refnamediv>
+				<refname>Types</refname>
+				<refpurpose>This tag records each Type declared in the source
+				file.</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+ty#[id] [name]
+ykind [kind]
+yrett ty#[return type]
+yargt ty#[argument type]
+yexcept ty#[exception type]
+yfkind [float type]
+yikind [integer type]
+yclen [length]
+yshape [shape]
+yloc {Location}
+ygroup gr#[groupId]
+yacs [access]
+[ysigned]
+yenum [name] [value]
+[...]
+yptr (ty#|gr#)[pointerId]
+yref (ty#|gr#)[referenceId]
+[yellip]
+yqual [qualifier]
+yelem (ty#|gr#)[elementId]
+[ystat]
+ynelem [number of elements]
+yrank [rank]
+ydim [dimension]
+ytref (ty#|gr#)[typedefId]
+ympgroup gr#[ptr_groupId]
+ymptype (ty#|gr#)[ptr_typeId]
+
+					</literallayout>
+				</synopsis>
+			</refsynopsisdiv>
+		
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[id]</literal> Unique number identifying this Type.
+					<literal>[name]</literal> The name given to this Type in the source
+					file.</member>
+				
+					<member><literal>[kind]</literal> The kind of Routine this is, either:
+					NA (not defined), bool (boolean), enum (enumeration) , err
+					(error/exception), func (function), void, int (integer), float,
+					ptr (pointer), ref (reference to memory location), array, tref
+					(template reference), ptrmem, traram, wchar, c_type, ferr (Fortran
+					error), fvoid (Fortran void), fint (Fortran integer), flogic, ffloat
+					(Fortran float), ffunc (Fortran function), fchar (Fortran character),
+					farray (Fortran array), fcmplx (Fortran complex), funspecfunc, fbldat,
+					fmod, fptr, f_type, group.</member>
+
+					<member><literal>[return type]</literal> Id. of the tag that defines
+					the return part of this type (Ommit line if type is not a function
+					type).</member>
+
+					<member><literal>[argument type]</literal>Id. of the tag that defines
+					the parameter part of this type (Ommit line if type is not a function type).</member>
+					
+					<member><literal>[execption type]</literal></member>
+					
+					<member><literal>[float type]</literal> The type of this float,
+					either, float, dbl (double), or longdbl (long double). (Ommit
+					line if this type is integer or is non-primitive.)</member>
+
+					<member><literal>[integer type]</literal> The type of this integer,
+					either char (charater), schar (short charater), uchar (unsigned
+					charater), short, ushort (unsigned short), int (integer), uint
+					(unsigned integer), long, ulong (unsigned long), longlong, ulonglong
+					(unsigned long long ). (Ommit line if this type is float or is
+					non-primitive.)</member>
+
+					<member><literal>[length]</literal> The length of the array (Ommit
+					line if type is not array.)</member>
+
+					<member><literal>[shape]</literal> The shape of this Fortran array,
+					either, explicit (set when the rank and extent are defined
+					explicitly), asize (set when the extend of one or more dimension is
+					undefined), ashape (set when the rank of an array is left undefined),
+					deferred (set when an array is allocated but undefined). (Ommit 
+					          line if type is not a fortran array.)</member>
+			
+					<member><literal><link linkend="Location">{Location}</link></literal>
+					Location of where this type is defined in the source code.</member>
+
+					<member><literal>[groupId]</literal> This type's parent group.
+					</member>
+
+					<member><literal>[access]</literal> This type's access level.</member>
+
+					<member><literal>[ysigned]</literal> If this type is signed, ommit
+					otherwise</member>
+
+					<member><literal>[name]</literal> The name of the enumeration member.
+					<literal>[value]</literal> The value of the enumeration
+					member.</member>
+
+					<member><literal>[pointerId]</literal> the type or group Id. that this
+					type is pointing to, ommit if this is not a pointer type.</member>
+
+					<member><literal>[referenceId]</literal> the type or group Id. that this
+					type is referencing, ommit if this is not a reference type.</member>
+
+					<member><literal>[yellip]</literal> yellip if this type has ellipsis,
+					ommit line otherwise.</member>
+
+					<member><literal>[qualifier]</literal> the qualifiers this type has,
+					if any.</member>
+
+					<member><literal>[elementId]</literal> the type or group of the
+					elements in the array, ommit if this is not an array type.</member>
+
+					<member><literal>[ystat]</literal> ystat if this type is
+					static.</member>
+
+					<member><literal>[ynelem]</literal> The number of element in this
+					array, -1 if this array has variable length, ommit line if this is not
+					an array type.</member>
+
+					<member><literal>[rank]</literal> The rank of this array, ommit line
+					if this is not an array type.</member>
+
+					<member><literal>[dimension]</literal> The dimension of this array, ommit line
+					if this is not an array type.</member>
+
+					<member><literal>[typedefId]</literal> The typedef type if there is
+					one.</member>
+
+					<member><literal>[ptr_groupId]</literal> The type of group to which
+				 	the type or group that is pointed to belongs.</member>
+
+					<member><literal>[ptr_typeId]</literal> The type that
+					the type or group that is pointed to belongs.</member>
+
+				</simplelist>
+			</refsect1>
+		</refentry>
+		
+		<refentry id="Location">
+			<refnamediv>
+				<refname>Locations</refname>
+				<refpurpose>This simple tag is used to store a location in a source
+				file. Used only within other tags, not found by itself.
+				</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+so#[id] [line number] [colunm number]
+				</literallayout>
+				</synopsis>
+			</refsynopsisdiv>
+		
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[id]</literal> The id number of the source file.
+						<literal>[line number]</literal> The line number of the location. 
+						<literal>[colunm number]</literal> The colunm number of the location. 
+					</member>
+				</simplelist>
+			</refsect1>
+		</refentry>
+		
+		<refentry id="Statement">
+			<refnamediv>
+				<refname>Statements</refname>
+				<refpurpose>This simple tag is used to record a statement in the source
+				file. Used only within other tags, not found by itself. 
+				</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+stmt st#[id] [name] {Location} {Location} [next] [down]
+					</literallayout>
+				</synopsis>
+			</refsynopsisdiv>
+		
+			<refsect1>
+				<title>Definition</title>
+
+				<simplelist>
+					<member><literal>[id]</literal> the unique number identifying this
+					statement.
+						<literal>[kind]</literal> the kind of statement, either, na (not
+						defined), switch, case, init, return, if, empty, for, goto, continue,
+						break, label, block, asm,  expr, assign, throw, while, do, try,
+						catch, decl, set_vla_size, vla_decl, vla_dealloc, 
+						fallocate, fassign, fio, fdo, fdeallocate, freturn, fif, fgoto,
+						fsingle_if, fstop, or flabel. 
+						<literal><link linkend="Location">{Location}</link> <link
+						linkend="Location">{Location}</link></literal> Two locations, where
+						the statement begins and where it ends. 
+						<literal>[next]</literal> Id number of the next statement (NA if
+						there is none). 
+						<literal>[down]</literal> Id number of the statement beneath this
+						one, (ie, if this were a block statement, then this would be the
+						first statement within the block.) (NA if there is none).
+					</member>
+				</simplelist>
+			</refsect1>
+		</refentry>
+
+		<refentry id="Group">
+			<refnamediv>
+				<refname>Groups</refname>
+				<refpurpose>This simple tag is used to record a group (classes in C) in the source
+				code.
+				</refpurpose>
+
+			</refnamediv>
+
+			<refsynopsisdiv>
+				<synopsis>
+					<literallayout>
+gr#[Id] [name]
+gloc {Location}
+ggroup gr#[groupID]			    
+gacs [access]
+gnspace	[namespaceID]
+gkind	[kind]
+gtempl	te#[templateID]
+[gspecl]
+[gsparam] [type] (ty#|gr#)[paramId]
+[...]
+gbase [virtual] [access] gr#[baseId] {Location}
+[...]
+gfrgroup gr#[friendId] {Location}
+[...]
+gfrfunc	ro#[routineID] {Location}
+[...]
+gfunc	ro#[member_routineId] {Location}
+[...]
+gmem [members]
+[...]
+gmloc	{Location}
+gmgroup	gr#[parentId]
+gmacs	[member_access]
+gmkind [member_kind]
+gmtype (ty#|gt#)[member_type]
+gmtempl	te#[templateId]
+[gmspecl]
+[gmconst]
+[gmisbit]
+[gmmut]
+[gmconst]
+[gmtempl]	te#[templateId]
+gpos {Location} {Location} {Location} {Location}
+          </literallayout>
+				</synopsis>
+			</refsynopsisdiv>
+
+			<refsect1>
+				<title>Definition</title>
+
+					<simplelist>
+						<member><literal>[id]</literal> The unique number identifying this
+						group.</member>
+																																	
+						<member><literal>[name]</literal> The name of this group.</member>
+
+						<member><literal><link
+						linkend="Location">{Location}</link></literal> Location
+						where the group header begins.</member>
+
+						<member><literal>[groupId]</literal> The group Id. of this group's
+						parent.</member>
+
+						<member><literal>[gacs]</literal> This group's access
+						level.</member>
+
+						<member><literal>[namespaceId]</literal> This group's parent
+						namespace.</member>
+
+						<member><literal>[kind]</literal> The kind of groups this
+						is.</member>
+
+						<member><literal>[templateId]</literal> The id of the template this
+						group implements, if it implement one.</member>
+
+						<member><literal>[gspecl]</literal> gspecl if this group is
+						specialized.</member>
+
+						<member><literal>[type]</literal> The type of this parameter.
+						<literal>[paramId]</literal> the id. for this parameter's type.</member>
+
+						<member><literal>[virtual]</literal> vir if the direct base group
+						is virtual. <literal>[access]</literal> the access level for the
+						base group. <literal>[base_groupId]</literal> the id of this groups
+						base group. <literal>{Location}</literal></member>
+
+						<member><literal>[friendId]</literal> The Id. of the friend groups
+						of this group. <literal><link
+						linkend="Location">{Location}</link></literal> Location of this
+						friend group.</member>
+
+						<member><literal>[routineId]</literal> The Id. of the friend
+						functions of this group. <literal><link
+						linkend="Location">{Location}</link></literal>
+						Location of this friend function.</member>
+
+						<member><literal>[member_routineId]</literal> the Id. for the
+						routines that are members of this group.
+						<literal><link linkend="Location">{Location}</link></literal> The location of this member
+						routine.</member>
+
+						<member><literal>[member]</literal> The name of the
+						non-function members of this group.</member>
+						
+						<member><literal>{location}</literal> the location of this
+						member.</member>
+
+						<member><literal>[parentId]</literal> the parent group of this
+						member.</member>
+
+						<member><literal>[member_access]</literal> the access level of this
+						member group.</member>
+
+						<member><literal>[member_kind]</literal> the kind of the member this
+						is.</member>
+
+						<member><literal>[member_typeId]</literal> the type id of this
+						member</member>
+						
+						<member><literal>[member_templateId]</literal> this member's
+						templete Id, if it implements one.</member>
+
+						<member><literal>[gmspecl]</literal>gmspecl if this member is
+						specialized.</member>
+
+						<member><literal>[gmconst]</literal> gspecl if this member is
+						initalized.</member>
+
+						<member><literal>[gmisbit]</literal> gmisbit if this member is a bit
+						field.</member>
+
+						<member><literal>[gmmut]</literal> gmmut if this member is
+						mutable.</member>
+
+						<member><literal><link linkend="Location">{Location}</link> <link
+          	linkend="Location">{Location}</link> <link linkend="Location">
+						{Location}</link> <link	linkend="Location">{Location}</link></literal>
+						Four location tags, in order, the begining of the Group declaration,
+						the ending of the Group declaration, the begining of
+						the Group body, and lastly the ending of the Group body.</member>
+
+					</simplelist>
+
+				</refsect1>
+			</refentry>
+
+			<refentry id="Template">
+				<refnamediv>
+					<refname>Templates</refname>
+					<refpurpose>These tags record templates in the source files.</refpurpose>
+
+				</refnamediv>
+
+				<refsynopsisdiv>
+					<synopsis>
+						<literallayout>
+te#[templateId]
+tloc {Location}
+tgroup gr#[groupId]
+tacs [access]
+tnspace	na#[namespaceId]
+tdecl te#[declareId]
+tdef	te#[definitionID]
+tkind [kind]
+tparam [type_name] ty#[typeId] 
+[...]
+tsparam [...]	[param_name] (ty#|gr#)[paramId]
+[...]
+tproto ro#[routineId]
+ttype		(ty#|gr#)[variable_typeId]
+ttext		[template_text]
+tpos		{Location} {Location} {Location} {Location}
+						</literallayout>
+					</synopsis>
+				</refsynopsisdiv>
+
+				<refsect1>
+					<title>Defintions</title>
+
+					<simplelist>
+						
+						<member><literal>[templateId]</literal> The unique number
+						identifying this template item.</member>
+
+						<member><literal><link
+						linkend="Location">{Location}</link></literal> The location where
+						this template definition starts.</member>
+
+						<member><literal>[groupId]</literal> the Id. of this template's
+						parent group.</member>
+
+						<member><literal>[access]</literal> this template access
+						level.</member>
+
+						<member><literal>[namespaceId]</literal> this template's parents
+						namespace.</member>
+
+						<member><literal>[declareId]</literal> The Id of the template which
+						declares this one, if one does.</member>
+
+						<member><literal>[definitionId]</literal> The Id of the template
+						which defines this one, if one does.</member>
+												
+						<member><literal>[kind]</literal> The kind of template this
+						is.</member>
+
+						<member><literal>[type_name]</literal> The type of any template
+						parameters. <literal>[typeId]</literal> The Id of the type that
+						defines this parameter. </member>
+
+						<member><literal>[param_name]</literal> The name of this template parameter.
+						<literal>[parameterId]</literal> The Id. of the type or groups that defines
+						this template parameter.</member>
+
+						<member><literal>[routineId]</literal> The Id. of this template's
+						prototype instantiation.</member>
+
+						<member><literal>[variable_typeId]</literal> The Id. of the type
+						that defines this variable.</member>
+
+						<member><literal>[template_text]</literal> The actual text of this
+						template.</member>
+
+						<member><literal><link linkend="Location">{Location}</link> <link
+            linkend="Location">{Location}</link> <link linkend="Location">
+						{Location}</link> <link linkend="Location">{Location}</link></literal>
+						Four location tags, in order, the begining of the Template declaration,
+					 	the ending of the Template declaration, the begining of the Template body, and
+						lastly the ending of the Template body.</member>
+
+					</simplelist>
+				</refsect1>
+			</refentry>
+
+			<refentry id="Namespace">
+
+				<refnamediv>
+					<refname>Namespaces</refname>
+					<refpurpose>These tags record the namespaces inside the source
+					file.</refpurpose>
+				</refnamediv>
+					<refsynopsisdiv>
+						<synopsis>
+							<literallayout>
+na#[namespaceID]	[name]
+nloc {Location}
+nnspace		na#[parentId>		 
+nmem (ty#|ro#|gr#)[memberId]
+[...]
+nalias [alias_name]
+npos {Location} {Location} {Location} {Location}
+							</literallayout>
+						</synopsis>
+					</refsynopsisdiv>
+
+					<refsect1>
+						<title>Definition</title>
+						
+						<simplelist>
+
+							<member><literal>[namespaceId]</literal> The unique number
+							identifying this namespace. <literal>[name]</literal> The name of
+							this namespace.</member>
+
+							<member><literal><link
+							linkend="Location">{Location}</link></literal> The location where
+							the definition of this namespace starts in the source
+							file.</member>
+
+							<member><literal>[parentId]</literal> The Id. of this namespaces
+							parent namespace.</member>
+
+							<member><literal>[memberId]</literal> The Id. of the type,
+							routine, or group that defines this member of the
+							namespace.</member>
+
+							<member><literal>[alias_name]</literal> The name of this
+							namespaces alias.</member>
+
+							<member><literal><link linkend="Location">{Location}</link> <link
+            	linkend="Location">{Location}</link> <link linkend="Location">
+							{Location}</link> <link linkend="Location">{Location}</link></literal>
+							Four location tags, in order, the begining of the Namespace declaration,
+							the ending of the Namespace declaration, the begining of the
+							Namespace body, and lastly the ending of the Namespace body.</member>
+						</simplelist>
+					</refsect1>
+				</refentry>
+
+				<refentry id="Macro">
+					
+					<refnamediv>
+						<refname>Macros</refname>
+						<refpurpose>These tags record each occurance of a marco in the
+						source file.</refpurpose>
+					</refnamediv>	
+						<refsynopsisdiv>
+							<synopsis>
+								<literallayout>
+ma#[macroId] [name]
+mloc {Location}
+mkind	[kind]
+mtext	[text]
+								</literallayout>
+							</synopsis>
+						</refsynopsisdiv>
+
+					<refsect1>
+						<title>Definition</title>
+						<simplelist>
+	
+							<member><literal>[macroId]</literal> </member>
+
+							<member><literal><link
+							linkend="Location">{Location}</link></literal> The
+							location in the source file where this macro begins.</member>
+
+							<member><literal>[kind]</literal> The kind of macro this is,
+							either defined or undefined.</member>
+
+							<member><literal>[text]</literal> The actual text of this
+							macro.</member>
+
+						</simplelist>
+					</refsect1>
+				</refentry>
+
+				<refentry id="Pragma">
+					<refnamediv>
+						<refname>Pragmas</refname>
+						<refpurpose>These tags record every Pragma within the source
+						file.</refpurpose>
+					</refnamediv>
+
+					<refsynopsisdiv>
+						<synopsis>
+							<literallayout>
+pr#[pragmaId] [name]
+ploc {Location}
+pkind		[kind]
+ppos		{Location} {Location}
+ptext		[text]
+							</literallayout>
+						</synopsis>
+					</refsynopsisdiv>
+
+					<refsect1>
+						<title>Definition</title>
+						<simplelist>
+							
+							<member><literal><link
+							linkend="Location">{Location}</link></literal> The
+							location in the source file where this pragma
+							begins.</member>
+
+							<member><literal>[kind]</literal> The kind of Pragma this
+							is.</member>
+
+							<member><literal><link
+							linkend="Location">{Location}</link><link
+							linkend="Location">{Location}</link></literal> 
+							The location where this pragma begins and ends.</member>
+
+							<member><literal>[text]</literal> The actual text of the
+							pragma.</member>
+
+						</simplelist>
+					</refsect1>
+				</refentry>
+</reference>
+
+

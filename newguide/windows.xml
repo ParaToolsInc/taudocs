@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
+																									
+<chapter>
+  <title>Windows</title>
+  <sect1 id="TAUonWin">
+    <title>TAU on Windows</title>
+    <sect2>
+    <title>Installation</title>
+  
+    <para>We provide a binary release build for Windows on the <ulink
+    url="http://www.cs.uoregon.edu/research/tau/downloads.php">download
+    page</ulink>. TAU can also be built form source using
+    <literal>Makefile.win32</literal>.</para>
+
+    
+  
+  </sect2>
+
+  <sect2>
+    <title>Instrumenting an application with Visual Studio C/C++</title>
+  
+    <para>Here is a step by step guide for retrieving a standard profile from a
+    threaded program.</para>
+
+    <orderedlist>
+      <listitem><para>Download TAU (see previous section)</para></listitem>
+      <listitem><para>Open
+      <literal>[TAU-HOME]/examples/threads/threads.sln</literal> in VC 7 or
+      greater.</para></listitem>
+      <listitem><para>Open <literal>testTau.cpp</literal> source file.</para></listitem>
+      <listitem><para>Uncomment the pragma element at the top of the file so that it
+      reads:<screen>
+#define PROFILING_ON 1
+#pragma comment(lib, "tau-profile-static-mt.lib")
+</screen></para></listitem>
+      <listitem><para>Edit these properties of this project:
+        <orderedlist>
+          <listitem><para>Add the <literal>..\..\lib\vc7\</literal> directory to the
+          Linker's Additional Library Directories.</para></listitem>
+          <listitem><para>Set the Runtime Library to <literal>Multi-threaded DLL
+          (MD)</literal>in the C/C++ Code Generation section.</para></listitem>
+        </orderedlist>
+      </para></listitem>
+      <listitem><para>Build and run the application.</para></listitem>
+      <listitem><para>Launch Visual Studio's command line prompt Move to the
+      <literal>[TAU-HOME]/examples/threads/directory/</literal> this is where
+      the profile files where written. Type: <screen>
+%> [TAU-HOME]/bin/paraprof
+</screen> To view these profiles in pararprof</para></listitem>
+    </orderedlist>
+  </sect2>
+
+    <sect2 id="UsingMINGW">
+    <title>Using MINGW  with TAU</title>
+<screen>
+Building TAU with the MinGW cross-compilers for 32- or 64-bit Windows
+
+Requirements:
+
+MinGW compilers must be in your path.  For example (64-bit):
+* x86_64-w64-mingw32-gcc
+* x86_64-w64-mingw32-g++
+* x86_64-w64-mingw32-ar
+* x86_64-w64-mingw32-ld
+* x86_64-w64-mingw32-ranlib
+
+Limitations:
+
+* No signal processing
+* No event-based sampling (EBS)
+
+Instructions:
+
+See ./configure -help.
+</screen>
+  </sect2>
+  </sect1>
+
+</chapter>

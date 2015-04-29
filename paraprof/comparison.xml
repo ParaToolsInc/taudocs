@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.comparison">
+
+  <title>Comparative Analysis</title>
+
+  <para>ParaProf can perform cross-thread and cross-trial anaylsis.  In this
+  way, you can compare two or more trials and/or threads in a single display.</para>
+  
+  <sect1 id="paraprof.comparison.using">
+
+    <title>Using Comparitive Analysis</title> 
+
+    <para>Comparative analysis in ParaProf is based on individual threads of
+    execution.  There is a maximum of one Comparison window for a given
+    ParaProf session.  To add threads to the window, right click on them and
+    select "Add Thread to Comparison Window".  The Comparison Window will pop
+    up with the thread selected.  Note that "mean" and "std. dev." are
+    considered threads for this any most other purposes.
+    </para>
+
+
+
+    <figure> <title>Comparison Window (initial)</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="comparison1.gif" scalefit="0"
+		       width="3.91in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>Add additional threads, from any trial, by the same means.
+    </para>
+
+    <figure> <title>Comparison Window (2 trials)</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="comparison2.gif" scalefit="0"
+		       width="3.914in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure> <title>Comparison Window (3 threads)</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="comparison3.gif" scalefit="0"
+		       width="3.914in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+  </sect1>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

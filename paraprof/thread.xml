@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.threaddisplays">
+
+  <title>Thread Based Displays</title>
+
+    <para>ParaProf displays several windows that show data for one thread of
+      execution.  In addition to per thread values, the users may also select
+      <emphasis>mean</emphasis> or <emphasis>standard deviation</emphasis> as
+      the "thread" to display.  In this mode, the mean or standard deviation of
+      the values across the threads will be used as the value.
+    </para>
+  
+  <sect1 id="paraprof.threaddatawindow">
+    
+    <title>Thread Bar Graph</title> 
+    
+    <figure> <title>Thread Bar Graph</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="threaddatawindow.gif" scalefit="0"
+		       width="3.38in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display graphs each function on a particular thread for
+      comparison.  The metric, units, and sort order can be changed from the
+      <emphasis>Options</emphasis> menu.
+    </para>
+
+  </sect1>
+
+  <sect1 id="paraprof.threadstatwindow">
+
+    <title>Thread Statistics Text Window</title> 
+
+    <figure> <title>Thread Statistics Text Window</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="threadstatwindow.gif" scalefit="0" 
+      width="5.3in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+
+    <para>This display shows a <command>pprof</command> style text view of the
+      data.
+    </para>
+    
+  </sect1>
+
+
+  <sect1 id="paraprof.treetablewindow">
+
+    <title>Thread Statistics Table</title> 
+
+    <figure id="paraprof.thread.treetable1">
+      <title>Thread Statistics Table, inclusive and exclusive</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="treetable1.gif" scalefit="0" 
+      width="4.3in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+
+    <para>
+      This display shows the callpath data in a table.  Each callpath can be traced
+      from root to leaf by opening each node in the tree view.  A colorscale
+      immediately draws attention to "hot spots", areas that contain highest values.
+    </para>
+      
+    <figure id="paraprof.thread.treetable2">
+      <title>Thread Statistics Table</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="treetable2.gif" scalefit="0" 
+      width="4.3in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+
+    <figure id="paraprof.thread.treetable3">
+      <title>Thread Statistics Table</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="treetable3.gif" scalefit="0" 
+      width="4.3in" align="center"/></imageobject> 
+     </mediaobject>
+    </figure>
+
+    <para>
+      The display can be used in one of two ways, in "inclusive/exclusive"
+      mode, both the inclusive and exclusive values are shown for each path,
+      see <xref linkend="paraprof.thread.treetable1" /> for an example.
+    </para>
+
+    <para>
+      When this option is off, the inclusive value for a node is show when it
+      is closed, and the exclusive value is shown when it is open.  This allows
+      the user to more easily see where the time is spent since the total time
+      for the application will always be represented in one column.  See <xref
+      linkend="paraprof.thread.treetable2" /> and <xref
+      linkend="paraprof.thread.treetable3" /> for examples.
+      
+      This display also functions as a regular statistics table without
+      callpath data.  The data can be sorted by columns by clicking on the
+      column heading.  When multiple metrics are available, you can add and
+      remove columns for the display using the menu.
+    </para>
+    
+  </sect1>
+
+
+  <sect1 id="paraprof.callgraphwindow">
+
+    <title>Call Graph Window</title> 
+    
+    <figure> <title>Call Graph Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="callgraph.gif" scalefit="0"
+		       width="3.04in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display shows callpath data in a graph using two metrics, one
+      determines the width, the other the color.  The full name of the function
+      as well as the two values (color and width) are displayed in a tooltip
+      when hovering over a box.  By clicking on a box, the actual ancestors and
+      descendants for that function and their paths (arrows) will be
+      highlighted with blue.  This allows you to see which functions are called
+      by which other functions since the interplay of multiple paths may
+      obscure it.
+    </para>
+  </sect1>
+
+
+  <sect1 id="paraprof.callpaththreadrelations">
+
+    <title>Thread Call Path Relations Window</title>
+
+    <figure id="paraprof.thread.callpathrelations"> 
+      <title>Thread Call Path Relations Window</title>
+      <!--    <titleabbrev id="paraprof.thread.callpathrelations.short"></titleabbrev> -->
+      <mediaobject>
+	<imageobject><imagedata fileref="callpaththreadrelations.gif"
+		       scalefit="0" width="4.8in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display shows callpath data in a <command>gprof</command> style
+      view.  Each function is shown with its immediate parents.  For example,
+      <xref linkend="paraprof.thread.callpathrelations" /> shows that
+      <function>MPI_Recv()</function> is call from two places for a total of
+      <literal>9.052</literal> seconds.  Most of that time comes from the 30
+      calls when <function>MPI_Recv()</function> is called by
+      <function>MPIScheduler::postMPIRecvs()</function>.  The other 60 calls do
+      not amount to much time.</para>
+  </sect1>
+  
+  
+  <sect1 id="paraprof.usereventstats">
+    
+    <title>User Event Statistics Window</title> 
+    
+    <figure> <title>User Event Statistics Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="usereventstats.gif" scalefit="0"
+		       width="5.6in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display shows a <command>pprof</command> style text view of the
+      user event data.  Right clicking on a User Event will give you the option
+      to open a Bar Graph for that particular User Event across all threads.  See
+      <xref linkend="paraprof.userevent.bargraph"/></para>
+    
+  </sect1>
+
+
+  <sect1 id="paraprof.usereventthreadbar">
+    
+    <title>User Event Thread Bar Chart</title> 
+    
+    <figure> <title>User Event Thread Bar Chart Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="usereventthreadbargraph.gif" scalefit="0"
+		       width="5.6in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display shows a particular thread's user defined event
+    statistics as a bar chart.  This is the same data from the <xref
+    linkend="paraprof.usereventstats"/>, in graphical form.</para>
+    
+  </sect1>
+
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="paraprof.functiondisplays">
+
+  <title>Function Based Displays</title>
+
+  <para>ParaProf has two displays for showing a single function across all
+  threads of execution.  This chapter describes the Function Bar Graph
+  Window and the Function Histogram Window.</para>
+
+  <sect1 id="paraprof.function.bargraph">
+
+    <title>Function Bar Graph</title> 
+
+    <figure> <title>Function Bar Graph</title>
+     <mediaobject>
+	<imageobject><imagedata fileref="functionbargraph.gif" scalefit="0"
+		       width="3.08in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>This display graphs the values that the particular function had for
+      each thread along with the mean and standard deviation across the
+      threads.  You may also change the units and metric displayed from the
+      <emphasis>Options</emphasis> menu.
+    </para>
+    
+  </sect1>
+
+  <sect1 id="paraprof.function.histogram">
+
+    <title>Function Histogram</title> 
+
+    <figure> <title>Function Histogram</title>
+     <mediaobject>
+      <imageobject><imagedata fileref="functionhistogram.gif" scalefit="0"
+      width="3.80in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+    <para>This display shows a histogram of each thread's value for the given
+      function.  Hover the mouse over a given bar to see the range minimum and
+      maximum and how many threads fell into that range.  You may also change
+      the units and metric displayed from the <emphasis>Options</emphasis>
+      menu.
+    </para>
+
+    <para>
+      You may also dynamically change how many bins are used (1-100) in the
+      histogram.  This option is available from the
+      <emphasis>Options</emphasis> menu.  Changing the number of bins can
+      dramatically change the shape of the histogram, play around with it to
+      get a feel for the true distribution of the data.
+    </para>
+
+  </sect1>
+
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="Inference_Rules">
+    <title>Developing Inference Rules for Scripted Analysis</title>
+    <para>Coming soon...</para>
+</chapter>

@@ -1,0 +1,1281 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<chapter id="instrumentationOptions">
+  <title>TAU Instrumentation Options</title>
+	
+	<sect1>
+		<title>Selective Instrumentation Options</title>
+
+    <variablelist id="SelectiveProfilingOverview">
+      <formalpara>
+				<title>Selective Instrumentation File Specification</title>
+        <para>The selective instrumentation file has the following sections,
+			  each preceded and followed by:</para></formalpara>
+
+      <varlistentry><term><literal>BEGIN_EXCLUDE_LIST</literal> / 
+        <literal>END_EXCLUDE_LIST</literal> or <literal>BEGIN_INCLUDE_LIST</literal> / 
+        <literal>END_INCLUDE_LIST</literal> </term>
+        <listitem>
+          <para>
+            exclude/include list of routines and/or files for instrumentation. The
+            list of routines to be excluded from instrumentation is specified, one
+            per line, enclosed by <literal>BEGIN_EXCLUDE_LIST</literal> and
+            <literal>END_EXCLUDE_LIST</literal>. Instead of specifying which
+            routines should be excluded, the user can specify the list of routines
+            that are to be instrumented using the include list, one routine name per
+            line, enclosed by <literal>BEGIN_INCLUDE_LIST</literal> and
+            <literal>END_INCLUDE_LIST</literal>.
+          </para>
+        </listitem>
+      </varlistentry>  
+      <varlistentry><term><literal>BEGIN_FILE_EXCLUDE_LIST</literal> / 
+        <literal>END_FILE_EXCLUDE_LIST</literal> or <literal>BEGIN_FILE_INCLUDE_LIST</literal> / 
+        <literal>END_FILE_INCLUDE_LIST</literal> </term>
+        <listitem>
+          <para>
+            Similarly, files can be included or
+            excluded with the <literal>BEGIN_FILE_EXCLUDE_LIST, END_FILE_EXCLUDE_LIST,
+            BEGIN_FILE_INCLUDE_LIST, and END_FILE_INCLUDE_LIST </literal> lines. 
+		      </para>
+        </listitem>
+      </varlistentry> 
+      <varlistentry><term><literal>BEGIN_INSTRUMENT_SECTION</literal> /
+			  <literal>END_INSTRUMENT_SECTION</literal></term>
+        <listitem>
+          <para>Manually editing the selective instrumentation file gives you more
+            options. These tags allow you to control the type of instrumentation
+            performed in certain portions of your application.
+          </para>  
+				</listitem>
+      </varlistentry>      
+    </variablelist>        
+          <itemizedlist>
+            <listitem>
+              <para>Static and Dynamic timers can be set by specifying either
+              a range of line numbers or a routine.</para>
+              <screen>
+static timer name="foo_bar" file="foo.c" line=17 to line=18
+dynamic timer routine="int foo1(int)
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                Static and Dynamic phases can be set by specifying either a
+                range of line numbers or a routine. If you do not configure TAU
+                with <literal>-PROFILEPHASE</literal> these phases will be
+                converted to regular timers.
+              </para>
+              <screen>
+static phase routine="int foo(int)
+dynamic phase name="foo1_bar" file="foo.c" line=26 to line=27
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                Loops in the source code can be profiled by
+                specifying a routine in which all loop should be profiled, like:
+              </para>
+              <screen>
+loops file="loop_test.cpp" routine="multiply"
+              </screen>
+            </listitem>
+			      <listitem>
+              <para>
+                With <link linkend="memoryOptions">Memory Profiling</link> the following events are tracked: memory
+                allocation, memory deallocation, and memory leaks.
+              </para>
+              <screen>
+memory file="foo.f90" routine="INIT"
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                IO Events track the
+                size, in bytes of read, write, and print statements.
+              </para>
+              <screen>
+io file="foo.f90" routine="RINB"
+              </screen>
+            </listitem>
+          </itemizedlist>
+          <para>
+            Both Memory and IO
+            events are represented along with their call-stack; the length of which can
+            be set with environment variable
+            <literal>TAU_CALLPATH_DEPTH</literal>.
+          </para>  
+          <note> 
+            <para>
+              Due to the limitations of the some compilers (IBM xlf, PGI pgf90, GNU
+              gfortran),  the size of the memory reported for a Fortran Array is 
+              not the number of bytes but rather the number of elements. 
+            </para>
+          </note>
+   </sect1>
+  <sect1 id="RunningDynInstAIP">
+    <title>Running an application using DynInstAPI</title>
+    <para>TAU also allows you to dynamically instrument your application using
+		the DynInst package. There are a few limitation to DyInst: 1) only function
+		level events will be captured and 2) your application must be compiled with
+		debugging symbols (<literal>-g</literal>).</para>
+    <para>To install the DynInstAPI package, configure TAU with -dyinst= option
+		which will point TAU to where dyninst is installed. Use the
+		<literal>tau_run</literal> tool to instrument your application at runtime.</para>
+
+    <para>The command-line options accepted by tau_run are:</para>
+
+    <screen>
+Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
+       [-f &lt;instrumentation file&gt; ] &lt;application&gt; [args]
+</screen>
+
+    <para>By default, <literal>libTAU</literal>. so is loaded by
+    tau_run. However, the user can override this and specify another file
+    using the -Xrun&lt;Taulibrary&gt;. In this case lib&lt;Taulibrary&gt;.so
+    will be loaded using <literal>LD_LIBRARY_PATH</literal>. </para>
+	 
+
+    <para>To use <literal>tau_run</literal>, TAU is configured with
+    DyninstAPI as shown below:</para>
+
+    <screen>
+% configure -dyninst=/usr/local/packages/dyninstAPI
+% make install
+% cd tau/examples/dyninst
+% make install
+% tau_run klargest 2500 23
+% pprof; paraprof
+</screen>
+
+    <!--para>Support for new platforms and compilers is being added and this DyninstAPI 
+    option is experimental for now. </para> -->
+
+  </sect1>
+  <sect1 id="RewritingMaqao">
+    <title>Rewriting Binaries</title>
+    <sect2 id="Maqao">
+    <title>Using MAQAO</title>
+    <para>TAU also allows you to rewrite  your application using
+		the MAQAO package included in PDToolkit 3.17 or above(http://tau.uoregon.edu/pdt.tgz). 
+</para>
+    <para>Install PDToolkit 3.17+ and configure TAU with -pdt= option
+		which will point TAU to where PDToolkit is installed. Use the
+		<literal>tau_rewrite</literal> tool to instrument your application.
+		(If TAU is not configured with PDT 3.17+, then <literal>tau_rewrite</literal> 
+		defaults to tau_run.) 
+</para>
+
+    <screen>
+% configure -pdt=/usr/local/packages/pdtoolkit-3.17
+% make install
+% tau_rewrite -T scorep,pdt  -loadlib=/tmp/libfoo.so ./a.out -o a.inst 
+</screen>
+</sect2>
+<sect2 title="PEBIL">
+    <title>Using PEBIL</title>
+    <para>TAU also allows you to rewrite  your application using
+		the PEBIL package included in PDToolkit 3.18.1 or above(http://tau.uoregon.edu/pdt.tgz). 
+</para>
+    <para>Install PDToolkit 3.18.1 and configure TAU with -pdt= option
+		which will point TAU to where PDToolkit is installed. Use the
+		<literal>tau_pebil_rewrite</literal> tool to instrument your application.
+     </para>
+    <screen>
+% tau_pebil_rewrite -T &lt;commands&gt; -f select.tau &lt;exe&gt; [-o] &lt;output_exe&gt; 
+</screen>
+<para>
+The select.tau file  supports outer-loop level instrumentation and exclude/include lists of functions just like tau_instrumentor's select.tau (same format). 
+Also,	-T &lt;options&gt; are identical to tau_exec -T options.  
+</para>
+
+</sect2>
+  </sect1>
+  <sect1 id="ProfilingParam">
+    <title>Profiling each call to a function</title>
+    <para>
+      By default TAU profiles the total time (inclusive/exclusive) spent on a
+      given function. Profiling each function call  
+      for an application that calls some function hundred of thousands of
+      times, is impractical since the profile data would grow enormously. But
+      configuring TAU with the <literal>-PROFILEPARAM</literal> option will have
+      TAU profile select functions
+      each time they are called. But TAU will also 
+      group some of these function calls together according to the value of
+      the parameter they are given. For example if a function mpisend(int i) is called 2000
+      times 1000 times with 512 and 1000 times with 1024 then we will receive two
+      profile for mpisend() one we it is called with 512 and one when it is called with
+      1024. This reduces the overhead since we are profiling mpisend() two times not 2000
+      times.
+    </para>
+  </sect1>
+	<sect1>
+		<title>Profiling with Hardware counters</title>
+    <para>LIST OF COUNTERS:</para>
+
+    <para>Set the following values for the COUNTER&lt;1-25&gt; environment variables.</para>
+
+    <itemizedlist>
+
+      <listitem><para><literal>GET_TIME_OF_DAY</literal>    - For the default profiling option using gettimeofday()</para></listitem>
+
+      <listitem><para><literal>SGI_TIMERS</literal>         - For <literal>-SGITIMERS</literal> configuration option under IRIX</para></listitem>
+
+      <listitem><para><literal>CRAY_TIMERS</literal>   - For <literal>-CRAYTIMERS</literal> configuration option under Cray X1.</para></listitem>
+
+      <listitem><para><literal>LINUX_TIMERS</literal>       - For -LINUXTIMERS configuration option under Linux</para></listitem>
+
+      <listitem><para><literal>CPU_TIME</literal>           - For user+system time from getrusage() call with <literal>-CPUTIME</literal></para></listitem>
+
+      <listitem><para><literal>P_WALL_CLOCK_TIME</literal> - For PAPI's WALLCLOCK time using <literal>-PAPIWALLCLOCK</literal></para></listitem>
+
+      <listitem><para><literal>P_VIRTUAL_TIME</literal>     - For PAPI's process virtual time using <literal>-PAPIVIRTUAL</literal></para></listitem>
+
+      <listitem><para id="MUSE"><literal>TAU_MUSE</literal> - For reading counts of
+      Linux OS kernel level events when MAGNET/MUSE is installed and -muse
+      configuration option is enabled.
+      <ulink url="http://public.lanl.gov/radiant/">MUSE</ulink>.<literal>TAU_MUSE_PACKAGE</literal> environment variable has
+      to be set to package name (busy_time, count, etc.)</para></listitem>
+
+      <listitem><para><literal>TAU_MPI_MESSAGE_SIZE</literal> - For tracking
+      the cumulative message size for all MPI operations by a node for each
+      routine. </para></listitem>
+
+    </itemizedlist>
+
+      <note> <para>When TAU is configured with -TRACE -MULTIPLECOUNTERS and 
+      -papi=&lt;dir&gt; options, the COUNTER1 environment variable must be 
+      set to GET_TIME_OF_DAY to allow TAU's tracing module to use a globally
+      synchronized real-time clock for time-stamping event records. When we use
+      tracing with hardware performance counters, the counters specified in 
+      environment variables COUNTER[2-25] are accessed at routine transitions
+      and logged in the trace file. Use tau2vtf tool to convert TAU traces to 
+      VTF3 traces that may be loaded in the Vampir trace visualization tool. 
+      </para>
+      </note>
+
+
+      <para>and PAPI/PCL options that can be found in <xref
+      linkend="PAPI_TABLE" /> and <xref linkend="PCL_TABLE" />. Example:</para>
+
+      <itemizedlist>
+	
+	<listitem><para><literal>PCL_FP_INSTR</literal>       - For floating point operations using PCL (-pcl=&lt;dir&gt;)</para></listitem>
+
+	<listitem><para><literal>PAPI_FP_INS</literal>        - For floating point operations using PAPI (-papi=&lt;dir&gt;)</para></listitem>
+
+	<listitem><para><literal>PAPI_NATIVE_&lt;event&gt;</literal>        - For native papi events using PAPI (-papi=&lt;dir&gt;)</para></listitem>
+
+
+      </itemizedlist>
+
+    <para><emphasis>NOTE:</emphasis> When
+    <literal>-MULTIPLECOUNTERS</literal> is used with
+    <literal>-TRACE</literal> option, the tracing library uses the wall-clock
+    time from the function specified in the <literal>COUNTER1</literal>
+    variable. This should typically point to wall-clock time routines (such
+    as <literal>GET_TIME_OF_DAY or SGI_TIMERS</literal> or
+    <literal>LINUX_TIMERS</literal>).</para>
+
+    <para>Example:</para>
+
+    <screen>
+% setenv COUNTER1   P_WALL_CLOCK_TIME
+% setenv COUNTER2 PAPI_L1_DCM
+% setenv COUNTER3 PAPI_FP_INS
+</screen>
+
+    <para>will produce profile files in directories called <literal>MULT_P_WALL_CLOCK_TIME, MULTI__PAPI_L1_DCM, and MULTI_PAPI_FP_INS.</literal></para>
+
+
+    <table frame='all' id="PAPI_TABLE">
+      <title>Events measured by setting the environment variable TAU_METRICS in TAU</title>
+      <tgroup cols='2' align='left'>
+        <colspec colname='PAPI_Event'/>
+        <colspec colname='Measured'/>
+          <thead>
+            <row>
+              <entry>TAU_METRICS</entry>
+              <entry>EVENT Measured</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry align='left'>PAPI_L1_DCM</entry>
+              <entry align='left'>Level 1 data cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_ICM</entry>
+              <entry align='left'>Level 1 instruction cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_DCM</entry>
+              <entry align='left'>Level 2 data cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_ICM</entry>
+              <entry align='left'>Level 2 instruction cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_DCM</entry>
+              <entry align='left'>Level 3 data cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_ICM</entry>
+              <entry align='left'>Level 3 instruction cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_TCM</entry>
+              <entry align='left'>Level 1 total cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_TCM</entry>
+              <entry align='left'>Level 2 total cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_TCM</entry>
+              <entry align='left'>Level 3 total cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CA_SNP</entry>
+              <entry align='left'>Snoops</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CA_SHR</entry>
+              <entry align='left'>Request for access to shared cache line (SMP)</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CA_CLN</entry>
+              <entry align='left'>Request for access to clean cache line (SMP)</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CA_INV</entry>
+              <entry align='left'>Cache Line Invalidation (SMP)</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CA_ITV</entry>
+              <entry align='left'>Cache Line Intervention (SMP)</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_LDM</entry>
+              <entry align='left'>Level 3 load misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_STM</entry>
+              <entry align='left'>Level 3 store misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BRU_IDL</entry>
+              <entry align='left'>Cycles branch units are idle</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FXU_IDL</entry>
+              <entry align='left'>Cycles integer units are idle</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FPU_IDL</entry>
+              <entry align='left'>Cycles floating point units are idle</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_LSU_IDL</entry>
+              <entry align='left'>Cycles load/store units are idle</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TLB_DM</entry>
+              <entry align='left'>Data translation lookaside buffer misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TLB_IM</entry>
+              <entry align='left'>Instruction translation lookaside buffer misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TLB_TL</entry>
+              <entry align='left'> Total translation lookaside buffer misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_LDM</entry>
+              <entry align='left'>Level 1 load misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_STM</entry>
+              <entry align='left'>Level 1 store misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_LDM</entry>
+              <entry align='left'>Level 2 load misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_STM</entry>
+              <entry align='left'>Level 2 store misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BTAC_M</entry>
+              <entry align='left'>BTAC miss</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_PRF_DM</entry>
+              <entry align='left'>Prefetch data instruction caused a miss</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_DCH</entry>
+              <entry align='left'>Level 3 Data Cache Hit</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TLB_SD</entry>
+              <entry align='left'>Translation lookaside buffer shootdowns (SMP)</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CSR_FAL</entry>
+              <entry align='left'>Failed store conditional instructions</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CSR_SUC</entry>
+              <entry align='left'>Successful store conditional instructions</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_CSR_TOT</entry>
+              <entry align='left'>Total store conditional instructions</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_MEM_SCY</entry>
+              <entry align='left'>Cycles Stalled Waiting for Memory Access</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_MEM_RCY</entry>
+              <entry align='left'>Cycles Stalled Waiting for Memory Read</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_MEM_WCY</entry>
+              <entry align='left'>Cycles Stalled Waiting for Memory Write</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_STL_ICY</entry>
+              <entry align='left'>Cycles with No Instruction Issue</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FUL_ICY</entry>
+              <entry align='left'>Cycles with Maximum Instruction Issue</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_STL_CCY</entry>
+              <entry align='left'>Cycles with No Instruction Completion</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FUL_CCY</entry>
+              <entry align='left'>Cycles with Maximum Instruction Completion</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_HW_INT</entry>
+              <entry align='left'>Hardware interrupts</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_UCN</entry>
+              <entry align='left'>Unconditional branch instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_CN</entry>
+              <entry align='left'>Conditional branch instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_TKN</entry>
+              <entry align='left'>Conditional branch instructions taken</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_NTK</entry>
+              <entry align='left'>Conditional branch instructions not taken</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_MSP</entry>
+              <entry align='left'>Conditional branch instructions mispredicted</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_PRC</entry>
+              <entry align='left'>Conditional branch instructions correctly predicted</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FMA_INS</entry>
+              <entry align='left'>FMA instructions completed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TOT_IIS</entry>
+              <entry align='left'>Total instructions issued</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TOT_INS</entry>
+              <entry align='left'>Total instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_INT_INS</entry>
+              <entry align='left'>Integer instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FP_INS</entry>
+              <entry align='left'>Floating point instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_LD_INS</entry>
+              <entry align='left'>Load instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_SR_INS</entry>
+              <entry align='left'>Store instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_BR_INS</entry>
+              <entry align='left'>Total branch instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_VEC_INS</entry>
+              <entry align='left'>Vector/SIMD instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FLOPS</entry>
+              <entry align='left'>Floating Point Instructions executed per second</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_RES_STL</entry>
+              <entry align='left'>Cycles processor is stalled on resource</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FP_STAL</entry>
+              <entry align='left'>FP units are stalled</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_TOT_CYC</entry>
+              <entry align='left'>Total cycles</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_IPS</entry>
+              <entry align='left'>Instructions executed per second</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_LST_INS</entry>
+              <entry align='left'>Total load/store instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_SYC_INS</entry>
+              <entry align='left'>Synchronization instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_DCH</entry>
+              <entry align='left'>L1 D Cache Hit</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_DCH</entry>
+              <entry align='left'>L2 D Cache Hit</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_DCA</entry>
+              <entry align='left'>L1 D Cache Access</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_DCA</entry>
+              <entry align='left'>L2 D Cache Access</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_DCA</entry>
+              <entry align='left'>L3 D Cache Access</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_DCR</entry>
+              <entry align='left'>L1 D Cache Read</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_DCR</entry>
+              <entry align='left'>L2 D Cache Read</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_DCR</entry>
+              <entry align='left'>L3 D Cache Read</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_DCW</entry>
+              <entry align='left'>L1 D Cache Write</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_DCW</entry>
+              <entry align='left'>L2 D Cache Write</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_DCW</entry>
+              <entry align='left'>L3 D Cache Write</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_ICH</entry>
+              <entry align='left'>L1 instruction cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_ICH</entry>
+              <entry align='left'>L2 instruction cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_ICH</entry>
+              <entry align='left'>L3 instruction cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_ICA</entry>
+              <entry align='left'>L1 instruction cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_ICA</entry>
+              <entry align='left'>L2 instruction cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_ICA</entry>
+              <entry align='left'>L3 instruction cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_ICR</entry>
+              <entry align='left'>L1 instruction cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_ICR</entry>
+              <entry align='left'>L2 instruction cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_ICR</entry>
+              <entry align='left'>L3 instruction cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_ICW</entry>
+              <entry align='left'>L1 instruction cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_ICW</entry>
+              <entry align='left'>L2 instruction cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_ICW</entry>
+              <entry align='left'>L3 instruction cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_TCH</entry>
+              <entry align='left'>L1 total cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_TCH</entry>
+              <entry align='left'>L2 total cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_TCH</entry>
+              <entry align='left'>L3 total cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_TCA</entry>
+              <entry align='left'>L1 total cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_TCA</entry>
+              <entry align='left'>L2 total cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_TCA</entry>
+              <entry align='left'>L3 total cache accesses</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_TCR</entry>
+              <entry align='left'>L1 total cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_TCR</entry>
+              <entry align='left'>L2 total cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_TCR</entry>
+              <entry align='left'>L3 total cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L1_TCW</entry>
+              <entry align='left'>L1 total cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L2_TCW</entry>
+              <entry align='left'>L2 total cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_L3_TCW</entry>
+              <entry align='left'>L3 total cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FML_INS</entry>
+              <entry align='left'>FM ins</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FAD_INS</entry>
+              <entry align='left'>FA ins</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FDV_INS</entry>
+              <entry align='left'>FD ins</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FSQ_INS</entry>
+              <entry align='left'>FSq ins</entry>
+            </row>
+            <row>
+              <entry align='left'>PAPI_FNV_INS</entry>
+              <entry align='left'>Finv ins</entry>
+            </row>
+
+          </tbody>
+      </tgroup>
+    </table>
+    
+
+<para>
+ For example to measure the floating point operations in routines using
+ <literal>PCL</literal>,</para>
+
+    <screen>
+% ./configure -pcl=/usr/local/packages/pcl-1.2
+% setenv PCL_EVENT PCL_FP_INSTR 
+% mpirun -np 8 application
+</screen>
+
+    <table frame='all' id="PCL_TABLE">
+      <title>Events measured by setting the environment variable PCL_EVENT in TAU</title>
+      <tgroup cols='2' align='left'>
+        <colspec colname='Event'/>
+        <colspec colname='Measured'/>
+          <thead>
+            <row>
+              <entry>PCL_EVENT</entry>
+              <entry>EVENT Measured</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry align='left'>PCL_L1CACHE_READ</entry>
+              <entry align='left'>L1 (Level one) cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1CACHE_WRITE</entry>
+              <entry align='left'>L1 cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1CACHE_READWRITE</entry>
+              <entry align='left'>L1 cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1CACHE_HIT</entry>
+              <entry align='left'>L1 cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1CACHE_MISS</entry>
+              <entry align='left'>L1 cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_READ</entry>
+              <entry align='left'>L1 data cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_WRITE</entry>
+              <entry align='left'>L1 data cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_READWRITE</entry>
+              <entry align='left'>L1 data cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_HIT</entry>
+              <entry align='left'>L1 data cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_MISS</entry>
+              <entry align='left'>L1 data cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1ICACHE_READ</entry>
+              <entry align='left'>L1 instruction cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1ICACHE_WRITE</entry>
+              <entry align='left'>L1 instruction cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1ICACHE_READWRITE</entry>
+              <entry align='left'>L1 instruction cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1ICACHE_HIT</entry>
+              <entry align='left'>L1 instruction cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1ICACHE_MISS</entry>
+              <entry align='left'>L1 instruction cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2CACHE_READ</entry>
+              <entry align='left'>L2 (Level two) cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2CACHE_WRITE</entry>
+              <entry align='left'>L2 cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2CACHE_READWRITE</entry>
+              <entry align='left'>L2 cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2CACHE_HIT</entry>
+              <entry align='left'>L2 cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2CACHE_MISS</entry>
+              <entry align='left'>L2 cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_READ</entry>
+              <entry align='left'>L2 data cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_WRITE</entry>
+              <entry align='left'>L2 data cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_READWRITE</entry>
+              <entry align='left'>L2 data cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_HIT</entry>
+              <entry align='left'>L2 data cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_MISS</entry>
+              <entry align='left'>L2 data cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2ICACHE_READ</entry>
+              <entry align='left'>L2 instruction cache reads</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2ICACHE_WRITE</entry>
+              <entry align='left'>L2 instruction cache writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2ICACHE_READWRITE</entry>
+              <entry align='left'>L2 instruction cache reads and writes</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2ICACHE_HIT</entry>
+              <entry align='left'>L2 instruction cache hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2ICACHE_MISS</entry>
+              <entry align='left'>L2 instruction cache misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_TLB_HIT</entry>
+              <entry align='left'>TLB (Translation Lookaside Buffer) hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_TLB_MISS</entry>
+              <entry align='left'>TLB misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ITLB_HIT</entry>
+              <entry align='left'>Instruction TLB hits</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ITLB_MISS</entry>
+              <entry align='left'>Instruction TLB misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_DTLB_HIT</entry>
+              <entry align='left'>Data TLB hits</entry>
+            </row>           
+            <row>
+              <entry align='left'>PCL_DTLB_MISS</entry>
+              <entry align='left'>Data TLB misses</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_CYCLES</entry>
+              <entry align='left'>Cycles</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ELAPSED_CYCLES</entry>
+              <entry align='left'>Cycles elapsed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_INTEGER_INSTR</entry>
+              <entry align='left'>Integer instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_FP_INSTR</entry>
+              <entry align='left'>Floating point (FP) instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_LOAD_INSTR</entry>
+              <entry align='left'>Load instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STORE_INSTR</entry>
+              <entry align='left'>Store instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_LOADSTORE_INSTR</entry>
+              <entry align='left'>Loads and stores executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_INSTR</entry>
+              <entry align='left'>Instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_JUMP_SUCCESS</entry>
+              <entry align='left'>Successful jumps executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_JUMP_UNSUCCESS</entry>
+              <entry align='left'>Unsuccessful jumps executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_JUMP</entry>
+              <entry align='left'>Jumps executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ATOMIC_SUCCESS</entry>
+              <entry align='left'>Successful atomic instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ATOMIC_UNSUCCESS</entry>
+              <entry align='left'>Unsuccessful atomic instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_ATOMIC</entry>
+              <entry align='left'>Atomic instructions executed</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL_INTEGER</entry>
+              <entry align='left'>Integer stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL_FP</entry>
+              <entry align='left'>Floating point stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL_JUMP</entry>
+              <entry align='left'>Jump stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL_LOAD</entry>
+              <entry align='left'>Load stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL_STORE</entry>
+              <entry align='left'>Store Stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_STALL</entry>
+              <entry align='left'>Stalls</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_MFLOPS</entry>
+              <entry align='left'>Millions of floating point operations/second</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_IPC</entry>
+              <entry align='left'>Instructions executed per cycle</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L1DCACHE_MISSRATE</entry>
+              <entry align='left'>Level 1 data cache miss rate</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_L2DCACHE_MISSRATE</entry>
+              <entry align='left'>Level 2 data cache miss rate</entry>
+            </row>
+            <row>
+              <entry align='left'>PCL_MEM_FP_RATIO</entry>
+              <entry align='left'>Ratio of memory accesses to FP operations</entry>
+            </row>
+
+          </tbody>
+      </tgroup>
+    </table>
+
+  </sect1>
+
+  <sect1 id="HardwarePerformanceCounters">
+    <title>Using Hardware Performance Counters</title>
+
+    <para> While running the application, set the environment variable
+    <literal>PCL_EVENT</literal> or <literal>TAU_METRICS</literal>
+    , to specify which hardware performance counter TAU should
+    use while profiling the application.</para>
+
+    <note><para> By default, only one counter is tracked at a time.  To track
+    more than one counter use <literal>-MULTIPLECOUNTERS</literal>.  See <xref
+    linkend="MultipleHardwareCounters" /> for more details.  </para></note>
+
+
+    <para>To select floating point instructions for profiling using
+    <literal>PAPI</literal>, you would:</para>
+
+    <screen>
+% configure -papi=/usr/local/packages/papi-3.5.0
+% make clean install
+% cd examples/papi
+% setenv TAU_METRICS PAPI_FP_INS
+% a.out
+    </screen>
+
+    <para>
+      In addition to the following events, you can use native events (see
+      <command>papi_native</command>) on a given CPU by setting
+      <literal>TAU_</literal> to
+      <literal>PAPI_NATIVE_&lt;event&gt;</literal>.  For example:
+      <screen>
+% setenv PAPI_NATIVE PAPI_NATIVE_PM_BIQ_IDU_FULL_CYC
+% a.out
+      </screen>
+
+    </para>
+
+    <para>By default <literal>PAPI</literal> will profile events in all domains
+    (users space, kernel, hypervisor, etc). You can restrict the set of domains
+    for papi event profiling by using the
+    <literal>TAU_PAPI_DOMAIN</literal> environment variable with these values (in
+    a colon separated list, if desired): <literal>PAPI_DOM_USER,
+    PAPI_DOM_KERNEL, PAPI_DOM_SUPERVISOR,</literal> and
+    <literal>PAPI_DOM_OTHER</literal> like thus:
+    <screen>
+% setenv TAU_PAPI_DOMAIN PAPI_DOM_SUPERVISOR:PAPI_DOM_OTHER
+</screen>
+    </para>
+  </sect1>
+
+  
+  
+
+  
+  <sect1 id="PerfLib">
+    <title>Profiling with PerfLib</title>
+
+    <para>This profiling option is currently under development at LANL.</para>
+
+    <para>To configure TAU with PerfLib use the following arguments:
+    <screen>
+%> configure -perflib=[path_to_perflib lib directory]
+             -perfinc=[path_to_perflib inc directory]
+             -perflibrary=[argument send to the linker if different than default]
+</screen>
+    After tau is build a new Makefile will be generated with *-perflib-* in its
+    name, use this Makefile when profiling applications with perflib.
+    </para>
+    <para>After configuration and installation, toggle these three environment
+    variables before running the application:
+    <screen>
+%> export PERF_PROFILE=1
+%> export PERF_PROFILE_MPI=1
+%> export PERF_PROFILE_MEMORY=1
+%> export PERF_PROFILE_COUNTERS=1
+%> export PERF_DATA_DIRECTORY=&lt;directory&gt;
+</screen>
+    </para><para>We also provide a perf2tau conversion utilities to convert the
+    remaining perflib profiles to regular tau profiles. To use perf2tau set the
+    environment variable <literal>perf_data_directory</literal> to the
+    type of the profiling to be converted (the directory where the data is store
+    will be called something like perf_data.[type]/). Or you may execute
+    perf2tau with the type as an argument:
+    <screen>
+%> perf2tau [type]
+</screen>
+    </para>
+    <para>See also the man page for perf2tau, <xref linkend="perf2tau" />.
+    </para>
+  </sect1>
+  <sect1 id="RunningPython">
+    <title>Running a Python application with TAU</title>
+
+    <para>TAU can automatically instrument all Python routines when the
+    tau python package is imported.  Add &lt;TAUROOT&gt;/&lt;ARCH&gt;/lib/bindings-&lt;options&gt; to the PYTHONPATH environment variable in order to use the TAU module.</para>
+
+    <para>To execute the program, tau.run routine is invoked with the name of
+    the top level Python code. For e.g.,</para>
+
+    <screen>
+#!/usr/bin/env python
+
+import tau
+from time import sleep
+
+def f2():
+    print "Inside f2: sleeping for 2 secs..."
+    sleep(2)
+def f1():
+    print "Inside f1, calling f2..."
+    f2()
+
+def OurMain():
+    f1()
+
+tau.run('OurMain()')
+</screen>
+
+    <para>instruments routines <literal>OurMain(), f1() and
+    f2()</literal> although there are no instrumentation calls in the
+    routines. To use this feature, TAU must be configured with the
+    -pythoninc=&lt;dir&gt; option (and -pythonlib=&lt;dir&gt; if running
+    under IBM). Before running the application, the environment variable
+    <literal>PYTHONPATH</literal> and <literal>LD_LIBRARY_PATH</literal> should be set to include the TAU library
+    directory (where tau.py is stored). Manual instrumentation of Python
+    sources is also possible using the Python API and the
+    <literal>pytau</literal> package. For e.g.,</para>
+
+    <screen>
+
+#!/usr/bin/env python
+
+import pytau
+from time import sleep
+
+x = pytau.profileTimer("A Sleep for excl 5 secs")
+y = pytau.profileTimer("B Sleep for excl 2 secs")
+pytau.start(x)
+print "Sleeping for 5 secs ..."
+sleep(5)
+pytau.start(y)
+print "Sleeping for 2 secs ..."
+sleep(2)
+pytau.stop(y)
+pytau.dbDump()
+pytau.stop(x)
+</screen>
+
+     <para>shows how two timers x and y are created and used. Note,
+     multiple timers can be nested, but not overlapping. Overlapping timers
+     are detected by TAU at runtime and flagged with a warning (as exclusive
+     time is not defined when timers overlap).</para>
+
+  </sect1>
+
+  <sect1 id="pprof">
+    <title>pprof</title>
+
+    <para>pprof sorts and displays profile data generated by TAU. To
+    view the profile, merely execute pprof in the directory where profile
+    files are located (or set the <literal>PROFILEDIR</literal> environment
+    variable).</para>
+
+    <screen>
+% pprof
+</screen>
+   
+    <para>Its usage is explained below:</para>
+
+     <screen>
+usage: pprof [-c|-b|-m|-t|-e|-i] [-r] [-s] [-n num] [-f filename] \
+       [-l] [node numbers]
+  -c : Sort by number of Calls
+  -b : Sort by number of suBroutines called by a function
+  -m : Sort by Milliseconds (exclusive time total)
+  -t : Sort by Total milliseconds (inclusive time total) (DEFAULT)
+  -e : Sort by Exclusive time per call (msec/call)
+  -i : Sort by Inclusive time per call (total msec/call)
+  -v : Sort by standard deViation (excl usec)
+  -r : Reverse sorting order
+  -s : print only Summary profile information
+  -n num : print only first num functions
+  -f filename : specify full path and Filename without node ids 
+  -p : suPpress conversion to hh:mm:ss:mmm format
+  -l : List all functions and exit 
+  -d : Dump output format (for Racy) [node numbers] : prints only info about
+	all contexts/threads of given node numbers
+ node numbers : prints information about all contexts/threads 
+ for specified nodes
+</screen>
+
+  </sect1>
+  
+    <sect1 id="RunningJAVA">
+    <title>Running a JAVA application with TAU</title>
+
+    <para>Java applications are profiled/traced using <literal>tau_java</literal> as shown below:</para>
+
+    <screen>
+% cd tau/examples/java/pi
+% setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH:&lt;tauroot&gt;/&lt;arch&gt;/lib
+% tau_java  Pi
+</screen>
+<para> More information about <literal>tau_java</literal> can be found
+  in the Tools section of the Reference Guide. </para>
+    <para>Running the application generates profile files with names
+    having the form profile.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.
+    These files can be analyzed using pprof or paraprof.</para>
+
+  </sect1>
+    <sect1 id="UsingTauConf">
+    <title>Using a tau.conf File</title>
+
+    <para>If a tau.conf file is created, then code that uses that TAU lib will effected by the
+     settings in tau.conf.  For example, if a directory tau-2.21/tau_system_defaults is created and  
+     a tau.conf file is placed in  it, TAU will read that file before doing the measurements. A user 
+     of that TAU libs  can choose to override the contents of that file by placing a tau.conf in their 
+     own directory. But by default, if the sysadmin chooses to create this dir, all the users of the 
+     TAU libs will be globally affected by this tau.conf. 
+
+    </para>
+    <para>For example, tau.conf could be:
+    </para>
+
+    <screen>
+% cat tau.conf
+TAU_LOG_PATH=/soft/apps/tau/logs
+PROFILEDIR=$TAU_LOG_DIR
+TAU_PROFILE_FORMAT=merged
+TAU_SUMMARY=1
+TAU_IBM_BG_HWP_COUNTERS=1
+TAU_TRACK_MESSAGE=1
+    </screen>
+    <para>
+Then anyone using TAU from that directory will get TAU_IBM_BG_HWP_COUNTERS=1, TAU_TRACK_MESSAGE=1, etc.
+    </para>
+
+  </sect1>
+    <sect1 id="UsingScoreP">
+    <title>Using Score-P with TAU</title>
+
+    <para>TAU can be configured to use the  Score-P measurement infrastructure (www.score-p.org).
+          To use Score-P, configure TAU with <literal>-scorep=</literal> option to point TAU to the Score-P
+          installation.  (Please use Score-P version 1.0 beta or above.) You may then instrument and run your
+          application with TAU in a manor of your choosing.  
+    </para>
+    <para>  Set the environment variable SCOREP_PROFILING_FORMAT to TAU_SNAPSHOT to produce TAU Snapshot files, 
+             which will be found in scorep*/tau/.  Also, the Score-P library must be found in LD_LIBRARY_PATH.
+ 
+    </para>
+  </sect1>
+    <sect1 id="UsingUPC">
+    <title>Using UPC  with TAU</title>
+    <para> Please see examples/upc for more details. 
+ </para>
+    <para>To instrument Berkeley UPC with GASP, configure TAU with <literal>-upcnetwork=&lt;option&gt;</literal> 
+where option is "mpi" or "udp". Then use a selective instrumentation file like the one shown below. 
+    </para>
+    <screen>
+BEGIN_INSTRUMENT_SECTION
+forall routine="#"
+loops routine="#"
+barrier routine="#"
+fence routine="#"
+notify routine="#"
+END_INSTRUMENT_SECTION
+</screen>
+<para> Then tau_upc.sh can be used to build the application. If "udp" is used
+with -upcnetwork, then upcrun can be used to run the application. For
+"mpi", mpirun or a similar mechanism can be used.
+</para>
+    <para>To instrument UPC with Cray CCE compilers, the following will produce a configuration that supports Cray UPC and may be used with tau_upc.sh
+    </para>
+<screen>
+module load PrgEnv-cray
+./configure -arch=craycnl -pdt=&lt;dir&gt; -pdt_c++=g++
+</screen>
+<para>
+TAU can also build the DMAPP wrapper using Cray CCE compilers. When
+the -optDMAPP option is used when building the application with TAU
+using TAU_OPTIONS, DMAPP events are automatically instrumented with
+tau_upc.sh.</para>
+  </sect1>
+</chapter>

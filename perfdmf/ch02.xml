@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="taudb.using">
+  
+  <title>Using TAUdb</title>
+  
+    <para>The easiest way to interact with TAUdb is to use ParaProf which
+    provides a GUI interface to all of the database information.  In addition,
+    the following commandline utilities are provided.
+    </para>
+  
+  
+  <sect1 id="perfdmf.createapp">
+    
+    <title>perfdmf_createapp (deprecated - only supported for older PerfDMF databases)</title>
+    
+    <para>This utility creates applications with a given name</para>
+    <screen>$ perfdmf_createapp -n "New Application"
+Created Application, ID: 24</screen>
+    
+
+  </sect1>
+
+
+  <sect1 id="perfdmf.createexp">
+    
+    <title>perfdmf_createexp (deprecated - only supported for older PerfDMF databases)</title>
+    
+    <para>This utility creates experiments with a given name, under a specified application</para>
+    <screen>$ perfdmf_createexp -a 24 -n "New Experiment"
+Created Experiment, ID: 38</screen>
+
+  </sect1>
+
+  <sect1 id="taudb.loadtrial">
+    
+    <title>taudb_loadtrial</title>
+    
+    <para>This utility uploads a trial to the database with a given name, under
+    a specified experiment</para>
+
+    <screen>
+$ taudb_loadtrial -h
+Usage: perfdmf_loadtrial -a &lt;appName&gt; -x &lt;expName&gt; -n &lt;name&gt; 
+[options] &lt;files&gt;
+
+Required Arguments:
+
+  -n, --name &lt;text&gt;              Specify the name of the trial
+  -a, --applicationname &lt;string&gt; Specify associated application name
+                                 for this trial
+  -x, --experimentname &lt;string&gt;  Specify associated experiment name
+                                 for this trial
+               ...or...
+
+  -n, --name &lt;text&gt;              Specify the name of the trial
+  -e, --experimentid &lt;number&gt;    Specify associated experiment ID
+                                 for this trial
+
+Optional Arguments:
+
+  -c, --config &lt;name&gt;       Specify the name of the configuration to use
+  -g, --configFile &lt;file&gt;   Specify the configuration file to use
+                            (overrides -c)
+  -f, --filetype &lt;filetype&gt; Specify type of performance data, options 
+                            are: profiles (default), pprof, dynaprof, 
+                            mpip, gprof, psrun, hpm, packed, cube, 
+                            hpc, ompp, snap, perixml, gptl, paraver, 
+                            ipm, google
+  -t, --trialid &lt;number&gt;    Specify trial ID
+  -i, --fixnames            Use the fixnames option for gprof
+  -z, --usenull             Include NULL values as 0 for mean 
+                            calculation
+  -r, --reduce &lt;percentage&gt; Aggregate all timers less than percentage 
+                            as "other"
+  -m, --metadata &lt;filename&gt; XML metadata for the trial
+
+Notes:
+  For the TAU profiles type, you can specify either a specific set 
+of profile files on the commandline, or you can specify a directory 
+(by default the current directory).  The specified directory will be 
+searched for profile.*.*.* files, or, in the case of multiple counters, 
+directories named MULTI_* containing profile data.
+
+Examples:
+
+  perfdmf_loadtrial -e 12 -n "Batch 001"
+    This will load profile.* (or multiple counters directories 
+    MULTI_*) into experiment 12 and give the trial the name 
+    "Batch 001"
+
+  perfdmf_loadtrial -e 12 -n "HPM data 01" -f hpm perfhpm*
+    This will load perfhpm* files of type HPMToolkit into experiment 
+    12 and give the trial the name "HPM data 01"
+
+  perfdmf_loadtrial -a "NPB2.3" -x "parametric" -n "64" par64.ppk
+    This will load packed profile par64.ppk into the experiment named
+    "parametric" under the application named "NPB2.3" and give the 
+    trial the name "64".  The application and experiment will be 
+    created if not found.
+  </screen>
+
+  <para>TAUdb supports a large number of parallel profile formats:</para>
+  <!--  This is an include, because it is also used in ParaProf manual -->
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="dataformats.xml" />
+
+  </sect1>
+
+  <sect1 id="taudb.views">
+    
+    <title>TAUdb Views</title>
+	<para>In order to provide flexible data management, the application /
+	experiment / trial hierarchy was removed in the conversion from PerfDMF to
+	TAUdb. In addition, trial metadata was promoted from an XML blob in PerfDMF
+	to queryable tables. Users can now organize their data in arbitrary
+	hierarchies using Views and SubViews.  Creating and using Views is outlined
+	in the ParaProf User Manual, in Chapter 2.
+	</para>
+    
+  </sect1>
+
+  
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

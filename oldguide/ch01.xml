@@ -1,0 +1,984 @@
+<chapter id="tau.installation">
+
+  <title>Installation</title>
+
+  <simplesect>
+      <para> TAU (Tuning and Analysis Utilities) is a portable profiling and 
+      tracing toolkit for performance analysis of parallel programs written 
+      in Java, C++, C, and Fortran.  The model that TAU uses to profile 
+      parallel, multi-threaded programs maintains performance data for each 
+      thread, context, and node in use by an application. The profiling 
+      instrumentation needed to implement the model captures data for 
+      functions, methods, basic blocks, and statement execution at these 
+      levels. All C++ language features are supported in the TAU profiling 
+      instrumentation including templates and namespaces, which is available 
+      through an API at the library or application level. The API also 
+      provides selection of profiling groups for organizing and controlling 
+      instrumentation. The instrumentation can be inserted in the source code 
+      using an automatic instrumentor tool based on the Program Database 
+      Toolkit (PDT), dynamically using DyninstAPI, at runtime in the Java 
+      virtual machine, or manually using the instrumentation API.  TAU's 
+      profile visualization tool, paraprof, provides graphical displays of 
+      all the performance analysis results, in aggregate and single 
+      node/context/thread forms.  The user can quickly identify sources of 
+      performance bottlenecks in the application using the graphical 
+      interface. In addition, TAU can generate event traces that can be 
+      displayed with the Vampir or Paraver trace visualization tools.  
+      This chapter discusses installation of the TAU portable profiling 
+      package.</para>
+  </simplesect>
+
+  <sect1 id="installing.tau">
+    
+    <title>Installing TAU</title>
+
+    <para> After uncompressing and untarring TAU, the user needs to configure, 
+    compile and install the package. This is done by invoking: </para>
+
+    <screen>
+% ./configure
+% make install
+</screen>
+
+    <para>TAU is configured by running the configure script with appropriate 
+    options that select the profiling and tracing components that are used to 
+    build the TAU library.  The `configure' shell script attempts to guess 
+    correct values for various system-dependent variables used during 
+    compilation, and creates the Makefile(s) (one in each subdirectory of the 
+    source directory).</para>
+
+    <para>The following command-line options are available to configure:</para>
+
+    <sect2>
+      <title>Available configuration options</title>
+      
+      <itemizedlist>
+
+      <listitem>
+
+        <literal>-prefix=&lt;directory&gt;</literal>
+
+        <para>Specifies the destination directory where the header, library and 
+        binary files are copied. By default, these are copied to subdirectories 
+        &lt;arch&gt;/bin and &lt;arch&gt;/lib in the TAU root directory.</para>
+
+      </listitem>
+
+      <listitem>
+        <literal>-arch=&lt;architecture&gt;</literal>
+
+        <para>Specifies the architecture. If the user does not 
+        specify this option, configure determines the architecture. 
+        For SGI, the user can specify either of sgi32, sgin32 or 
+        sgi64 for 32, n32 or 64 bit compilation modes respectively. 
+        The files are installed in the &lt;architecture&gt;/bin and 
+        &lt;architecture&gt;/lib directories.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-c++=&lt;C++ compiler&gt;</literal>
+
+        <para>Specifies the name of the C++ compiler. Supported C++ 
+        compilers include KCC (from KAI/Intel), CC (SGI, Sun), g++ 
+        (from GNU), FCC (from Fujitsu), xlC (from IBM), guidec++ 
+        (from KAI/Intel), cxx (Tru64) and aCC (from HP), c++ (from Apple), 
+        icpc and ecpc (from Intel) and pgCC (from PGI).</para>
+
+      </listitem>
+
+      <listitem>
+        <literal>-cc=&lt;C Compiler&gt;</literal>
+
+        <para> Specifies the name of the C compiler. Supported C 
+        compilers include cc, gcc (from GNU), pgcc (from PGI), 
+        fcc (from Fujitsu), xlc (from IBM), and KCC (from KAI/ Intel), 
+        icc and ecc (from Intel).</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-pdt_c++=&lt;C++ Compiler&gt;</literal>
+
+        <para>Specifies a different C++ compiler for PDT (tau_instrumentor). 
+        This is typically used when the library is compiled with a C++ 
+        compiler (specified with -c++) and the tau_instrumentor is compiled 
+        with a different &lt;pdt_c++&gt; compiler. For e.g., </para>
+
+
+        <screen>
+-c++=pgCC -cc=pgcc -pdt_c++=KCC -openmp ...
+</screen>
+
+        <para>uses PGI's OpenMP compilers for TAU's library and KCC for 
+        tau_instrumentor.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-fortran=&lt;Fortran Compiler&gt;</literal>
+
+        <para>Specifies the name of the Fortran90 compiler. Valid options are: 
+        gnu, sgi, ibm, ibm64, hp, cray, pgi, absoft, fujitsu, sun, kai, nec, 
+        hitachi, compaq, and intel.</para>
+
+      </listitem>
+      
+      <listitem>
+
+        <literal>-tag=&lt;Unique Name&gt;</literal>
+
+        <para>Specifies a tag in the name of the stub Makefile and TAU makefiles to uniquely identify the installation. This is useful when more than one MPI library may be used with different versions of compilers. e.g.,</para>
+	
+	<screen> 
+	% configure -c++=icpc -cc=icc -tag=intel71-vmi -mpiinc=/vmi2/mpich/include
+	</screen>
+
+      </listitem>
+      
+      <listitem>
+        <literal>-pthread</literal>
+
+        <para>Specifies pthread as the thread package to be used. In the 
+        default mode, no thread package is used.</para>
+
+      </listitem>
+
+      <listitem>
+        <literal>-charm=&lt;directory&gt;</literal>
+
+        <para>Specifies charm++ (converse) threads as the thread package to be used.</para>
+
+      </listitem>
+      
+      <listitem>
+        <literal>-tulipthread=&lt;directory&gt; -smarts</literal>
+
+        <para>Specifies SMARTS (Shared Memory Asynchronous Runtime System) 
+        as the threads package to be used. &lt;directory&gt; gives the 
+        location of the SMARTS root directory. [SMARTS-URL]</para>
+
+      </listitem>
+
+      <listitem>
+        <literal>-openmp</literal>
+
+        <para>Specifies OpenMP as the threads package to be used.
+        [OPENMP-URL]</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-opari=&lt;dir&gt;</literal>
+
+        <para>Specifies the location of the Opari OpenMP directive rewriting 
+        tool.  The use of Opari source-to-source instrumentor in conjunction 
+        with TAU exposes OpenMP events for instrumentation. See 
+        examples/opari directory.  [OPARI-URL]   Note: There are two versions 
+        of Opari: standalone - (opari-pomp-1.1.tar.gz) and the newer KOJAK - 
+        kojak-&lt;ver&gt;.tar.gz opari/ directory. Please upgrade to the 
+        KOJAK version (especially if you're using IBM xlf90) and specify 
+        -opari=&lt;kojak-dir&gt;/opari while configuring TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-opari_region</literal>
+
+        <para>Report performance data for only OpenMP regions and not 
+        constructs.  By default, both regions and constructs are profiled 
+        with Opari.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-opari_construct</literal>
+
+        <para>Report performance data for only OpenMP constructs and not 
+        Regions.  By default, both regions and constructs are profiled with 
+        Opari.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-pdt=&lt;directory&gt;</literal>
+
+        <para>Specifies the location of the installed PDT (Program Database 
+        Toolkit) root direc- tory. PDT is used to build tau_instrumentor, 
+        a C++, C and F90 instrumentation program that automatically inserts 
+        TAU annotations in the source code [PDT-URL].  If PDT is configured 
+        with a subdirectory option (-compdir=&lt;opt&gt;) then TAU can be 
+        configured with the same option by specifying </para>
+
+        <screen>
+-pdt=&lt;dir&gt; -pdtcompdir=&lt;opt&gt;. 
+</screen>
+
+      </listitem>
+
+      <listitem>
+        <literal>-pcl=&lt;directory&gt;</literal>
+
+        <para>Specifies the location of the installed PCL (Performance 
+        Counter Library) root directory. PCL provides a common interface 
+        to access hardware performance counters on modern microprocessors. 
+        The library supports Sun UltraSparc I/II, PowerPC 604e under AIX, 
+        MIPS R10000/12000 under IRIX, Compaq Alpha 21164, 21264 under 
+        Tru64Unix and Cray Unicos (T3E) and the Intel Pentium family of 
+        microprocessors under Linux. This option specifies the use of 
+        hardware performance counters for profiling (instead of time). 
+        To measure floating point instructions, set the environment 
+        variable PCL_EVENT to PCL_FP_INSTR (for example). See the section 
+        "Using Hardware Performance Counters" in Chapter 4 for details 
+        regarding its usage. [PCL-URL]</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-papi=&lt;directory&gt;</literal>
+
+        <para>Specifies the location of the installed PAPI (Performance 
+        Data Standard and API) root directory. PCL provides a common 
+        interface to access hardware performance counters and timers on 
+        modern microprocessors. Most modern CPUs provide on-chip hardware 
+        performance counters that can record several events such as the 
+        number of instructions issued, floating point operations performed, 
+        the number of primary and secondary data and instruction cache misses, 
+        etc. To measure floating point instructions, set the environment 
+        variable PAPI_EVENT to PAPI_FP_INS (for example). This option (by 
+        default) specifies the use of hardware performance counters for 
+        profiling (instead of time). When used in conjunction with 
+        -PAPIWALLCLOCK or -PAPIVIRTUAL, it specifies the use of wallclock 
+        or virtual process timers respectively. See the section "Using 
+        Hardware Performance Counters" in Chapter 4 for details regarding 
+        its usage. [PAPI-URL]</para>
+
+      </listitem>
+
+      <listitem>
+        
+        <literal>-PAPIWALLCLOCK</literal>
+
+        <para>When used in conjunction with the -papi=&lt;dir&gt; option, 
+        this option allows TAU to use high resolution, low overhead CPU 
+        timers for wallclock time based measure- ments. This can reduce 
+        the TAU overhead for accessing wallclock time for profile and 
+        trace measurements. (See NOTE below.)</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-PAPIVIRTUAL</literal>
+
+        <para>When used in conjunction with the -papi=&lt;dir&gt; option, 
+        this option allows TAU to use the process virtual time (time spent 
+        in the "user" mode) for profile measure- ments, instead of the 
+        default wallclock time. (See NOTE below.)</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-CPUTIME</literal>
+
+        <para>Specifies the use of user+ system time (collectively CPU time) 
+        for profile measurements, instead of the default wallclock time. This 
+        may be used with multi-threaded programs only under the LINUX 
+        operating system which provides bound threads.  On other platforms, 
+        this option may be used for profiling single-threaded programs 
+        only.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-MULTIPLECOUNTERS</literal>
+
+        <para>Allows TAU to track more than one quantity (multiple hardware 
+        counters, CPU- time, wallclock time, etc.) Configure with other 
+        options such as -papi=&lt;dir&gt;,   - pcl=&lt;dir&gt;, -LINUXTIMERS, 
+        -SGITIMERS, -CPUTIME, -PAPIVIRTUAL, etc.  See Section "Using Multiple 
+        Hardware Counters" in Chapter 4 for detailed instruc- tions on setting 
+        the environment variables COUNTER&lt;1-25&gt; for this option. If - 
+        MULTIPLECOUNTERS is used with the -TRACE option, tracing employs 
+        the COUNTER1 environment variable for wallclock time.</para>
+
+        <para>NOTE: The default measurement option in TAU is to use the 
+        wallclock time, which is the total time a program takes to execute, 
+        including the time when it is waiting for resources. It is the time 
+        measured from a real-time clock. The process virtual time 
+        (-PAPIVIRTUAL) is the time spent when the process is actually running. 
+        It does not include the time spent when the process is swapped out 
+        waiting for CPU or other resources and it does not include the time 
+        spent on behalf of the operating system (for executing a system call, 
+        for instance). It is the time spent in the "user" mode. The CPUTIME 
+        on the other hand, includes both the time the process is running 
+        (process virtual time) and the time the system is providing services 
+        for it (such as executing a system call). It is the sum of the 
+        process virtual (user) time and the system time (See man 
+        getrusage()).</para>
+
+      </listitem>
+
+      <listitem>
+
+        <literal>-jdk=&lt;directory&gt;</literal>
+
+        <para>Specifies the location of the installed Java 2 Development 
+        Kit (JDK1.2+) root directory. TAU can profile or trace Java 
+        applications without any modifications to the source code, byte-code 
+        or the Java virtual machine. See README.JAVA on instructions on 
+        using TAU with Java 2 applications. This option should only be used 
+        for configuring TAU to use JVMPI for profiling and tracing of Java 
+        applica- tions. It should not be used for configuring paraprof, 
+        which uses java from the user's path.</para>
+	
+      </listitem>
+
+      <listitem>
+
+        <literal>-dyninst=&lt;dir&gt;</literal>
+
+        <para>Specifies the directory where the DynInst dynamic 
+        instrumentation package is installed. Using DynInst, a user can 
+        invoke tau_run to instrument an executable program at runtime or 
+        prior to execution by rewriting it. 
+        [DYNINST-URL][PARA- DYN-URL].</para>
+
+      </listitem>
+      
+      
+      
+      <listitem>
+        <literal>-vtf=&lt;directory&gt;</literal>
+          <para>
+   Specifies the location of the VTF3 trace generation package. TAU's binary
+   traces can be converted to the VTF3 format using tau2vtf, a tool that links
+   with the VTF3 library. The VTF3 format is read by Intel trace analyzer, 
+   formerly known as vampir, a commercial trace visualization tool developed
+   by TU. Dresden, Germany.
+        </para>
+      </listitem>      
+      
+      <listitem>
+        <literal>-slog2=&lt;directory&gt;</literal>
+          <para>
+   Specifies the location of the SLOG2 SDK trace generation package. TAU's
+   binary traces can be converted to the SLOG2 format using tau2slog2, a tool
+   that uses the SLOG2 SDK. The SLOG2 format is read by the Jumpshot4 trace
+   visualization software, a freely available trace visualizer from Argonne National Laboratories.
+   [Ref: http://www-unix.mcs.anl.gov/perfvis/download/index.htm#slog2sdk]
+        </para>
+      </listitem>       
+      
+      
+      <listitem>
+        <literal>-slog2</literal>
+          <para>
+   Specifies the use of the SLOG2 trace generation package and the Jumpshot 
+   trace visualizer that is bundled with TAU. Jumpshot v4 and SLOG2 v1.2.5delta
+   are included in the TAU distribution. When the -slog2 flag is specified,
+   tau2slog2 and jumpshot tools are copied to the &lt;tau&gt;/&lt;arch&gt;/&lt;bin&gt; directory.
+   It is important to have a working javac and java (preferably v1.4+) in your
+   path. On linux systems, where /usr/bin/java may be a place holder, you'll
+   need to modify your path accordingly.
+        </para>
+      </listitem>           
+      
+      
+      <listitem>
+      <literal>-mpiinc=&lt;dir&gt;</literal>
+
+        <para>Specifies the directory where MPI header files reside (such as 
+        mpi.h and mpif.h).  This option also generates the TAU MPI wrapper 
+        library that instruments MPI rou- tines using the MPI Profiling 
+        Interface. See the examples/NPB2.3/config/make.def file for its 
+        usage with Fortran and MPI programs. [MPI-URL]</para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-mpilib=&lt;dir&gt;</literal>
+
+      <para>Specifies the directory where MPI library files reside. This 
+      option should be used in conjunction with the -mpiinc=&lt;dir&gt; 
+      option to generate the TAU MPI wrapper library. </para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-mpilibrary=&lt;lib&gt;</literal>
+
+      <para>Specifies the use of a different MPI library. By default, TAU uses
+      -lmpi or -lmpich as the MPI library. This option allows the user to 
+      specify another library. e.g., - mpilibrary=-lmpi_r for specifying a 
+      thread-safe MPI library.</para>
+
+    </listitem>
+
+    
+    <listitem>
+      <literal>-shmeminc=&lt;dir&gt;</literal>
+      <para>Specifies the directory where shmem.h resides. Specifies the use of the TAU SHMEM interface.</para>
+    </listitem>
+    
+    <listitem>
+      <literal>-shmemlib=&lt;dir&gt;</literal>
+      <para>Specifies the directory where libsma.a resides. Specifies the use of the TAU SHMEM interface.</para>
+    </listitem>    
+    
+    <listitem>
+      <literal>-shmemlibrary=&lt;lib&gt;</literal>
+      <para>By default, TAU uses -lsma as the shmem/pshmem library. This option allows the user to specify a different shmem library.</para>
+    </listitem>      
+    
+    <listitem>
+
+      <literal>-nocomm</literal>
+
+      <para>Allows the user to turn off tracking of messages 
+      (synchronous/asynchronous) in TAU's MPI wrapper interposition 
+      library. Entry and exit events for MPI routines are still tracked. 
+      Affects both profiling and tracing.</para>
+
+    </listitem>
+
+    <listitem>
+      
+      <literal>-epilog=&lt;dir&gt;</literal>
+
+      <para>Specifies the directory where the EPILOG tracing package 
+      [EPILOG-URL] is installed.This option should be used in conjunction with 
+      the -TRACE option to gen- erate binary EPILOG traces (instead of 
+      binary TAU traces). EPILOG traces can then be used with other tools 
+      such as EXPERT. EPILOG comes with its own imple- mentation of the 
+      MPI wrapper library and the POMP library used with Opari. Using option 
+      overrides TAU's libraries for MPI, and OpenMP.</para>
+
+    </listitem>
+
+    
+    <listitem>
+      <literal>-MPITRACE</literal>
+      <para>Specifies the tracing option and generates event traces for MPI calls and routines that are ancestors of MPI calls in the callstack. This option is useful for generating traces that are converted to the EPILOG trace format.  KOJAK's Expert automatic diagnosis tool needs traces with events that call MPI routines. Do not use this option with the -TRACE option. </para>
+    </listitem>
+    
+    
+    <listitem>
+
+      <literal>-pythoninc=&lt;dir&gt;</literal>
+
+      <para>Specifies the location of the Python include directory. This is 
+      the directory   where Python.h header file is located. This option 
+      enables python bindings to be gener- ated. The user should set the 
+      environment variable PYTHONPATH to 
+      &lt;TAUROOT&gt;/&lt;ARCH&gt;/lib/bindings-&lt;options&gt; to use a 
+      specific version of the TAU Python bindings. By importing package pytau, 
+      a user can manually instrument the source code and use the TAU API. On 
+      the other hand, by importing tau and using tau.run(`&lt;func&gt;'), 
+      TAU can automatically generate instrumentation. See examples/python 
+      directory for further information.</para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-pythonlib=&lt;dir&gt;</literal>
+
+      <para>Specifies the location of the Python lib directory. This is the 
+      directory where *.py and *.pyc files (and config directory) are located. 
+      This option is mandatory for IBM when Python bindings are used. For other
+      systems, this option may not be specified (but -pythoninc=&lt;dir&gt; 
+      needs to be specified).</para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-PROFILE</literal>
+
+      <para>This is the default option; it specifies summary profile files to 
+      be generated at the end of execution. Profiling generates aggregate 
+      statistics (such as the total time spent in routines and statements), 
+      and can be used in conjunction with the profile browser racy to analyze 
+      the performance. Wallclock time is used for profiling program 
+      entities.</para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-PROFILECALLPATH</literal>
+
+      <para>This option generates call path profiles which shows the time 
+      spent in a routine when it is called by another routine in the calling 
+      path. "a =&gt; b" stands for the time spent in routine "b" when it is 
+      invoked by routine "a". This option is an extension of -PROFILE, the 
+      default profiling option.  Specifying TAU_CALLPATH_DEPTH environment 
+      variable, the user can vary the depth of the callpath. See 
+      examples/calltree for further information.</para>
+
+    </listitem>
+
+    <listitem>
+      <literal>-PROFILEPHASE</literal>
+      <para>This option generates phase based profiles. It requires special instrumentation
+   to mark phases in an application (I/O, computation, etc.). Phases can be 
+   static or dynamic (different phases for each loop iteration, for instance).
+   See examples/phase/README for further information. 
+      </para>
+    </listitem>
+
+    
+    <listitem>
+
+      <literal>-PROFILESTATS</literal>
+
+      <para>Specifies the calculation of additional statistics, such as the 
+      standard deviation of the exclusive time/counts spent in each profiled 
+      block. This option is an extension of -PROFILE, the default profiling 
+      option.</para>
+
+    </listitem>
+
+    
+    <listitem>
+      <literal>-DEPTHLIMIT</literal>
+      <para>Allows users to enable instrumentation at runtime based on the depth of a 
+   calling routine on a callstack. The depth is specified using the environment 
+   variable TAU_DEPTH_LIMIT. When its value is 1, instrumentation in the top-level
+   routine such as main (in C/C++) or program (in F90) is activated. When it is 2,
+   only routine invoked directly by main and main are recorded. When a routine appears
+   at a depth of 2 and at 10 and we set the limit at 5, then the routine is recorded
+   when its depth is 2, and ignored when its depth is 10 on the calling stack. This can
+   be used with -PROFILECALLPATH to generate a tree of height &lt;h&gt; from the main routine
+   by setting TAU_CALLPATH_DEPTH and TAU_DEPTH_LIMIT variables to &lt;h&gt;. 
+      </para>
+    </listitem>
+
+
+   
+    <listitem>
+      <literal>-PROFILEMEMORY</literal>
+      <para>
+Specifies tracking heap memory utilitization for each instrumented function.
+   When any function entry takes place, a sample of the heap memory used is 
+   taken. This data is stored as user-defined event data in profiles/traces.
+      </para>
+    </listitem>    
+    
+    
+    
+    <listitem>
+      <literal>-PROFILEHEADROOM</literal>
+      <para>
+Specifies tracking memory available in the heap (as opposed to memory 
+   utilization tracking in -PROFILEMEMORY). When any function entry takes place,
+   a sample of the memory available (headroom to grow) is taken. This data is 
+   stored as user-defined event data in profiles/traces. Please refer to the
+   examples/headroom/README file for a full explanation of these headroom
+   options and the C++/C/F90 API for evaluating the headroom. 
+      </para>
+    </listitem>    
+    
+    
+    <listitem>
+      <literal>-COMPENSATE</literal>
+      <para>
+Specifies online compensation of performance perturbation. When this 
+   option is used, TAU computes its overhead and subtracts it from the 
+   profiles. It can be only used when profiling is chosen. This option works
+   with MULTIPLECOUNTERS as well, but while it is relevant for removing 
+   perturbation with wallclock time, it cannot accurately account for 
+   perturbation with hardware performance counts (e.g., L1 Data cache misses).
+   See TAU Publication [Europar04] for further information on this option. 
+      </para>
+    </listitem>       
+    
+    <listitem>
+    
+      <literal>-PROFILECOUNTERS</literal>
+
+      <para>Specifies use of hardware performance counters for profiling 
+      under IRIX using the SGI R10000 perfex counter access interface. The 
+      use of this option is deprecated in favor of the -pcl=&lt;dir&gt; 
+      and -papi=&lt;dir&gt; options described above. </para>
+
+    </listitem>
+
+
+    
+    <listitem><literal>-SGITIMERS</literal>
+      <para>Specifies use of the free running nanosecond resolution on-chip 
+      timer on the R10000+. This timer has a lower overhead than the default 
+      timer on SGI, and is rec- ommended for SGIs (similar to the 
+      -papi=&lt;dir&gt; -PAPIWALLCLOCK options).</para>
+    </listitem>
+
+    <listitem><literal>-CRAYTIMERS</literal>
+      <para>Specifies use of the free running nanosecond resolution on-chip 
+      timer on the CRAY X1 cpu (accessed by the rtc() syscall). This timer 
+      has a significantly lower overhead than the default timer on the X1, 
+      and is recommended for profiling. Since this timer is not synchronized 
+      across different cpus, this option should not be used with the - TRACE 
+      option for tracing a multi-cpu application, where a globally 
+      synchronized realtime clock is required.</para>
+    </listitem>
+    
+    <listitem><literal>-LINUXTIMERS</literal>
+      <para>Specifies the use of the free running nanosecond resolution time 
+      stamp counter (TSC) on Pentium III+ and Itanium family of processors 
+      under Linux. This timer has a lower overhead than the default time and 
+      is recommended.</para>
+    </listitem>
+
+    <listitem><literal>-TRACE</literal>
+      <para>Generates event-trace logs, rather than summary profiles. Traces 
+      show when and where an event occurred, in terms of the location in the 
+      source code and the process that executed it. Traces can be merged and 
+      converted using tau_merge and tau_convert utilities respectively, and 
+      visualized using Vampir, a commercial trace visualization tool. 
+      [VAMPIR-URL]</para>
+    </listitem>
+
+    <listitem>
+
+      <literal>-muse</literal>
+
+      <para>Specifies the use of MAGNET/MUSE to extract low-level information 
+      from the kernel. To use this configuration, Linux kernel has to be 
+      patched with MAGNET and MUSE has to be install on the executing machine.  
+      Also, magnetd has to be running with the appropriate handlers and filters
+      installed. User can specify pack- age by setting the environment 
+      variable TAU_MUSE_PACKAGE.  [MUSE-URL]</para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-noex</literal>
+
+      <para>Specifies that no exceptions be used while compiling the library. 
+      This is relevant for C++. </para>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-useropt=&lt;options-list&gt;</literal>
+
+      <para>Specifies additional user options such as -g or -I. For multiple 
+      options, the options list should be enclosed in a single quote. For 
+      example </para>
+
+      <screen>
+%./configure -useropt='-g -I/usr/local/stl'
+</screen>
+
+    </listitem>
+
+    <listitem>
+
+      <literal>-help</literal>
+
+      <para>Lists all the available configure options and quits.</para>
+
+    </listitem>
+
+  </itemizedlist>
+
+  </sect2>
+
+  <sect2>
+
+    <title>installtau script</title>
+
+    <para>To install multiple (typical) configurations of TAU at a site, you 
+    may use the script `installtau'. It takes options similar to those 
+    described above. It invokes ./configure &lt;opts&gt;; make clean install;  
+    to create multiple libraries that may be requested by the users at a 
+    site. The installtau script accepts the following options: </para>
+
+    <screen>
+% installtau -help
+
+TAU Configuration Utility 
+***************************************************
+Usage: installtau [OPTIONS]
+  where [OPTIONS] are:
+-arch=&lt;arch&gt;  
+-fortran=&lt;compiler&gt;  
+-cc=&lt;compiler&gt;
+-c++=&lt;compiler&gt;
+-useropt=&lt;options&gt;  
+-pdt=&lt;pdtdir&gt;
+-papi=&lt;papidir&gt;  
+-mpiinc=&lt;mpiincdir&gt;  
+-mpilib=&lt;mpilibdir&gt;
+-mpilibrary=&lt;mpilibrary&gt;
+-opari=&lt;oparidir&gt;   
+******************************************************************
+</screen>
+
+    <para>These options are similar to the options used by the configure script.</para>
+
+  </sect2>
+
+  <sect2>
+
+    <title>Examples: </title>
+
+    <para>(See Appendix for POOMA and Windows installation instructions)</para>
+
+    <itemizedlist>
+    
+      <listitem>
+        <para>a) Install TAU using KCC on SGI, with trace and profile 
+        options:</para>
+          
+        <screen>
+%./configure -c++=KCC -SGITIMERS -arch=sgi64 -TRACE \
+  -PROFILE -prefix=/usr/local/packages/tau
+</screen>
+
+      </listitem>
+
+    <listitem>
+
+      <para>b) Installing TAU with Java</para>
+
+      <screen>
+%./configure -c++=g++ -jdk=/usr/local/packages/jdk1.4
+% make install
+% set path=($path &lt;taudir&gt;/&lt;tauarch&gt;/bin)
+% setenv LD_LIBRARY_PATH \ 
+  $LD_LIBRARY_PATH:&lt;taudir&gt;/&lt;tauarch&gt;/lib
+% cd examples/java/pi
+% java -XrunTAU Pi 200000
+% racy
+</screen>
+
+    </listitem>
+
+    <listitem>
+
+      <para>c) Use TAU with KCC, and cc on 64 bit SGI systems and use MPI 
+      wrapper libraries with SGI's low cost timers and use PDT for automated 
+      source code instrumenta- tion. Enable both profiling and tracing.</para>
+
+      <screen>
+% ./configure -c++=KCC -cc=cc -arch=sgi64 \
+  -mpiinc=/local/apps/mpich/include \
+  -mpilib=/local/apps/mpich/ lib/IRIX64/ch_p4 \
+  -SGITIMERS -pdt=/local/apps/pdt
+</screen>
+
+    </listitem>
+
+    <listitem>
+
+      <para>d) Use OpenMP+MPI using KAI's Guide compiler suite, Opari for 
+      OpenMP instrumentation and use PAPI for accessing hardware performance 
+      counters for profile based measurements.</para>
+
+      <screen>
+% ./configure -c++=guidec++ -cc=guidec \
+  -papi=/usr/ local/packages/papi -openmp \
+  -mpiinc=/usr/pack- ages/mpich/include \
+  -mpilib=/usr/packages/mpich/lib \
+  -opari=/usr/local/opari
+</screen>
+
+    </listitem>
+
+    <listitem>
+
+      <para>e) Use CPUTIME measurements for a multi-threaded application 
+      using pthreads under LINUX.</para>
+
+      <screen>
+% configure -pthread -CPUTIME
+</screen>
+
+    </listitem>
+
+    <listitem>
+
+      <para>f) Use multiple hardware performance counters</para>
+
+      <screen>
+% configure -MULTIPLECOUNTERS -papi=/usr/local/papi \
+  -PAPIWALLCLOCK -PAPIVIRTUAL -LINUXTIMERS \
+  -mpiinc=/usr/local/mpich/include \
+  -mpilib=/usr/local/mpich/ lib/ \
+  -pdt=/usr/local/pdtoolkit -useropt=-O2
+% setenv COUNTER1 LINUX_TIMERS
+% setenv COUNTER2 PAPI_FP_INS
+% setenv COUNTER3 PAPI_L1_DCM ...
+</screen>
+
+    </listitem>
+
+    </itemizedlist>
+
+    <para>NOTE: Also see Section "Application Scenarios" in Chapter 2 
+    (Compiling) for an explanation of simple examples that are included 
+    with the TAU distribution.</para>
+
+
+    </sect2>
+  </sect1>
+
+  <sect1 id="platforms.supported">
+
+    <title>Platforms Supported</title>
+
+    <para>TAU has been tested on the following platforms:</para>
+
+    <itemizedlist>
+
+      <listitem>
+        <para>1. SGI</para>
+
+        <para>On IRIX 6.x based systems, including Indy, Power Challenge, 
+        Onyx, Onyx2 and Origin 200, 2000, 3000 Series, CC 7.2+, KAI 
+        [KAI-URL] KCC and g++/egcs [GNU-URL] compilers are supported.</para>
+
+      </listitem>
+
+      <listitem>
+        <para>2. LINUX Clusters</para>
+
+        <para>On Linux based Intel x86 PC clusters, KAI/Intel's KCC, g++, 
+        egcs (GNU), pgCC (PGI) [PGI-URL], FCC (Fujitsu) [FUJITSU-URL] 
+        and icpc/ecpc Intel compilers have been tested. TAU also runs 
+        under IA-64, Opteron, PowerPC, Alpha, Apple PowerMac, Sparc and 
+        other processors running Linux. </para>
+
+      </listitem>
+
+      <listitem>
+        <para>3. Sun Solaris</para>
+
+        <para>Sun Workshop Pro 5.0 compilers (CC, F90), KAI KCC, KAP/Pro 
+        and GNU g++ work with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>4. IBM AIX</para>
+
+        <para>On IBM SP2 and AIX systems, KAI KCC, KAP/Pro, IBM xlC, xlc, 
+        xlf90 and g++ compilers work with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+        <para>5. HP HP-UX</para>
+
+        <para>On HP PA-RISC systems, aCC and g++ can be used.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>6.  HP Alpha Tru64</para>
+
+        <para>On HP Alpha Tru64 machines, cxx and g++, and Guide compilers 
+        may be used with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>7.  NEC SX series vector machines</para>
+
+    <para>On NEC SX-5 systems, NEC c++ may be used with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>8.  Cray X1, T3E, SV-</para>
+
+        <para>On Cray T3E systems, KAI KCC and Cray CC compilers have been 
+        tested with TAU. On Cray SV-1 and X1 systems, Cray CC compilers 
+        have been tested with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>9.  Hitachi SR8000 vector machine</para>
+
+        <para>On Hitachi machines, Hitachi KCC, g++ and Hitachi cc compilers 
+        may be used with TAU</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>10.  Apple OS X</para>
+
+        <para>On Apple OS X machines, c++ or g++ may be used to compile TAU. 
+        Also, IBM's xlf90, xlf compilers for G4/G5 may be used with TAU.</para>
+
+      </listitem>
+
+      <listitem>
+
+        <para>11.  Microsoft Window</para>
+
+        <para>On Windows, Microsoft Visual C++ 6.0 or higher and JDK 1.2+ 
+        compilers have been tested with TAU</para>
+
+      </listitem>
+
+    </itemizedlist> 
+
+    <para>NOTE: TAU has been tested with JDK 1.2, 1.3, 1.4.x under Solaris, SGI, IBM, 
+    Linux, and MacOS X.</para>
+
+  </sect1>
+
+  <sect1 id="software.requirements">
+    <title>Software Requirements</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>1. Java v 1.3</para>
+
+        <para>TAU's GUI paraprof requires Java v1.3 or better in your path. 
+        We recommend Java version 1.4x from Sun. An older Tcl/Tk based browser 
+        racy is also included with TAU for compatibility. It requires the 
+        executable wish to be in your path. racy is also available in this 
+        distribution but support for racy will be gradually phased out.  
+        Users are encouraged to use paraprof instead. Paraprof does *not* 
+        require - jdk=&lt;dir&gt; option to be specified (which is used 
+        for configuring TAU for analyzing Java applications). The java 
+        program should be in the user's path.</para>
+
+      </listitem>
+
+    </itemizedlist>
+
+  </sect1>
+
+
+</chapter>
+<!--
+sgml-parent-document: ("book.xml")
+end:
+-->

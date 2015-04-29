@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "../tools/docbook-xml-4.4/docbookx.dtd">
+<book id="TauUsersGuide">
+  <title>TAU User's Guide</title>
+  
+  <bookinfo>
+    <edition>Second</edition>
+    <isbn>0-00000-000-0</isbn>
+<!--     <authorgroup> -->
+      
+<!--       <author> -->
+<!-- 	<firstname>University of</firstname> -->
+<!-- 	<surname>Oregon</surname> -->
+<!--       </author> -->
+      
+<!--     </authorgroup> -->
+    
+    <editor>
+      <firstname>Christian</firstname>
+      <surname>Hoge</surname>
+    </editor>
+    
+ <!--    <pagenums></pagenums> -->
+<!--     <pubdate>2005-08-15</pubdate> -->
+    
+    <!-- <copyright> -->
+<!--       <year>2005</year> -->
+<!--       <holder>University of Oregon Performance Research Lab</holder> -->
+<!--     </copyright> -->
+
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="NewTauLogo.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+		
+
+
+    <legalnotice>
+      <para>Version 2.14</para>
+      
+      <para>Copyright &#xA9; 1997-2005
+      Department of Computer and Information Science, University of Oregon 
+      Advanced Computing Laboratory, LANL, NM 
+      Research Centre Julich, ZAM, Germany</para>
+      
+      <para>Permission to use, copy, modify, and distribute this software and
+      its documentation for any purpose and without fee is hereby granted,
+      provided that the above copyright notice appear in all copies and that
+      both that copyright notice and this permission notice appear in
+      supporting documentation, and that the name of University of Oregon (UO)
+      Research Centre Julich, (ZAM) and Los Alamos National Laboratory (LANL)
+      not be used in advertising or publicity pertaining to distribution of the
+      software without specific, written prior permission.  The University of
+      Oregon, ZAM and LANL make no representations about the suitability of
+      this software for any purpose.  It is provided "as is" without express or
+      implied warranty.</para>
+
+      <para>UO, ZAM AND LANL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+      SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+      FITNESS. IN NO EVENT SHALL THE UNIVERSITY OF OREGON, ZAM OR LANL BE
+      LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+      WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+      ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+      OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+      </para>
+
+		
+
+		<!-- these are here to move the URL to the bottom of the page -->
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <para>TAU can be found on the web at: <ulink url="http://www.cs.uoregon.edu/research/tau">http://www.cs.uoregon.edu/research/tau</ulink></para>
+
+    </legalnotice>
+
+
+
+</bookinfo>
+  
+
+
+  <part label="I">
+    <title>Generating Performance Data</title>
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="introduction.xml"/> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="compilation.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../taucompiler/taucompiler.xml"/>
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="profiling.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../taujava/taujava.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="tracing.xml"/>
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../taudocs/tauutils.xml"/>
+
+  </part>
+
+  <part label="II">
+    <title>ParaProf</title>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/intro.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/management.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/3d.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/thread.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/function.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/phase.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/comparison.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/misc.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/preferences.xml"/>
+  </part>
+
+
+  <part label="III">
+    <title>PerfDMF</title>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfdmf/ch01.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfdmf/ch02.xml"/>
+  </part>
+
+  <part label="IV">
+    <title>PerfExplorer</title>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/ch01.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/ch02.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/ch03.xml"/>
+<!--    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../perfexplorer/ch04.xml" /> -->
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/ch05.xml"/>
+<!--    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../perfexplorer/ch06.xml" /> -->
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/ch07.xml"/>
+<!--    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../perfexplorer/ch08.xml" /> -->
+  </part>
+
+
+  <part label="V">
+    <title>Instrumentation API</title>
+<!--     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="timers.xml" /> -->
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../APIs/tauapis.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../APIs/taumapping.xml"/>
+  </part>
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="summary.xml"/>
+
+
+
+
+
+
+<!--
+  <part label="TAU installation">
+    &installation;
+    &compilation;
+  </part>
+  <part label="TAU compiler">
+    &taucompiler;
+  </part>
+  <part label="TAU API">
+    
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../APIs/tauapis.xml" /> 
+    &timers;
+  </part>
+  <part label="TAU tools">
+    &tools;
+  </part>
+  <part label="TAU profiling">
+    &profiling;
+  </part>
+  
+  <part label="TAU tracing">
+    &tracing;
+  </part>
+  
+  
+  <part label="ParaProf">
+    &paraprof1;
+    &paraprof2;
+    &paraprof3;
+    &paraprof4;
+    &paraprof5;
+    &paraprof6;
+    &paraprof7;
+  </part>
+  
+  
+  <part label="PerfDMF">
+    &perfdmf1;
+    &perfdmf2;
+  </part>
+  
+  <part label="PerfExplorer">
+    &perfexplorer;
+  </part>
+  
+  &summary;
+  -->
+
+</book>

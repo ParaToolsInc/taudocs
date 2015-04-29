@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="Configuration">
+  <title>Configuration</title>
+	<sect1>
+    <title>Blank</title>
+		<para></para>
+	</sect1>
+</chapter>
+

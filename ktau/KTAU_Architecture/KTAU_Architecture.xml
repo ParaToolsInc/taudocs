@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "../tools/docbook-xml-4.4/docbookx.dtd">
+
+
+<article>
+  <title>KTAU Architecture</title>
+
+  <articleinfo> 
+
+    <edition>1.0</edition>
+ 
+    <date>10/2005</date>
+
+    <authorgroup>
+
+      <author>
+        <firstname>University of</firstname>
+        <surname>Oregon</surname>
+      </author>
+
+    </authorgroup>
+
+    <editor>
+      <firstname>Suravee</firstname>     
+      <surname>Suthikulpanit</surname>
+      <firstname>Aroon</firstname>     
+      <surname>Nataraj</surname>
+    </editor>
+
+
+    <copyright>
+      <year>2005</year>
+      <holder>University of Oregon Performance Research Lab</holder>
+    </copyright>
+  </articleinfo>
+
+
+  <!-- Content -->
+
+
+<sect1 id="KTAU_Architecture">
+<title>KTAU Architecture</title>
+	<para>
+	KTAU comprises 4 individual modules
+	</para>
+	<itemizedlist>
+		<listitem><para>- KTAU Instrumentation</para></listitem>
+		<listitem><para>- KTAU Infrastructure</para></listitem>
+		<listitem><para>- KTAU Proc Interface</para></listitem>
+		<listitem><para>- KTAU User-API Library and Utilities</para></listitem>
+	</itemizedlist>
+	<figure>
+		<title>Figure 1 : KTAU Architecture Diagram</title>
+		<graphic fileref="ktau_diagram.jpg"/>	
+	</figure>
+
+	<sect2 id="instrumentation">
+	<title>KTAU Instrumentation</title>
+		<para>
+		KTAU places instrumentation points in Linux kernel source to intercept 
+		the execution path and extract the performance data of interest.  For 
+		instance, KTAU places instrumentation at the entry and exit point of a 
+		kernel routine to measure the amount of time spending inside the routine.  
+		Time measurement is in tick, which is obtained from the timestamp counter 
+		of a processor.  Most Intel processors tick-rate is normally equal to the 
+		clock speed of the processor, but varies on PPC.  
+		</para>	
+	
+		<para>
+		For each function being instrumented, KTAU assigns a unique ID at runtime.  
+		This ID is assigned dynamically depending on the order the function was executed.  
+		It is assigned once at the first time a process execute the function, and will be 
+		maintained as long as the system is running.  In other word, the ID is not bound 
+		to the function across the system reboot.  This ID is used as an index into a table, 
+		which stores profile data of each function.  This technique allows profile data to be 
+		accessed directly with out searching through a list of functions.
+		</para>
+	</sect2>
+	
+	<sect2 id="infrastructure">
+	<title>KTAU Infrastructure</title>
+	<para>
+		KTAU main infrastructure resides in task_struct of each process.  It consists 
+		of a profile table, a circular trace buffer, locks, and state variables.  
+		The profile table is used to store profile data (i.e. amount of time a process spent 
+		inside a function, counter, etc).  The function ID is used to index into the table.  
+		Currently, the table has 1,024 entries, which are grouped into ranges that adopt 
+		different indexing schemes.  Please refer to appendix A for more detail.	
+	</para>	
+	</sect2>
+
+	<sect2 id="proc">
+	<title>KTAU Proc Interface</title>
+	<para>
+		KTAU uses <literal>/proc</literal> filesystem as a communication channel between kernel-space and user-space.  
+		<literal>/proc/ktau/profile</literal> and <literal>/proc/ktau/trace</literal> are used for accessing profile data and trace 
+		data respectively.  Generally, applications from user-space access the data through 
+		provided user-API library, which uses ioctl as underlying communication method.	
+	</para>	
+	</sect2>
+
+	<sect2 id="api_util">
+	<title>KTAU User-API Library and Utilities</title>
+	<para>
+		KTAU uses <literal>/proc</literal> filesystem as a communication channel between kernel-space and user-space.  
+		"/proc/ktau/profile"and <literal>/proc/ktau/trace</literal> are used for accessing profile data 
+		and trace data respectively.  Generally, applications from user-space access 
+		the data through provided user-API library, which uses ioctl as underlying 
+		communication method.
+	</para>	
+	</sect2>
+</sect1>
+</article>

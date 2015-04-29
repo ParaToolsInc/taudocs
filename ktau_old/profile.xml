@@ -1,0 +1,81 @@
+<appendix>
+  <title>Profile Table</title>
+
+  <para>Currently, profile table has 1024 entries, which are grouped as following:</para>
+
+  <table>
+    <tgroup cols="3" align="left">
+   
+      <tbody>
+        <row>
+          <entry>Range I</entry>
+          <entry>0-299</entry>
+          <entry>:System calls</entry>
+        </row>
+ 
+        <row>
+          <entry>Range II</entry>
+          <entry>300-399</entry>
+          <entry>:Pre-define ID</entry>
+        </row>
+
+        <row>
+          <entry>Range III</entry>
+          <entry>400-1023</entry>
+          <entry>:Dynamic ID</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </table>
+
+  <para>In range I, each entry contains profiling data regarding the amount of time the process 
+  spends inside each system call, and indexed by system call number.  </para>
+
+  <para>Range II maintains profile data for a pre-define set of IDs:</para>
+
+  <table>
+
+    <tgroup cols="2" align="left">
+      <tbody>
+        <row>
+          <entry>300</entry>
+          <entry>KTAU_EVENT_SCHED</entry>
+        </row>
+     
+        <row>
+          <entry>301</entry>
+          <entry>KTAU_EVENT_SOFTIRQ</entry>
+        </row>
+
+        <row>
+          <entry>302</entry>
+          <entry>KTAU_EVENT_TASKLET</entry>
+        </row>
+  
+        <row>
+          <entry>303</entry>
+          <entry>KTAU_EVENT_HI_TASKLET</entry>
+        </row>
+  
+        <row>
+          <entry>304</entry>
+          <entry>KTAU_EVENT_WORKQUEUE</entry>
+        </row>
+ 
+        <row>     
+          <entry>305</entry>
+          <entry>KTAU_EVENT_TIMER_SOFTIR</entry>
+        </row>
+ 
+        <row>
+          <entry>306</entry>
+          <entry>KTAU_EVENT_TCP_SLOWPATH</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </table> 
+
+
+  <para>Range III maintains profile data for dynamically assigned IDs.</para>
+   
+</appendix>

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="InstallPerfExplorer">
+    <title>Installation and Configuration</title>
+
+        <para>PerfExplorer uses TAUdb and PerfDMF databases so if you have not already you
+        will need to install TAUdb, see <xref linkend="taudb.intro"/>.
+
+        To configure PerfExplorer move to the
+        <literal>tools/src/PerfExplorer/</literal> directory in you TAU
+        distribution. Type:<screen> %>./configure</screen>
+
+        If you haven't already done so for other TAU tools, add
+        <literal>[path to tau]/tau2/apple/bin</literal> to your
+        path.</para>
+
+        <para>The following command-line options are available to
+        configure:</para>
+
+    <sect1 id="ConfigurationOptions">
+            <title>Available configuration options</title>
+            <itemizedlist>
+
+            <listitem>
+            <para><literal>-engine=&lt;analysis engine&gt;</literal></para>
+            <para>Specifies the data-mining engine to use.  The
+            supported options include weka and R.</para>
+            </listitem>
+
+            <listitem>
+            <para><literal>-rroot=&lt;directory&gt;</literal></para>
+            <para>Specifies the directory where R is installed.
+            Specifically, it should be the directory where the
+            <literal>bin</literal>, <literal>include</literal>,
+            <literal>lib</literal>, <literal>library</literal> and 
+            <literal>share</literal> directories are located.</para>
+            </listitem>
+
+            <listitem>
+            <para><literal>-objectport=&lt;available network
+            port&gt;</literal></para>
+            <para>Specifies the port that the PerfExplorer server should
+            use, when running PerfExplorer in client-server mode.
+            Select an available network port, and make sure that other
+            appropriate network configurations are made (firewalls,
+            etc.).  The default port is 9999.</para>
+            </listitem>
+
+            <listitem>
+            <para><literal>-registryport=&lt;available network
+            port&gt;</literal></para>
+            <para>Specifies the port that the rmiregistry should
+            use, when ruining PerfExplorer in client-server mode.
+            Select an available network port, and make sure that other
+            appropriate network configurations are made (firewalls,
+            etc.).  The default port is 1099.</para>
+            </listitem>
+
+            <listitem>
+            <para><literal>-server=&lt;server name&gt;</literal></para>
+            <para>Specifies the fully qualified domain name of the
+            server where PerfExplorer is run, when running PerfExplorer
+            in client-server mode.</para>
+            </listitem>
+
+            </itemizedlist>
+    </sect1>
+
+</chapter>

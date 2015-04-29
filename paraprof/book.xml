@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<part id="ParaProfDoc">
+  <title>ParaProf - User's Manual</title>
+
+  <!-- Content references -->
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="intro.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="views.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="management.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="3d.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="thread.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="function.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="phase.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="comparison.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="misc.xml" /> 
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="preferences.xml" /> 
+
+
+</part>

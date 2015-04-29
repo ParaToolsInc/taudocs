@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+    <itemizedlist>
+      
+	  <listitem><para><emphasis role="bold">TAU Profiles (profiles)</emphasis>
+	  - Output from the TAU measurement library, these files generally take the
+		form of <filename>profile.X.X.X</filename>, one for each
+		node/context/thread combination.  When multiple counters are used, each
+		metric is located in a directory prefixed with "MULTI__".  To launch
+		ParaProf with all the metrics, simply launch it from the root of the
+		MULTI__ directories.</para></listitem>
+      
+	  <listitem><para><emphasis role="bold">ParaProf Packed Format
+	  (ppk)</emphasis> - Export format supported by PerfDMF/ParaProf.
+	  Typically .ppk.  </para></listitem>
+
+	  <listitem><para><emphasis role="bold">TAU Merged Profiles
+	  (snap)</emphasis> - Merged and snapshot profile format supported by
+	  TAU.  Typically tauprofile.xml.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">TAU pprof (pprof)</emphasis> - Dump
+	  Output from TAU's <command>pprof -d</command>.  Provided for backward
+	  compatibility only.</para></listitem>
+      
+	  <listitem><para><emphasis role="bold">DynaProf (dynaprof)</emphasis> -
+	  Output From DynaProf's wallclock and papi probes.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">mpiP (mpip)</emphasis> - Output
+	  from mpiP.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">gprof (gprof)</emphasis> - Output
+	  from gprof, see also the --fixnames option.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">PerfSuite (psrun)</emphasis> -
+	  Output from PerfSuite psrun files.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">HPM Toolkit (hpm)</emphasis> -
+	  Output from IBM's HPM Toolkit.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">Cube (cube)</emphasis> - Output
+	  from Kojak Expert tool for use with Cube.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">Cube3 (cube3)</emphasis> - Output
+	  from Kojak Expert tool for use with Cube3 and Cube4.  </para></listitem>
+      
+	  <listitem><para><emphasis role="bold">HPCToolkit (hpc)</emphasis> - XML
+	  data from hpcquick.  Typically, the user runs hpcrun, then hpcquick on
+	  the resulting binary file.  </para></listitem>
+
+	  <listitem><para><emphasis role="bold">OpenMP Profiler (ompp)</emphasis> -
+	  CSV format from the ompP OpenMP Profiler (http://www.ompp-tool.com).  The
+	  user must use OMPP_OUTFORMAT=CVS.</para></listitem>
+      
+	  <listitem><para><emphasis role="bold">PERI XML (perixml)</emphasis> -
+	  Output from the PERI data exchange format.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">General Purpose Timing Library
+	  (gptl)</emphasis> - Output from the General Purpose Timing
+	  Library.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">Paraver (paraver)</emphasis> -
+	  2D output from the Paraver trace analysis tool from
+	  BSC.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">IPM (ipm)</emphasis> -
+	  Integrated Performance Monitoring format, from NERSC.</para></listitem>
+
+	  <listitem><para><emphasis role="bold">Google (google)</emphasis> -
+	  Google Profiles.</para></listitem>
+
+    </itemizedlist>

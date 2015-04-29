@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="taudb.intro">
+  
+  <title>Introduction</title>
+  
+	<para>
+	TAUdb (TAU Database), formerly known as PerfDMF (Performance Data
+	Management Framework) is a an API/Toolkit that sits atop a DBMS to manage
+	and analyze performance data.  The API is available in its native Java form
+	as well as C.
+    </para>
+  
+  
+  <sect1 id="taudb.prereq">
+    
+    <title>Prerequisites</title>
+    
+    <orderedlist>
+	  <listitem><para>A supported Database Management System (DBMS).  TAUdb
+	  currently supports PostgreSQL, MySQL, Oracle, H2, and Derby. For
+	  use with the C API, only PostgreSQL is supported (SQLite support is
+	  currently being evaluated). Because they are Java only, H2 and Derby
+	  can NO  be accessed with the C API.</para></listitem>
+      <listitem><para>Java 1.5.</para></listitem>
+	  <listitem><para>If the C API is desired, a working C compiler is
+	  required, along with the following libraries: libpq (PostgreSQL
+	  libraries), libxml2, libz, libuuid. These libraries are all commonly
+	  installed by default on *NIX systems.</para></listitem>
+    </orderedlist>
+
+  </sect1>
+
+
+  <sect1 id="taudb.installation">
+    <title>Installation</title>
+
+    <para>The TAUdb utilities and applications are installed as part of the
+    standard TAU release.  Shell scripts are installed in the TAU bin directory
+    to configure and run the utilities.  It is assumed that the user has
+    installed TAU and run TAU's configure and 'make install'.
+    </para>
+
+    <orderedlist>
+      <listitem>
+		<para>(Optionally) Create a database.  This step will depend on the user's
+		chosen DBMS.
+		</para>
+
+
+		<itemizedlist>
+	  <listitem><para><emphasis role="bold">H2:</emphasis>
+	  Because it is an embedded, file-based DBMS, H2 does
+	  <emphasis role="bold">not</emphasis> require creating the database before
+	  configuring TAUdb. TAUdb takes advantage of the "auto-server"
+	  capabilities in H2, so multiple clients can connect to the same database
+	  at the same time. Users should use the H2 DBMS if they expect to
+	  maintain a small to moderate local repository of performance data, and
+	  want the convenience of connecting to the database from multiple clients.
+	  </para></listitem>
+
+	  <listitem><para><emphasis role="bold">Derby:</emphasis>
+	  Because it is an embedded, file-based DBMS, Derby does
+	  <emphasis role="bold">not</emphasis> require creating the database before
+	  configuring TAUdb. Be advised that the Derby DBMS does <emphasis
+	  role="bold">not</emphasis> allow multiple clients to connect to the same
+	  database. For that reason, we suggest users use the H2 DBMS if a
+	  file-based database is desired. Derby support is maintained for backwards
+	  compatability.
+	  </para></listitem>
+	  
+	  <listitem><para><emphasis role="bold">PostgreSQL:</emphasis>
+	  <screen>$ createdb -O taudb taudb</screen>
+	  Or, from <command>psql</command>
+	  <screen>psql=# create database taudb with owner = taudb;</screen>
+	  </para></listitem>
+	  
+	  <listitem><para><emphasis role="bold">MySQL:</emphasis>  From the MySQL prompt
+	  <screen>mysql&gt; create database taudb;</screen>
+	  </para></listitem>
+	  
+	  <listitem><para><emphasis role="bold">Oracle:</emphasis> It is recommended that
+	  you create a tablespace for taudb: 
+	  <screen>create tablespace taudb 
+datafile '/path/to/somewhere' size 500m reuse;</screen>
+
+	  Then, create a user that has this tablespace as default:
+	  <screen>create user amorris identified by db;
+grant create session to amorris;
+grant create table to amorris;
+grant create sequence to amorris;
+grant create trigger to amorris;
+alter user amorris quota unlimited on taudb;
+alter user amorris default tablespace taudb;</screen>
+	  
+TAUdb is set up to use the Oracle Thin Java driver.  You will have
+to obtain this jar file for your DBMS.  In our case, it was
+ojdbc14.jar.
+	  </para></listitem>
+
+	</itemizedlist>
+      </listitem>
+
+      
+      <listitem>
+	<para>Configure a TAUdb connection.  To configure TAUdb, run the
+	<command>taudb_configure</command> program from the TAU bin directory.</para>
+	
+	<para>The configuration program will prompt the user for several values.  The
+	default values will work for most users.  When configuration is complete,
+	it will connect to the database and test the configuration.  If the
+	configuration is valid and the schema is not already found in the database
+	(as will be the case on initial configuration), the schema will be
+	uploaded.  Be sure to specify the correct version of the schema for your
+	DBMS.
+	</para>
+
+	<para>An example session for configuring a database is below. The user
+	is creating an H2 database, with default settings including no username
+	and no password (recommended for file-based databases when security is not
+	an issue).
+	<screen>
+$ taudb_configure
+Configuration file NOT found...
+a new configuration file will be created.
+
+Welcome to the configuration program for PerfDMF.
+This program will prompt you for some information necessary to 
+ensure the desired behavior for the PerfDMF tools.
+
+
+You will now be prompted for new values, if desired.  The current 
+or default values for each prompt are shown in parenthesis.
+To accept the current/default value, just press Enter/Return.
+
+Please enter the name of this configuration.
+():documentation_example
+Please enter the database vendor (oracle, postgresql, mysql, db2, 
+derby or h2).
+(h2):
+Please enter the JDBC jar file.
+(/Users/khuck/src/tau2/apple/lib/h2.jar):
+Please enter the JDBC Driver name.
+(org.h2.Driver):
+Please enter the path to the database directory.
+(/Users/khuck/.ParaProf/documentation_example):
+Please enter the database username.
+():
+Store the database password in CLEAR TEXT in your configuration 
+file? (y/n):y
+Please enter the database password: 
+Please enter the PerfDMF schema file.
+(/Users/khuck/src/tau2/etc/taudb.sql):
+
+Writing configuration file: 
+/Users/khuck/.ParaProf/perfdmf.cfg.documentation_example
+
+Now testing your database connection.
+
+Database created, command: 
+jdbc:h2:/Users/khuck/.ParaProf/documentation_example/perfdmf;AUTO_SERVER=TRUE;create=true
+
+Uploading Schema: /Users/khuck/src/tau2/etc/taudb.sql
+Found /Users/khuck/src/tau2/etc/taudb.sql  ... Loading
+Successfully uploaded schema
+
+Database connection successful.
+Configuration complete.
+	</screen>
+	</para>
+
+      </listitem>
+      
+    </orderedlist>
+
+  </sect1>
+  
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

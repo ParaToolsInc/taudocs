@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+	  "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<book id="TauReferenceGuide">
+  <title>TAU Reference Guide</title>
+  
+  <bookinfo>
+    <!-- <edition>Second</edition>
+    <isbn>0-00000-000-0</isbn> -->
+    <!--     <authorgroup> -->
+    
+    <!--       <author> -->
+    <!-- 	<firstname>University of</firstname> -->
+    <!-- 	<surname>Oregon</surname> -->
+    <!--       </author> -->
+    
+    <!--     </authorgroup> -->
+    
+    <editor>
+      <firstname>TAU</firstname>
+      <surname>Team</surname>
+    </editor>
+    
+    <!--    <pagenums></pagenums> -->
+    <!--     <pubdate>2005-08-15</pubdate> -->
+    
+    <!-- <copyright> -->
+    <!--       <year>2005</year> -->
+    <!--       <holder>University of Oregon Performance Research Lab</holder> -->
+    <!--     </copyright> -->
+
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="../usersguide/NewTauLogo.png" format="PNG"></imagedata>
+      </imageobject>
+    </mediaobject>
+    
+
+
+    <legalnotice>
+      <para>Updated November 14th, 2014, for use with version 2.24 or greater.</para>
+      
+      <para>Copyright &copy; 1997-2012
+      Department of Computer and Information Science, University of Oregon 
+      Advanced Computing Laboratory, LANL, NM 
+      Research Centre Julich, ZAM, Germany</para>
+      
+      <para>Permission to use, copy, modify, and distribute this software and
+	its documentation for any purpose and without fee is hereby granted,
+	provided that the above copyright notice appear in all copies and that
+	both that copyright notice and this permission notice appear in
+	supporting documentation, and that the name of University of Oregon (UO)
+	Research Centre Julich, (ZAM) and Los Alamos National Laboratory (LANL)
+	not be used in advertising or publicity pertaining to distribution of the
+	software without specific, written prior permission.  The University of
+	Oregon, ZAM and LANL make no representations about the suitability of
+	this software for any purpose.  It is provided "as is" without express or
+	implied warranty.</para>
+
+      <para>UO, ZAM AND LANL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+	SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+	FITNESS. IN NO EVENT SHALL THE UNIVERSITY OF OREGON, ZAM OR LANL BE
+	LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+	WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+	ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+	OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+      </para>
+
+      <para>TAU can be found on the web at: <ulink
+					       url="http://www.cs.uoregon.edu/research/tau"
+					       >http://www.cs.uoregon.edu/research/tau</ulink></para>
+
+    </legalnotice>
+
+
+
+  </bookinfo>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../newguide/introduction.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+		href="instrumentation.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+		href="tracing.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../memorytracking/tutorial.xml" />
+    
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../taujava/taujava.xml" />
+    
+		<xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../taueclipse/eclipseplugin.xml" />
+    <!--This just says blank xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="portal.xml" />
+	-->
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../taudocs/tauutils.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../perfdmf/book.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../newguide/windows.xml" />
+    
+		<xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../APIs/tauapis.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../APIs/taumapping.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../newguide/environment.xml" />
+</book>

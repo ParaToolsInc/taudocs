@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "../tools/docbook-xml-4.4/docbookx.dtd">
+
+
+<article>
+  <title>KTAU Installation for ANL BlueGene/L System</title>
+
+  <articleinfo> 
+
+    <edition>1.0</edition>
+ 
+    <date>10/2005</date>
+
+    <authorgroup>
+
+      <author>
+        <firstname>University of</firstname>
+        <surname>Oregon</surname>
+      </author>
+
+    </authorgroup>
+
+    <editor>
+      <firstname>Suravee</firstname>     
+      <surname>Suthikulpanit</surname>
+      <firstname>Aroon</firstname>     
+      <surname>Nataraj</surname>
+    </editor>
+
+
+    <copyright>
+      <year>2005</year>
+      <holder>University of Oregon Performance Research Lab</holder>
+    </copyright>
+  </articleinfo>
+
+
+  <!-- Content -->
+
+<sect1 id="part0">
+<title>KTAU Installation for ANL BlueGene/L System</title>
+	<sect2 id="part1">
+	<title>KTAUD and KTAU Utilities Installation</title>
+		<orderedlist>
+		<listitem><para>
+		Obtain a distribution of KTAU from KTAU website. 
+		(<ulink url="http://www.cs.uoregon.edu/research/ktau/downloads.php">http://www.cs.uoregon.edu/research/ktau/download.php</ulink>)
+		</para></listitem>
+		<listitem><para>
+		At <literal>ZeptoOS/BGL</literal> dirctory, run <literal>configure --edit.</literal>  This will launch the ZeptoOS configuration tool.
+		Select on KTAUD parameters, enable KTAUD, and configure the parameters.  Please refer to the help section of each 
+		configuration for more detail.
+		</para></listitem>
+		<figure>
+		<title>Figure 1 : KTAUD configuration page from ZeptoOS configuration tool.</title>
+		<graphic fileref="ktaud_configure.jpg"/>
+		</figure>
+		<listitem><para>
+		Save configuration, and run <literal>make clean all install</literal>.  At this point, <literal> ktaud, ktaud.conf
+		and ktaud.sh </literal> should be configured and installed in the ZeptoOS build directory 
+		(<literal>/ZeptoOS/BGL/build/ZeptoOS-&lt;version&gt;</literal>).  The installation also includes <literal>ktaud.sh</literal> 
+		in the ramdisk image.
+		</para></listitem>
+		<listitem><para> 
+		At <literal>ZeptoOS/BGL/ionode-ramdisk</literal> directory, run <literal>make clean all install</literal>
+		to recreate the ramdisk image which will include ktaud.sh in <literal>ZeptoOS/BGL/ionode-ramdisk/datatree/etc/rc.d/</literal>
+		</para></listitem>
+		<listitem><para> 
+		To change the KTAUD configuration later on, simply run <literal>configure --edit</literal>
+		at <literal>ZeptoOS/BGL/</literal> directory, and run <literal>make clean all install</literal>.
+		In this case, there is no need to rebuild the ramdisk image unless the path to the <literal>ktaud</literal> and 
+		<literal>ktaud.conf</literal> are changed.
+		</para></listitem>
+		</orderedlist>
+	</sect2>
+
+	<sect2 id="part2">
+	<title>KTAU Installation</title>
+		<orderedlist>
+		<listitem><para>
+		At <literal>ZeptoOS/BGL/ionode-linux-2.4.19/</literal> directory, run <literal>make .config</literal> to 
+		uncompress the Linux kernel source, patch the vanilla kernel with BGL patches, 
+		and configure the kernel.
+		</para></listitem>
+		<listitem><para>
+		At <literal>ktau/src/linux-2.4/</literal>, run 
+		<screen>sh INSTALL-kernel.sh &lt;path to ZeptoOS&gt;/BGL/ionode-linux-2.4.19/linux-2.4.19 patch-2.4.19-ZeptoOS-1.1_ktau-1.6</screen>
+		This script willl patch the kernel with KTAU patch and install necessary files inside the kernel source tree.
+		</para></listitem>
+		<listitem><para>
+		At <literal>ZeptoOS/BGL/ionode-linux-2.4.19/linux-2.4.19/</literal> directory, run <literal>make menuconfig</literal> 
+		and configure the kernel to enable KTAU.  Save the configuration.
+		</para></listitem>
+		<figure>
+		<title>Figure 2 : KTAU Linux kernel configuration.</title>
+		<graphic fileref="ktau_configure.gif"/>
+		</figure>
+		<listitem><para>
+		At <literal>ZeptoOS/BGL/ionod-linux-2.4.19</literal> directory, run <literal>rm zImage.elf</literal>, 
+		and then run <literal>make clean all install</literal>.  This will compile the kernel and install the kernel 
+		image (zImage.elf) in the ZeptoOS build directory.
+		</para></listitem>
+		</orderedlist>
+	</sect2>
+</sect1>
+</article>

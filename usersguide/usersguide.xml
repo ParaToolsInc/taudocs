@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+	  "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+ <book id="TauUsersGuide">
+  <title>TAU User Guides</title>
+  
+  <bookinfo>
+    <!-- <edition>Second</edition>
+    <isbn>0-00000-000-0</isbn> -->
+    <!--     <authorgroup> -->
+    
+    <!--       <author> -->
+    <!-- 	<firstname>University of</firstname> -->
+    <!-- 	<surname>Oregon</surname> -->
+    <!--       </author> -->
+    
+    <!--     </authorgroup> -->
+    
+    <editor>
+      <firstname>TAU</firstname>
+      <surname>Team</surname>
+    </editor>
+    
+    <!--    <pagenums></pagenums> -->
+    <!--     <pubdate>2005-08-15</pubdate> -->
+    
+    <!-- <copyright> -->
+    <!--       <year>2005</year> -->
+    <!--       <holder>University of Oregon Performance Research Lab</holder> -->
+    <!--     </copyright> -->
+
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="NewTauLogo.png" format="PNG"></imagedata>
+      </imageobject>
+    </mediaobject>
+    
+
+
+    <legalnotice>
+      <para>Updated November 9th, 2012 for use with version 2.24 or greater.</para>
+
+      
+      <para>Copyright &copy; 1997-2012
+      Department of Computer and Information Science, University of Oregon 
+      Advanced Computing Laboratory, LANL, NM 
+      Research Centre Juelich, ZAM, Germany</para>
+      
+      <para>Permission to use, copy, modify, and distribute this software and
+	its documentation for any purpose and without fee is hereby granted,
+	provided that the above copyright notice appear in all copies and that
+	both that copyright notice and this permission notice appear in
+	supporting documentation, and that the name of University of Oregon (UO)
+	Research Centre Juelich, (ZAM) and Los Alamos National Laboratory (LANL)
+	not be used in advertising or publicity pertaining to distribution of the
+	software without specific, written prior permission.  The University of
+	Oregon, ZAM and LANL make no representations about the suitability of
+	this software for any purpose.  It is provided "as is" without express or
+	implied warranty.</para>
+
+      <para>UO, ZAM AND LANL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+	SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+	FITNESS. IN NO EVENT SHALL THE UNIVERSITY OF OREGON, ZAM OR LANL BE
+	LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+	WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+	ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+	OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+      </para>
+
+    </legalnotice>
+
+
+
+  </bookinfo>
+
+  <preface>
+    <para>TAU Performance System&reg;  is a portable profiling and tracing
+      toolkit for performance analysis of parallel programs written in Fortran,
+      C, C++, Java, and Python.
+      
+      TAU (Tuning and Analysis Utilities) is capable of gathering performance
+      information through instrumentation of functions, methods, basic blocks,
+      and statements. The TAU API also provides selection of profiling groups
+      for organizing and controlling instrumentation. Calls to the TAU API are
+      made by probes inserted into the execution of the application via source
+      transformation, compiler directives or by library interposition.</para>
+
+    <para>This guide is organized into different sections. Readers wanting to
+      get started right way can skip to
+      the <link linkend='ApplicationScenario'>Common Profile Requests</link>
+      section for step-by-step instructions for obtaining difference kinds of
+      performance data. Or browse the <link linkend='StartersGuide'>starters
+      guide</link> for a quick reference to common TAU commands and
+      variables.</para>
+    
+
+      <para>TAU can be found on the web at: <ulink
+					       url="http://tau.uoregon.edu"
+					       >http://tau.uoregon.edu</ulink></para>
+  </preface>
+    <!--<xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+		href="../tutorial/tutorial.xml" />-->
+    
+	<part id="TAUUSERMANUAL">
+	  <title>Tau User Guide</title>
+
+   	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../taucompiler/taucompiler.xml" />
+	
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../newguide/profiling.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"  href="../newguide/tracing.xml" />
+   
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="anaylsis.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="startersguide.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../scenario/scenario.xml" /> 
+	</part>
+		
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../paraprof/book.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfexplorer/perfexplorer.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../perfdmf/book.xml" />
+</book>

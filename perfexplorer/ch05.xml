@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="ClusterAnalysis">
+    <title>Cluster Analysis</title>
+	<para>Cluster analysis is a valuable tool for reducing large
+	parallel profiles down to representative groups for investigation.
+	Currently, there are two types of clustering analysis implemented in
+	PerfExplorer.  Both <emphasis>hierarchical</emphasis> and
+	<emphasis>k-means</emphasis> analysis are used to group parallel
+	profiles into common clusters, and then the clusters are summarized.
+	Initially, we used similarity measures computed on a single parallel
+	profile as input to the clustering algorithms, although other forms
+	of input are possible.  Here, the performance data is organized into
+	multi-dimensional vectors for analysis.  Each vector represents one
+	parallel thread (or process) of execution in the profile.  Each
+	dimension in the vector represents an event that was profiled in the
+	application.  Events can be any sub-region of code, including
+	libraries, functions, loops, basic blocks or even individual lines
+	of code.  In simple clustering examples, each vector represents only
+	one metric of measurement.  For our purposes, some dissimilarity
+	value, such as <emphasis>Euclidean</emphasis> or
+	<emphasis>Manhattan</emphasis> distance, is computed on the vectors.
+	As discussed later, we have tested hierarchical and $k$-means
+	cluster analysis in PerfExplorer on profiles with over 32K threads
+	of execution with few difficulties.  </para>
+        <sect1 id="DimensionReduction">
+            <title>Dimension Reduction</title>
+            <para>Often, many hundreds of events are instrumented when
+            profile data is collected.  Clustering works best with
+            dimensions less than 10, so dimension reduction is often
+            necessary to get meaningful results.  Currently, there is
+            only one type of dimension reduction available in
+            PerfExplorer.  To reduce dimensions, the user specifies a
+            minimum exclusive percentage for an event to be considered
+            "significant".
+			</para>
+            <para>To reduce dimensions, select the "Select Dimension
+            Reduction" item under the "Analysis" main menu bar item.
+			The following dialog will appear:  
+            </para>
+    <figure id="perfexplorer.mainwindow.dimensionreduction1">
+	<title>Selecting a dimension reduction method</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="dimensionreduction1.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+			<para>
+			Select "Over X Percent".  The following dialog will appear:  
+            </para>
+
+    <figure id="perfexplorer.mainwindow.dimensionreduction2">
+	<title>Entering a minimum threshold for exclusive percentage</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="dimensionreduction2.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+			<para>
+			Enter a value, for example "1".
+            </para>
+        </sect1>
+
+        <sect1 id="MaxClusters">
+            <title>Max Number of Clusters</title>
+			<para>By default, PerfExplorer will attempt k-means
+			clustering with values of k from 2 to 10.  To change the
+			maximum number of clusters, select the "Set Maximum Number
+			of Clusters" item under the "Analysis" main menu item.
+			The following dialog will appear:  
+			</para>
+
+    <figure id="perfexplorer.mainwindow.maxclusters">
+	<title>Entering a maximum number of clusters</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="maxclusters.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+        </sect1>
+
+        <sect1 id="PerformingClusterAnalysis">
+			<title>Performing Cluster Analysis</title>
+		<para>To perform cluster analysis, you first need to select a
+		metric.  To select a metric, navigate through the tree of
+		applications, experiments and trials, and expand the trial of
+		interest, showing the available metrics, as shown in the figure
+		below:
+		</para>
+
+    <figure id="perfexplorer.mainwindow.clustering"> <title>Selecting a
+	Metric to Cluster</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="clusteringselection.gif"
+	   scalefit="0" width="6in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+		<para>After selecting the metric of interest, select the "Do
+		Clustering" item under the "Analysis" main menu bar item.
+		The following dialog will appear:  </para>
+
+    <figure id="perfexplorer.confirm.clustering"> <title>Confirm
+	Clustering Options</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="confirmclustering.gif"
+	   scalefit="0" width="2in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+		<para>After confirming the clustering, the clustering will
+		begin.  When the clustering results are available, you can view
+		them in the "Cluster Results" tab.
+		</para>
+
+    <figure id="perfexplorer.cluster.results"> <title>Cluster
+	Results</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="clusterresults.gif"
+	   scalefit="0" width="6in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+		<para>There are a number of images in the "Cluster Results"
+		window.  From left to right, the windows indicate the cluster
+		membership histogram, a PCA scatterplot showing the cluster
+		memberships, a virtual topology of the parallel machine, the
+		minimum values for each event in each cluster, the average
+		values for each event in each cluster, and the maximum values
+		for each event in each cluster.  Clicking on a thumbnail image
+		in the main window will bring up the images, as shown below:
+		</para>
+
+    <figure id="perfexplorer.cluster.histogram"> <title>Cluster
+	Membership Histogram</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="histogram.gif"
+	   scalefit="0" width="4in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+    <figure id="perfexplorer.cluster.scatterplot"> <title>Cluster
+	Membership Scatterplot</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="scatterplot.gif"
+	   scalefit="0" width="4in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+    <figure id="perfexplorer.cluster.topology"> <title>Cluster
+	Virtual Topology</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="topology.gif"
+	   scalefit="0" width="4in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+    <figure id="perfexplorer.cluster.averages"> <title>Cluster
+	Average Behavior</title>
+     <mediaobject>
+     <imageobject><imagedata fileref="averages.gif"
+	   scalefit="0" width="4in" align="center"/></imageobject>
+     </mediaobject>
+    </figure>
+
+        </sect1>
+
+</chapter>

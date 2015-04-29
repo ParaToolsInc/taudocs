@@ -1,0 +1,1002 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter id="taudb.capi">
+  
+  <title>TAUdb C API</title>
+	  <sect1 id="taudb.capi.overview">
+	  <title>TAUdb C API Overview</title>
+  
+    <para>The C API for TAUdb is currently under development, but there is a
+	beta version of the API available.  The API provides the following
+    capabilities: </para>
+    <itemizedlist>
+      <listitem><para>Loading trials from the database</para></listitem>
+      <listitem><para>Inserting trials into the database</para></listitem>
+      <listitem><para>Parsing TAU profile files</para></listitem>
+    </itemizedlist>
+    </sect1>
+
+	  <sect1 id="taudb.capi.structs">
+	  <title>TAUdb C Structures</title>
+		<para>The C structures are roughly organized as a tree, with a trial
+        object at the root.</para>
+        <itemizedlist>
+		  <listitem><para><emphasis role="bold">taudb_trial: </emphasis>
+A top-level structure which contains the collections of all the performance data
+dimensions.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_primary_metadata: </emphasis>
+Name/value pairs which describe the properties of the trial.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_secondary_metadata: </emphasis>
+Name/value pairs which describe the properties of the trial. Unlike primary_metadata
+values, secondary_metadata objects can have complex value types. They are also associated
+with a measurement context - a thread of execution, a timer, a timestamp, an iteration,
+etc.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_thread: </emphasis>
+A structure which represents a thread of execution in the parallel
+measurement.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_time_range: </emphasis>
+A structure which holds a time-range value of beginning and ending iteration
+numbers or timestamps.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_metric: </emphasis>
+A structure which represents a unit of measurement, such as TIME, FP_OPS,
+L1_DCM, etc.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer: </emphasis>
+A structure which represents a region of code. For example, a phase, a 
+function, a loop, a basic block, or even a line of code.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer_parameter: </emphasis>
+A structure which represents parameter values, when parameter based profiling
+is used.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer_group: </emphasis>
+A structure which represents a semantic grouping of timers, such as "I/O",
+"MPI", "OpenMP", etc.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer_callpath: </emphasis>
+A structure which represents a node in the dynamic callpath tree. Timer_callpaths
+with a null parent are either top level timers, or a timers in a flat
+profile.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer_call_data: </emphasis>
+A structure which represents a tuple between a thread of execution and a node
+on the timer callpath tree.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_timer_value: </emphasis>
+A structure which represents a tuple between a timer_call_data object and a
+metric. The timer_value contains the measurement of one metric for one timer on
+one thread of execution.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_counter: </emphasis>
+A structure which represents a counter in the profile. For example, 
+the number of bytes transferred on an MPI_Send() timer.</para></listitem>
+          <listitem><para><emphasis role="bold">taudb_counter_value: </emphasis>
+A structure which represents a counter measurement on one thread of
+execution.</para></listitem>
+        </itemizedlist>
+		<para>Below are the object definitions, from the TAUdb C header file.</para>
+	<screen>
+#ifndef TAUDB_STRUCTS_H
+#define TAUDB_STRUCTS_H 1
+
+#include "time.h"
+#include "uthash.h"
+#include "taudb_structs.h"
+
+#if defined __TAUDB_POSTGRESQL__
+#include "libpq-fe.h"
+#elif defined __TAUDB_SQLITE__
+#include "sqlite3.h"
+#endif
+
+#ifndef boolean
+#define TRUE  1
+#define FALSE 0
+typedef int boolean;
+#endif
+
+typedef struct taudb_prepared_statement {
+ char* name;
+ UT_hash_handle hh; /* hash index for hashing by name */
+} TAUDB_PREPARED_STATEMENT;
+
+/* forward declarations to ease objects that need to know about 
+ * each other and have doubly-linked relationships */
+
+struct taudb_timer_call_data;
+struct taudb_timer_value;
+struct taudb_timer_callpath;
+struct taudb_timer_group;
+struct taudb_timer_parameter;
+struct taudb_timer;
+struct taudb_counter_value;
+struct taudb_counter;
+struct taudb_primary_metadata;
+struct taudb_secondary_metadata;
+struct taudb_time_range;
+struct taudb_thread;
+struct taudb_metric;
+struct taudb_trial;
+struct perfdmf_experiment;
+struct perfdmf_application;
+
+typedef struct taudb_configuration {
+  char* jdbc_db_type;    /* to identify DBMS vendor. 
+                          * postgresql, mysql, h2, derby, etc. */
+  char* db_hostname;     /* server host name */
+  char* db_portnum;      /* server port number */
+  char* db_dbname;       /* the database name at the server */
+  char* db_schemaprefix; /* the schema prefix. This is appended to 
+                          * all table names for some DBMSs */
+  char* db_username;     /* the database username */
+  char* db_password;     /* the database password for username */
+  char* db_schemafile;   /* full or relative path to the schema file, 
+                          * used for configuration, not used in C API */
+} TAUDB_CONFIGURATION;
+
+typedef enum taudb_database_schema_version {
+  TAUDB_2005_SCHEMA,
+  TAUDB_2012_SCHEMA
+} TAUDB_SCHEMA_VERSION;
+
+typedef struct taudb_data_source {
+ int id;
+ char* name;
+ char*description;
+ UT_hash_handle hh1; /* hash index for hashing by id */
+ UT_hash_handle hh2; /* hash index for hashing by name */
+} TAUDB_DATA_SOURCE;
+
+typedef struct taudb_connection {
+  TAUDB_CONFIGURATION *configuration;
+#if defined __TAUDB_POSTGRESQL__
+  PGconn *connection;
+  PGresult *res;
+  TAUDB_PREPARED_STATEMENT *statements;
+#elif defined __TAUDB_SQLITE__
+  sqlite3 *connection;
+  sqlite3_stmt *ppStmt;
+  int rc; 
+#endif
+  TAUDB_SCHEMA_VERSION schema_version;
+  boolean inTransaction;
+  boolean inPortal;
+  TAUDB_DATA_SOURCE* data_sources_by_id;
+  TAUDB_DATA_SOURCE* data_sources_by_name;
+} TAUDB_CONNECTION;
+
+/* these are the derived thread indexes. */
+
+#define TAUDB_MEAN_WITHOUT_NULLS -1
+#define TAUDB_TOTAL -2
+#define TAUDB_STDDEV_WITHOUT_NULLS -3
+#define TAUDB_MIN -4
+#define TAUDB_MAX -5
+#define TAUDB_MEAN_WITH_NULLS -6
+#define TAUDB_STDDEV_WITH_NULLS -7
+
+/* trials are the top level structure */
+
+typedef struct taudb_trial {
+ /* actual data from the database */
+ int id;
+ char* name;
+ struct taudb_data_source* data_source;
+ int node_count;             /* i.e. number of processes. */
+ int contexts_per_node;      /* rarely used, usually 1. */
+ int threads_per_context;    /* max number of threads per process 
+                              * (can be less on individual processes) */
+ int total_threads;          /* total number of threads */
+ /* arrays of data for this trial */
+ struct taudb_metric* metrics_by_id;
+ struct taudb_metric* metrics_by_name;
+ struct taudb_thread* threads;
+ struct taudb_time_range* time_ranges;
+ struct taudb_timer* timers_by_id;
+ struct taudb_timer* timers_by_name;
+ struct taudb_timer_group* timer_groups;
+ struct taudb_timer_callpath* timer_callpaths_by_id;
+ struct taudb_timer_callpath* timer_callpaths_by_name;
+ struct taudb_timer_call_data* timer_call_data_by_id;
+ struct taudb_timer_call_data* timer_call_data_by_key;
+ struct taudb_counter* counters_by_id;
+ struct taudb_counter* counters_by_name;
+ struct taudb_counter_value* counter_values;
+ struct taudb_primary_metadata* primary_metadata;
+ struct taudb_secondary_metadata* secondary_metadata;
+ struct taudb_secondary_metadata* secondary_metadata_by_key;
+} TAUDB_TRIAL;
+
+/*********************************************/
+/* data dimensions */
+/*********************************************/
+
+/* thread represents one physical &amp; logical 
+ * location for a measurement. */
+
+typedef struct taudb_thread {
+ int id; /* database id, also key to hash */
+ struct taudb_trial* trial;
+ int node_rank;    /* which process does this thread belong to? */
+ int context_rank; /* which context? USUALLY 0 */
+ int thread_rank;  /* what is this thread's rank in the process */
+ int index;        /* what is this threads OVERALL index? 
+                    * ranges from 0 to trial.thread_count-1 */
+ struct taudb_secondary_metadata* secondary_metadata;
+ UT_hash_handle hh;
+} TAUDB_THREAD;
+
+/* metrics are things like TIME, PAPI counters, and derived metrics. */
+
+typedef struct taudb_metric {
+ int id; /* database value, also key to hash */
+ char* name; /* key to hash hh2 */
+ boolean derived;  /* was this metric measured, or created by a 
+                    * post-processing tool? */
+ UT_hash_handle hh1; /* hash index for hashing by id */
+ UT_hash_handle hh2; /* hash index for hashing by name */
+} TAUDB_METRIC;
+
+/* Time ranges are ways to delimit the profile data within time ranges.
+   They are also useful for secondary metadata which is associated with
+   a specific call to a function. */
+
+typedef struct taudb_time_range {
+ int id; /* database value, also key to hash */
+ int iteration_start;
+ int iteration_end;
+ uint64_t time_start;
+ uint64_t time_end;  /* was this metric measured, 
+                      * or created by a post-processing tool? */
+ UT_hash_handle hh;
+} TAUDB_TIME_RANGE;
+
+/* timers are interval timers, capturing some interval value.  
+ * For callpath or phase profiles, the parent refers to the calling 
+ * function or phase.  Timers can also be sample locations, or 
+ * phases (dynamic or static), or sample aggregations (intermediate) */
+
+typedef struct taudb_timer {
+ int id; /* database value, also key to hash */
+ struct taudb_trial* trial;  /* pointer back to trial - NOTE: Necessary? */
+ char* name;  /* the full timer name, can have file, line, etc. */
+ char* short_name;  /* just the function name, for example */
+ char* source_file;  /* what source file does this function live in? */
+ int line_number;  /* what line does the timer start on? */
+ int line_number_end;  /* what line does the timer end on? */
+ int column_number;  /* what column number does the timer start on? */
+ int column_number_end;  /* what column number does the timer end on? */
+ struct taudb_timer_group* groups; /* hash of groups, 
+                                    * using group hash handle hh2 */
+ struct taudb_timer_parameter* parameters; /* array of parameters */
+ UT_hash_handle trial_hash_by_id;  /* hash key for id lookup */
+ UT_hash_handle trial_hash_by_name;  /* hash key for name lookup 
+                                      * in temporary hash */
+ UT_hash_handle group_hash_by_name;  /* hash key for name lookup 
+                                      * in timer group */
+} TAUDB_TIMER;
+
+/*********************************************/
+/* timer related structures  */
+/*********************************************/
+
+/* timer groups are the groups such as tau_default,
+   mpi, openmp, tau_phase, tau_callpath, tau_param, etc. 
+   this mapping table allows for nxn mappings between timers
+   and groups */
+
+typedef struct taudb_timer_group {
+ char* name;
+ struct taudb_timer* timers;   /* hash of timers, 
+                                * using timer hash handle hh3 */
+ UT_hash_handle trial_hash_by_name;  // hash handle for trial
+ UT_hash_handle timer_hash_by_name;  // hash handle for timers
+} TAUDB_TIMER_GROUP;
+
+/* timer parameters are parameter based profile values. 
+   an example is foo (x,y) where x=4 and y=10. in that example,
+   timer would be the index of the timer with the
+   name 'foo (x,y) &lt;x&gt;=&lt;4&gt; &lt;y&gt;=&lt;10&gt;'. this table would have two
+   entries, one for the x value and one for the y value.
+   The parameter can also be a phase / iteration index.
+*/
+
+typedef struct taudb_timer_parameter {
+ char* name;
+ char* value;
+ UT_hash_handle hh;
+} TAUDB_TIMER_PARAMETER;
+
+/* callpath objects contain the merged dynamic callgraph tree seen
+ * during execution */
+
+typedef struct taudb_timer_callpath {
+ int id; /* link back to database, and hash key */
+ struct taudb_timer* timer; /* which timer is this? */
+ struct taudb_timer_callpath *parent; /* callgraph parent */
+ char* name; /* a string which has the aggregated callpath. */
+ UT_hash_handle hh1; /* hash key for hash by id */
+ UT_hash_handle hh2; /* hash key for name (a => b => c...) lookup */
+} TAUDB_TIMER_CALLPATH;
+
+/* timer_call_data objects are observations of a node of the callgraph
+   for one of the threads. */
+
+typedef struct taudb_call_data_key {
+ struct taudb_timer_callpath *timer_callpath; /* link back to database */
+ struct taudb_thread *thread; /* link back to database, roundabout way */
+ char* timestamp; /* timestamp in case we are in a snapshot or something */
+} TAUDB_TIMER_CALL_DATA_KEY;
+
+typedef struct taudb_timer_call_data {
+ int id; /* link back to database */
+ TAUDB_TIMER_CALL_DATA_KEY key; /* hash table key */
+ int calls;  /* number of times this timer was seen */
+ int subroutines;  /* number of timers this timer calls */
+ struct taudb_timer_value* timer_values;
+ UT_hash_handle hh1;
+ UT_hash_handle hh2;
+} TAUDB_TIMER_CALL_DATA;
+
+/* finally, timer_values are specific measurements during one of the
+   observations of the node of the callgraph on a thread. */
+
+typedef struct taudb_timer_value {
+ struct taudb_metric* metric;   /* which metric is this? */
+ double inclusive;              /* the inclusive value of this metric */
+ double exclusive;              /* the exclusive value of this metric */
+ double inclusive_percentage;   /* the inclusive percentage of 
+                                 * total time of the application */
+ double exclusive_percentage;   /* the exclusive percentage of 
+                                 * total time of the application */
+ double sum_exclusive_squared;  /* how much variance did we see 
+                                 * every time we measured this timer? */
+ char *key; /* hash table key - metric name */
+ UT_hash_handle hh;
+} TAUDB_TIMER_VALUE;
+
+/*********************************************/
+/* counter related structures  */
+/*********************************************/
+
+/* counters measure some counted value. An example would be MPI message size
+ * for an MPI_Send.  */
+
+typedef struct taudb_counter {
+ int id; /* database reference */
+ struct taudb_trial* trial;
+ char* name;
+ UT_hash_handle hh1; /* hash key for hashing by id */
+ UT_hash_handle hh2; /* hash key for hashing by name */
+} TAUDB_COUNTER;
+
+/* counters are atomic counters, not just interval timers */
+
+typedef struct taudb_counter_value_key {
+ struct taudb_counter* counter; /* the counter we are measuring */
+ struct taudb_thread* thread;   /* where this measurement is */
+ struct taudb_timer_callpath* context; /* the calling context (can be null) */
+ char* timestamp; /* timestamp in case we are in a snapshot or something */
+} TAUDB_COUNTER_VALUE_KEY;
+
+typedef struct taudb_counter_value {
+ TAUDB_COUNTER_VALUE_KEY key;
+ int sample_count;          /* how many times did we see take this count? */
+ double maximum_value;      /* what was the max value we saw? */
+ double minimum_value;      /* what was the min value we saw? */
+ double mean_value;         /* what was the average value we saw? */
+ double standard_deviation; /* how much variance was there? */
+ UT_hash_handle hh1; /* hash key for hashing by key */
+} TAUDB_COUNTER_VALUE;
+
+/*********************************************/
+/* metadata related structures  */
+/*********************************************/
+
+/* primary metadata is metadata that is not nested, does not
+   contain unique data for each thread. */
+
+typedef struct taudb_primary_metadata {
+ char* name;
+ char* value;
+ UT_hash_handle hh; /* uses the name as the key */
+} TAUDB_PRIMARY_METADATA;
+
+/* primary metadata is metadata that could be nested, could
+   contain unique data for each thread, and could be an array. */
+
+typedef struct taudb_secondary_metadata_key {
+ struct taudb_timer_callpath *timer_callpath; /* link back to database */
+ struct taudb_thread *thread; /* link back to database, roundabout way */
+ struct taudb_secondary_metadata* parent; /* self-referencing */
+ struct taudb_time_range* time_range;
+ char* name;
+} TAUDB_SECONDARY_METADATA_KEY;
+
+typedef struct taudb_secondary_metadata {
+ char* id; /* link back to database */
+ TAUDB_SECONDARY_METADATA_KEY key;
+ int num_values; /* can have arrays of data */
+ char** value;
+ int child_count;
+ struct taudb_secondary_metadata* children; /* self-referencing  */
+ UT_hash_handle hh; /* uses the id as a compound key */
+ UT_hash_handle hh2; /* uses the key as a compound key */
+} TAUDB_SECONDARY_METADATA;
+
+/* these are for supporting the older schema */
+
+typedef struct perfdmf_experiment {
+ int id;
+ char* name;
+ struct taudb_primary_metadata* primary_metadata;
+} PERFDMF_EXPERIMENT;
+
+typedef struct perfdmf_application {
+ int id;
+ char* name;
+ struct taudb_primary_metadata* primary_metadata;
+} PERFDMF_APPLICATION;
+
+#endif /* TAUDB_STRUCTS_H */
+	</screen>
+	  </sect1>
+	  <sect1 id="taudb.capi.api">
+	  <title>TAUdb C API</title>
+	<screen>
+#ifndef TAUDB_API_H
+#define TAUDB_API_H 1
+
+#include "taudb_structs.h"
+
+/* when a "get" function is called, this global has the number of 
+   top-level objects that are returned. */
+extern int taudb_numItems;
+
+/* the database version */
+extern enum taudb_database_schema_version taudb_version;
+
+/* to connect to the database */
+extern TAUDB_CONNECTION* taudb_connect_config(char* config_name);
+extern TAUDB_CONNECTION* taudb_connect_config_file(char* config_file_name);
+
+/* test the connection status */
+extern int taudb_check_connection(TAUDB_CONNECTION* connection);
+
+/* disconnect from the database */
+extern int taudb_disconnect(TAUDB_CONNECTION* connection);
+
+/************************************************/
+/* query functions */
+/************************************************/
+
+/* functions to support the old database schema - avoid these if you can */
+extern PERFDMF_APPLICATION* 
+    perfdmf_query_applications(TAUDB_CONNECTION* connection);
+extern PERFDMF_EXPERIMENT* 
+    perfdmf_query_experiments(TAUDB_CONNECTION* connection, 
+	PERFDMF_APPLICATION* application);
+extern PERFDMF_APPLICATION* 
+    perfdmf_query_application(TAUDB_CONNECTION* connection, char* name);
+extern PERFDMF_EXPERIMENT* 
+    perfdmf_query_experiment(TAUDB_CONNECTION* connection, 
+	PERFDMF_APPLICATION* application, char* name);
+extern TAUDB_TRIAL* perfdmf_query_trials(TAUDB_CONNECTION* connection, 
+    PERFDMF_EXPERIMENT* experiment);
+
+/* get the data sources */
+extern TAUDB_DATA_SOURCE* 
+    taudb_query_data_sources(TAUDB_CONNECTION* connection);
+extern TAUDB_DATA_SOURCE* 
+    taudb_get_data_source_by_id(TAUDB_DATA_SOURCE* data_sources, 
+	const int id);
+extern TAUDB_DATA_SOURCE* 
+    taudb_get_data_source_by_name(TAUDB_DATA_SOURCE* data_sources, 
+	const char* name);
+
+/* using the properties set in the filter, find a set of trials */
+extern TAUDB_TRIAL* 
+    taudb_query_trials(TAUDB_CONNECTION* connection, boolean complete, 
+	TAUDB_TRIAL* filter);
+extern TAUDB_PRIMARY_METADATA* 
+    taudb_query_primary_metadata(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* filter);
+extern TAUDB_PRIMARY_METADATA* 
+    taudb_get_primary_metadata_by_name(TAUDB_PRIMARY_METADATA* primary_metadata, 
+	const char* name);
+extern TAUDB_SECONDARY_METADATA* 
+    taudb_query_secondary_metadata(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* filter);
+
+/* get the threads for a trial */
+extern TAUDB_THREAD* 
+    taudb_query_threads(TAUDB_CONNECTION* connection, TAUDB_TRIAL* trial);
+extern TAUDB_THREAD* 
+    taudb_query_derived_threads(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_THREAD* 
+    taudb_get_thread(TAUDB_THREAD* threads, int thread_index);
+extern int taudb_get_total_threads(TAUDB_THREAD* threads);
+
+/* get the metrics for a trial */
+extern TAUDB_METRIC* 
+    taudb_query_metrics(TAUDB_CONNECTION* connection, TAUDB_TRIAL* trial);
+extern TAUDB_METRIC* 
+    taudb_get_metric_by_name(TAUDB_METRIC* metrics, const char* name);
+extern TAUDB_METRIC* 
+    taudb_get_metric_by_id(TAUDB_METRIC* metrics, const int id);
+
+/* get the time_ranges for a trial */
+extern TAUDB_TIME_RANGE* 
+    taudb_query_time_range(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_TIME_RANGE* 
+    taudb_get_time_range(TAUDB_TIME_RANGE* time_ranges, const int id);
+
+/* get the timers for a trial */
+extern TAUDB_TIMER* 
+    taudb_query_timers(TAUDB_CONNECTION* connection, TAUDB_TRIAL* trial);
+extern TAUDB_TIMER* 
+    taudb_get_timer_by_id(TAUDB_TIMER* timers, int id);
+extern TAUDB_TIMER* 
+    taudb_get_trial_timer_by_name(TAUDB_TIMER* timers, const char* id);
+extern TAUDB_TIMER* 
+    taudb_get_trial_timer_by_name(TAUDB_TIMER* timers, const char* id);
+extern TAUDB_TIMER_GROUP* 
+    taudb_query_timer_groups(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern void 
+    taudb_parse_timer_group_names(TAUDB_TRIAL* trial, TAUDB_TIMER* timer, 
+	char* group_names);
+extern TAUDB_TIMER_GROUP* 
+    taudb_get_timer_group_from_trial_by_name(TAUDB_TIMER_GROUP* timers, 
+	const char* name);
+extern TAUDB_TIMER_GROUP* 
+    taudb_get_timer_group_from_timer_by_name(TAUDB_TIMER_GROUP* timers, 
+	const char* name);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_query_timer_callpaths(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial, TAUDB_TIMER* timer);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_get_timer_callpath_by_id(TAUDB_TIMER_CALLPATH* timers, int id);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_get_timer_callpath_by_name(TAUDB_TIMER_CALLPATH* timers, 
+	const char* id);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_query_all_timer_callpaths(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern char* taudb_get_callpath_string(TAUDB_TIMER_CALLPATH* timer_callpath);
+
+/* get the counters for a trial */
+extern TAUDB_COUNTER* 
+    taudb_query_counters(TAUDB_CONNECTION* connection, TAUDB_TRIAL* trial);
+extern TAUDB_COUNTER* 
+    taudb_get_counter_by_id(TAUDB_COUNTER* counters, int id);
+extern TAUDB_COUNTER* 
+    taudb_get_counter_by_name(TAUDB_COUNTER* counters, const char* id);
+extern TAUDB_COUNTER_VALUE* 
+    taudb_query_counter_values(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+TAUDB_COUNTER_VALUE* 
+    taudb_get_counter_value(TAUDB_COUNTER_VALUE* counter_values, 
+	TAUDB_COUNTER* counter, TAUDB_THREAD* thread, 
+	TAUDB_TIMER_CALLPATH* context, char* timestamp);
+
+/* get the timer call data for a trial */
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_query_timer_call_data(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial, TAUDB_TIMER_CALLPATH* timer_callpath, 
+	TAUDB_THREAD* thread);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_query_all_timer_call_data(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_query_timer_call_data_stats(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial, TAUDB_TIMER_CALLPATH* timer_callpath, 
+	TAUDB_THREAD* thread);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_query_all_timer_call_data_stats(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_get_timer_call_data_by_id(TAUDB_TIMER_CALL_DATA* timer_call_data, 
+	int id);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_get_timer_call_data_by_key(TAUDB_TIMER_CALL_DATA* timer_call_data, 
+	TAUDB_TIMER_CALLPATH* callpath, TAUDB_THREAD* thread, char* timestamp);
+
+/* get the timer values for a trial */
+extern TAUDB_TIMER_VALUE* 
+    taudb_query_timer_values(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial, TAUDB_TIMER_CALLPATH* timer_callpath, 
+	TAUDB_THREAD* thread, TAUDB_METRIC* metric);
+extern TAUDB_TIMER_VALUE* 
+    taudb_query_timer_stats(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial, TAUDB_TIMER_CALLPATH* timer_callpath, 
+	TAUDB_THREAD* thread, TAUDB_METRIC* metric);
+extern TAUDB_TIMER_VALUE* 
+    taudb_query_all_timer_values(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_TIMER_VALUE* 
+    taudb_query_all_timer_stats(TAUDB_CONNECTION* connection, 
+	TAUDB_TRIAL* trial);
+extern TAUDB_TIMER_VALUE* 
+    taudb_get_timer_value(TAUDB_TIMER_CALL_DATA* timer_call_data, 
+	TAUDB_METRIC* metric);
+
+/* find main */
+extern TAUDB_TIMER* 
+    taudb_query_main_timer(TAUDB_CONNECTION* connection, TAUDB_TRIAL* trial);
+
+/* save everything */
+extern void taudb_save_trial(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update, boolean cascade);
+extern void taudb_save_threads(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_metrics(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timers(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_time_ranges(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timer_groups(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timer_parameters(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timer_callpaths(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timer_call_data(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_timer_values(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_counters(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_counter_values(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_primary_metadata(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+extern void taudb_save_secondary_metadata(TAUDB_CONNECTION* connection, 
+    TAUDB_TRIAL* trial, boolean update);
+
+/************************************************/
+/* memory functions */
+/************************************************/
+
+extern char* taudb_strdup(const char* in_string);
+extern TAUDB_TRIAL* taudb_create_trials(int count);
+extern TAUDB_METRIC*             taudb_create_metrics(int count);
+extern TAUDB_TIME_RANGE*         taudb_create_time_ranges(int count);
+extern TAUDB_THREAD*             taudb_create_threads(int count);
+extern TAUDB_SECONDARY_METADATA* taudb_create_secondary_metadata(int count);
+extern TAUDB_PRIMARY_METADATA*   taudb_create_primary_metadata(int count);
+extern TAUDB_PRIMARY_METADATA*   taudb_resize_primary_metadata(int count, 
+    TAUDB_PRIMARY_METADATA* old_primary_metadata);
+extern TAUDB_COUNTER*            taudb_create_counters(int count);
+extern TAUDB_COUNTER_VALUE*      taudb_create_counter_values(int count);
+extern TAUDB_TIMER*              taudb_create_timers(int count);
+extern TAUDB_TIMER_PARAMETER*    taudb_create_timer_parameters(int count);
+extern TAUDB_TIMER_GROUP*        taudb_create_timer_groups(int count);
+extern TAUDB_TIMER_GROUP*        taudb_resize_timer_groups(int count, 
+    TAUDB_TIMER_GROUP* old_groups);
+extern TAUDB_TIMER_CALLPATH*     taudb_create_timer_callpaths(int count);
+extern TAUDB_TIMER_CALL_DATA*    taudb_create_timer_call_data(int count);
+extern TAUDB_TIMER_VALUE*        taudb_create_timer_values(int count);
+
+extern void taudb_delete_trials(TAUDB_TRIAL* trials, int count);
+
+/************************************************/
+/* Adding objects to the hierarchy */
+/************************************************/
+
+extern void taudb_add_metric_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_METRIC* metric);
+extern void taudb_add_time_range_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIME_RANGE* time_range);
+extern void taudb_add_thread_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_THREAD* thread);
+extern void taudb_add_secondary_metadata_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_SECONDARY_METADATA* secondary_metadata);
+extern void taudb_add_secondary_metadata_to_secondary_metadata
+    (TAUDB_SECONDARY_METADATA* parent, TAUDB_SECONDARY_METADATA* child);
+extern void taudb_add_primary_metadata_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_PRIMARY_METADATA* primary_metadata);
+extern void taudb_add_counter_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_COUNTER* counter);
+extern void taudb_add_counter_value_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_COUNTER_VALUE* counter_value);
+extern void taudb_add_timer_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIMER* timer);
+extern void taudb_add_timer_parameter_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIMER_PARAMETER* timer_parameter);
+extern void taudb_add_timer_group_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIMER_GROUP* timer_group);
+extern void taudb_add_timer_to_timer_group(TAUDB_TIMER_GROUP* timer_group, 
+    TAUDB_TIMER* timer);
+extern void taudb_add_timer_callpath_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIMER_CALLPATH* timer_callpath);
+extern void taudb_add_timer_call_data_to_trial(TAUDB_TRIAL* trial, 
+    TAUDB_TIMER_CALL_DATA* timer_call_data);
+extern void taudb_add_timer_value_to_timer_call_data
+    (TAUDB_TIMER_CALL_DATA* timer_call_data, TAUDB_TIMER_VALUE* timer_value);
+
+/* Profile parsers */
+extern TAUDB_TRIAL* taudb_parse_tau_profiles(const char* directory_name);
+
+/* Analysis routines */
+extern void taudb_compute_statistics(TAUDB_TRIAL* trial);
+
+/* iterators */
+extern TAUDB_DATA_SOURCE* 
+    taudb_next_data_source_by_name_from_connection
+	(TAUDB_DATA_SOURCE* current);
+extern TAUDB_DATA_SOURCE* 
+    taudb_next_data_source_by_id_from_connection
+	(TAUDB_DATA_SOURCE* current);
+extern TAUDB_THREAD* 
+    taudb_next_thread_by_index_from_trial(TAUDB_THREAD* current);
+extern TAUDB_METRIC* 
+    taudb_next_metric_by_name_from_trial(TAUDB_METRIC* current);
+extern TAUDB_METRIC* 
+    taudb_next_metric_by_id_from_trial(TAUDB_METRIC* current);
+extern TAUDB_TIME_RANGE* 
+    taudb_next_time_range_by_id_from_trial(TAUDB_TIME_RANGE* current);
+extern TAUDB_TIMER* 
+    taudb_next_timer_by_name_from_trial(TAUDB_TIMER* current);
+extern TAUDB_TIMER* 
+    taudb_next_timer_by_id_from_trial(TAUDB_TIMER* current);
+extern TAUDB_TIMER* 
+    taudb_next_timer_by_name_from_group(TAUDB_TIMER* current);
+extern TAUDB_TIMER_GROUP* 
+    taudb_next_timer_group_by_name_from_trial
+	(TAUDB_TIMER_GROUP* current);
+extern TAUDB_TIMER_GROUP* 
+    taudb_next_timer_group_by_name_from_timer
+	(TAUDB_TIMER_GROUP* current);
+extern TAUDB_TIMER_PARAMETER* 
+    taudb_next_timer_parameter_by_name_from_timer
+	(TAUDB_TIMER_PARAMETER* current);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_next_timer_callpath_by_name_from_trial
+	(TAUDB_TIMER_CALLPATH* current);
+extern TAUDB_TIMER_CALLPATH* 
+    taudb_next_timer_callpath_by_id_from_trial
+	(TAUDB_TIMER_CALLPATH* current);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_next_timer_call_data_by_key_from_trial
+	(TAUDB_TIMER_CALL_DATA* current);
+extern TAUDB_TIMER_CALL_DATA* 
+    taudb_next_timer_call_data_by_id_from_trial
+	(TAUDB_TIMER_CALL_DATA* current);
+extern TAUDB_TIMER_VALUE* 
+    taudb_next_timer_value_by_metric_from_timer_call_data
+	(TAUDB_TIMER_VALUE* current);
+extern TAUDB_COUNTER* 
+    taudb_next_counter_by_name_from_trial(TAUDB_COUNTER* current);
+extern TAUDB_COUNTER* 
+    taudb_next_counter_by_id_from_trial(TAUDB_COUNTER* current);
+extern TAUDB_COUNTER_VALUE* 
+    taudb_next_counter_value_by_key_from_trial(TAUDB_COUNTER_VALUE* current);
+extern TAUDB_PRIMARY_METADATA* 
+    taudb_next_primary_metadata_by_name_from_trial
+	(TAUDB_PRIMARY_METADATA* current);
+extern TAUDB_SECONDARY_METADATA* 
+    taudb_next_secondary_metadata_by_key_from_trial
+	(TAUDB_SECONDARY_METADATA* current);
+extern TAUDB_SECONDARY_METADATA* 
+    taudb_next_secondary_metadata_by_id_from_trial
+	(TAUDB_SECONDARY_METADATA* current);
+
+#endif /* TAUDB_API_H */
+	</screen>
+	  </sect1>
+	  <sect1 id="taudb.capi.examples">
+	  <title>TAUdb C API Examples</title>
+	  <sect2 id="taudb.capi.examples.insert">
+	    <title>Creating a trial and inserting into the database</title>
+	    <screen>
+#include "taudb_api.h"
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+#include "dump_functions.h"
+
+int main (int argc, char** argv) {
+  TAUDB_CONNECTION* connection = NULL;
+  if (argc &gt;= 2) {
+    connection = taudb_connect_config(argv[1]);
+  } else {
+    fprintf(stderr, "Please specify a TAUdb config file.\n");
+    exit(1);
+  }
+  printf("Checking connection...\n");
+  taudb_check_connection(connection);
+
+  // create a trial
+  TAUDB_TRIAL* trial = taudb_create_trials(1);
+  trial-&gt;name = taudb_strdup("TEST TRIAL");
+  // set the data source to "other"
+  trial-&gt;data_source = taudb_get_data_source_by_id(
+      taudb_query_data_sources(connection), 999);
+  
+  // create some metadata
+  TAUDB_PRIMARY_METADATA* pm = taudb_create_primary_metadata(1);
+  pm-&gt;name = taudb_strdup("Application");
+  pm-&gt;value = taudb_strdup("Test Application");
+  taudb_add_primary_metadata_to_trial(trial, pm);
+
+  pm = taudb_create_primary_metadata(1);
+  pm-&gt;name = taudb_strdup("Start Time");
+  pm-&gt;value = taudb_strdup("2012-11-07 12:30:00");
+  taudb_add_primary_metadata_to_trial(trial, pm);
+
+  // alternatively, you can allocate the primary metadata in blocks
+  pm = taudb_create_primary_metadata(10);
+  pm[0].name = taudb_strdup("ClientID");
+  pm[0].value = taudb_strdup("joe_user");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[0]));
+  pm[1].name = taudb_strdup("hostname");
+  pm[1].value = taudb_strdup("hopper04");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[1]));
+  pm[2].name = taudb_strdup("Operating System");
+  pm[2].value = taudb_strdup("Linux");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[2]));
+  pm[3].name = taudb_strdup("Release");
+  pm[3].value = taudb_strdup("2.6.32.36-0.5-default");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[3]));
+  pm[4].name = taudb_strdup("Machine");
+  pm[4].value = taudb_strdup("Hopper.nersc.gov");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[4]));
+  pm[5].name = taudb_strdup("CPU Cache Size");
+  pm[5].value = taudb_strdup("512 KB");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[5]));
+  pm[6].name = taudb_strdup("CPU Clock Frequency");
+  pm[6].value = taudb_strdup("800.000 MHz");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[6]));
+  pm[7].name = taudb_strdup("CPU Model");
+  pm[7].value = taudb_strdup("Quad-Core AMD Opteron(tm) Processor 8378");
+  taudb_add_primary_metadata_to_trial(trial, &amp;(pm[7]));
+
+  // create a metric
+  TAUDB_METRIC* metric = taudb_create_metrics(1);
+  metric-&gt;name = taudb_strdup("TIME");
+  taudb_add_metric_to_trial(trial, metric);
+
+  // create a thread
+  TAUDB_THREAD* thread = taudb_create_threads(1);
+  thread-&gt;node_rank = 1;
+  thread-&gt;context_rank = 1;
+  thread-&gt;thread_rank = 1;
+  thread-&gt;index = 1;
+  taudb_add_thread_to_trial(trial, thread);
+
+  // create a timer, timer_callpath, timer_call_data, timer_value
+  TAUDB_TIMER_GROUP* timer_group = taudb_create_timer_groups(1);
+  TAUDB_TIMER* timer = taudb_create_timers(1);
+  TAUDB_TIMER_CALLPATH* timer_callpath = taudb_create_timer_callpaths(1);
+  TAUDB_TIMER_CALL_DATA* timer_call_data = taudb_create_timer_call_data(1);
+  TAUDB_TIMER_VALUE* timer_value = taudb_create_timer_values(1);
+
+  timer-&gt;name = taudb_strdup(
+      "int main(int, char **) [{kernel.c} {134,1}-{207,1}]");
+  timer-&gt;short_name = taudb_strdup("main");
+  timer-&gt;source_file = taudb_strdup("kernel.c");
+  timer-&gt;line_number = 134;
+  timer-&gt;column_number = 1;
+  timer-&gt;line_number_end = 207;
+  timer-&gt;column_number_end = 1;
+  taudb_add_timer_to_trial(trial, timer);
+
+  timer_group-&gt;name = taudb_strdup("TAU_DEFAULT");
+  taudb_add_timer_group_to_trial(trial, timer_group);
+  taudb_add_timer_to_timer_group(timer_group, timer);
+
+  timer_callpath-&gt;timer = timer;
+  timer_callpath-&gt;parent = NULL;
+  taudb_add_timer_callpath_to_trial(trial, timer_callpath);
+
+  timer_call_data-&gt;key.timer_callpath = timer_callpath;
+  timer_call_data-&gt;key.thread = thread;
+  timer_call_data-&gt;calls = 1;
+  timer_call_data-&gt;subroutines = 0;
+  taudb_add_timer_call_data_to_trial(trial, timer_call_data);
+
+  timer_value-&gt;metric = metric;
+  // 5 seconds, or 5 million microseconds
+  timer_value-&gt;inclusive = 5000000; 
+  timer_value-&gt;exclusive = 5000000;
+  timer_value-&gt;inclusive_percentage = 100.0;
+  timer_value-&gt;exclusive_percentage = 100.0;
+  timer_value-&gt;sum_exclusive_squared = 0.0;
+  taudb_add_timer_value_to_timer_call_data(timer_call_data, timer_value);
+
+  // compute stats
+  printf("Computing Stats...\n");
+  taudb_compute_statistics(trial);
+
+  // save the trial!
+  printf("Testing inserts...\n");
+  boolean update = FALSE;
+  boolean cascade = TRUE;
+  taudb_save_trial(connection, trial, update, cascade);
+  
+  printf("Disconnecting...\n");
+  taudb_disconnect(connection);
+  printf("Done.\n");
+  return 0;
+}
+	    </screen>
+	  </sect2>
+	  <sect2 id="taudb.capi.examples.query">
+	  <title>Querying a trial from the database</title>
+	    <screen>
+#include "taudb_api.h"
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+void dump_metadata(TAUDB_PRIMARY_METADATA *metadata) {
+   printf("%d metadata fields:\n", HASH_COUNT(metadata));
+   TAUDB_PRIMARY_METADATA * current;
+   for(current = metadata; current != NULL; 
+       current = taudb_next_primary_metadata_by_name_from_trial(current)) {
+     printf("  %s = %s\n", current-&gt;name, current-&gt;value);
+   }
+}
+
+void dump_secondary_metadata(TAUDB_SECONDARY_METADATA *metadata) {
+   printf("%d secondary metadata fields:\n", HASH_COUNT(metadata));
+   TAUDB_SECONDARY_METADATA * current;
+   for(current = metadata; current != NULL; 
+       current = taudb_next_secondary_metadata_by_key_from_trial(current)) {
+     printf("  %s = %s\n", current-&gt;key.name, current-&gt;value[0]);
+   }
+}
+
+void dump_trial(TAUDB_CONNECTION* connection, TAUDB_TRIAL* filter, 
+                boolean haveTrial) {
+   TAUDB_TRIAL* trial;
+   if (haveTrial) {
+     trial = filter;
+   } else {
+     trial = taudb_query_trials(connection, FALSE, filter);
+   }
+   TAUDB_TIMER* timer = taudb_query_main_timer(connection, trial);
+   printf("Trial name: '%s', id: %d, main: '%s'\n\n", 
+          trial-&gt;name, trial-&gt;id, timer-&gt;name);
+}
+
+int main (int argc, char** argv) {
+   printf("Connecting...\n");
+   TAUDB_CONNECTION* connection = NULL;
+   if (argc &gt;= 2) {
+     connection = taudb_connect_config(argv[1]);
+   } else {
+     fprintf(stderr, "Please specify a TAUdb config file.\n");
+     exit(1);
+   }
+   printf("Checking connection...\n");
+   taudb_check_connection(connection);
+   printf("Testing queries...\n");
+
+   int t;
+
+   // test the "find trials" method to populate the trial
+   TAUDB_TRIAL* filter = taudb_create_trials(1);
+   filter-&gt;id = atoi(argv[2]);
+   TAUDB_TRIAL* trials = taudb_query_trials(connection, TRUE, filter);
+   int numTrials = taudb_numItems;
+   for (t = 0 ; t &lt; numTrials ; t = t+1) {
+      printf("  Trial name: '%s', id: %d\n", 
+	         trials[t].name, trials[t].id);
+      dump_metadata(trials[t].primary_metadata);
+      dump_secondary_metadata(trials[t].secondary_metadata);
+      dump_trial(connection, &amp;(trials[t]), TRUE);
+   }
+
+   printf("Disconnecting...\n");
+   taudb_disconnect(connection);
+   printf("Done.\n");
+   return 0;
+}
+	    </screen>
+	  </sect2>
+	  </sect1>
+  
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("book.xml" "Book" "chapter")
+end:
+-->

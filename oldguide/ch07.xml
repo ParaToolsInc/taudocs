@@ -1,0 +1,44 @@
+<chapter id="ChapterSummery">
+  <title>Summary</title>
+
+  <simplesect>The TAU performance framework and toolkit is an ongoing
+  research and development project. The TAU Portable Profiling and Tracing
+  Toolkit described in this document represents functionality present in
+  the current software release. All available software should be
+  considered research software available to the community under the BSD
+  style license.</simplesect>
+
+  <sect1 id="SoftwareAvalible">
+    <title>Software Availability</title>
+
+    <para>TAU Portable Profiling and Tracing Toolkit may be downloaded as
+	 freeware from the following website <ulink
+	 url="http://www.cs.uoregon.edu/research/tau">TAU</ulink>:</para>
+
+    <screen>
+http://www.cs.uoregon.edu/research/tau
+</screen>
+
+    <para>For more information, please refer to the documentation section at the above URL. Bug reports and comments may be sent to:</para>
+
+    <screen>
+tau-bugs@cs.uoregon.edu
+</screen>
+
+    <para>Technical papers about TAU can be downloaded from the TAU Publications
+	 homepage at <ulink
+	 url="http://www.cs.uoregon.edu/research/tau/pubs.php">TAU-PUBS</ulink></para>
+
+  </sect1>
+  
+  <sect1 id="Credits">
+    <title>Acknowledgments</title>
+
+    <para>The TAU development team wishes to thank the U.S. Government,
+    Department of Energy for their support of the TAU project under the
+    DOE-2000, DOE MICS office contract, University of Utah ASCI subcontract,
+    and ASCI Level 3 grants. </para>
+
+  </sect1>
+
+</chapter>

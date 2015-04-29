@@ -1,0 +1,912 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+<chapter>
+
+	<title>Tools</title>
+  <!-- cxxparse -->
+	<refentry id='cxxparse'>
+  	<refmeta>
+    	<refentrytitle>cxxparse</refentrytitle>
+    	<manvolnum>1</manvolnum>
+  	</refmeta>
+
+  	<refnamediv>
+    	<refname>cxxparse</refname>
+    	<refpurpose>Shell scripts that executes the right parsers and IL analyzers</refpurpose>
+  	</refnamediv>
+  
+  	<refsynopsisdiv>
+    	<cmdsynopsis>
+      	<command>cxxparse</command>
+      
+      	<arg choice="req">
+					<replaceable class="parameter">C++ file</replaceable>
+				</arg>
+					
+				<arg choice="opt">
+					<option>-I</option>
+					<replaceable class="parameter">directory</replaceable>
+      	</arg>
+      
+      	<arg choice="opt">
+					<option>-D</option>
+					<replaceable class="parameter">define</replaceable>
+     		</arg>
+      
+   		</cmdsynopsis>
+  	</refsynopsisdiv>
+  
+		<refsect1>
+  		<title>Description</title>
+  		<para>
+	  		C++ file is the source file for which a program database (PDB)
+	    	file is generated. The filename of the PDB file will have the basename of
+				the C++ file and the suffix ".pdb".
+			</para>
+			<para>
+				You can also specify additional flags necessary for your program to
+				compile. The configure script will determine most, if not all,
+				flags and incorporate these in cxxparse. Local options, such as an
+				application include directory, can be specified here.
+			</para>
+		</refsect1>
+
+		<refsect1>
+  		<title>Options</title>
+  		<para>
+    		<option>-I directory</option>
+  	  	Adds a directory dir to the list of directories searched
+				for INCLUDE statements.
+  		</para>
+ 		 	<para>
+    		<option>-D define</option>
+  			A list of file that this C file defines.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para>
+				cxxparse example.cc
+			</para>
+		</refsect1>
+	</refentry>	
+	<refentry id='cparse'>
+  	<refmeta>
+    	<refentrytitle>cparse</refentrytitle>
+    	<manvolnum>1</manvolnum>
+  	</refmeta>
+
+  	<refnamediv>
+    	<refname>cparse</refname>
+    	<refpurpose>Shell scripts that executes the right parsers and IL analyzers</refpurpose>
+  	</refnamediv>
+  
+  	<refsynopsisdiv>
+    	<cmdsynopsis>
+      	<command>cparse</command>
+      
+      	<arg choice="req">
+					<replaceable class="parameter">C file</replaceable>
+				</arg>
+					
+				<arg choice="opt">
+					<option>-I</option>
+					<replaceable class="parameter">directory</replaceable>
+      	</arg>
+      
+      	<arg choice="opt">
+					<option>-D</option>
+					<replaceable class="parameter">define</replaceable>
+     		</arg>
+      
+   		</cmdsynopsis>
+  	</refsynopsisdiv>
+  
+		<refsect1>
+  		<title>Description</title>
+  		<para>
+	  		C file is the source file for which a program database (PDB)
+	    	file is generated. The filename of the PDB file will have the basename of
+				the C file and the suffix ".pdb".
+			</para>
+			<para>
+				You can also specify additional flags necessary for your program to
+				compile. The configure script will determine most, if not all,
+				flags and incorporate these in cparse. Local options, such as an
+				application include directory, can be specified here.
+			</para>
+		</refsect1>
+
+		<refsect1>
+  		<title>Options</title>
+  		<para>
+    		<option>-I directory</option>
+  	  	Adds a directory dir to the list of directories searched
+				for INCLUDE statements.
+  		</para>
+ 		 	<para>
+    		<option>-D define</option>
+  			A list of file that this C file defines.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para>
+				cparse example.c
+			</para>
+		</refsect1>
+
+	</refentry>
+	<refentry id='f90parse'>
+  	<refmeta>
+    	<refentrytitle>f90parse</refentrytitle>
+    	<manvolnum>1</manvolnum>
+  	</refmeta>
+
+  	<refnamediv>
+    	<refname>f90parse</refname>
+    	<refpurpose>Shell scripts that executes the right parsers and IL analyzers</refpurpose>
+  	</refnamediv>
+  
+  	<refsynopsisdiv>
+    	<cmdsynopsis>
+      	<command>f90parse</command>
+      
+				<arg choice="req">
+					<replaceable class="parameter">Fortran file</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-F</option>
+				</arg>
+				<arg choice="opt">
+					<option>-I</option>
+					<replaceable class="parameter">directory</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-M</option>
+					<replaceable class="parameter">directory</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-R</option>
+				</arg>
+				<arg choice="opt">
+					<option>-r</option>
+				</arg>
+				<arg choice="opt">
+					<option>-U</option>
+				</arg>
+				<arg choice="opt">
+					<option>-u</option>
+				</arg>
+				<arg choice="opt">
+					<option>-A</option>
+				</arg>
+				<arg choice="opt">
+					<option>-Llfile</option>
+				</arg>
+   		</cmdsynopsis>
+  	</refsynopsisdiv>
+		
+		<refsect1>
+  		<title>Description</title>
+  		<para>
+	  		Fortran file is the source file for which a program database (PDB)
+	    	file is generated. The filename of the PDB file will have the basename of
+				the Fortran file and the suffix ".pdb".
+			</para>
+			<para>
+				You can also specify additional flags necessary for your program to
+				compile. The configure script will determine most, if not all,
+				flags and incorporate these in cparse. Local options, such as an
+				application include directory, can be specified here.
+			</para>
+		</refsect1>
+  
+		<refsect1>
+			<title>Options</title>
+			<para>
+				<option>-F</option>
+				Fixed form for source. By default, the form is free. In fixed
+        form positions (columns) 1-5 can be used only for lables,
+        position 6 is for continuation and a "C" or "*" is for comment
+        lines. The main program must fall in positions 7-72.
+			</para>
+			<para>
+				<option>-I&lt;dir&gt;</option>
+				Adds a directory dir to the list of directories searched
+        for INCLUDE statements.
+			</para>
+			<para>
+      	<option>-M&lt;dir&gt;</option>
+				Specifies a list of directories for searching module
+        definition files. Members of the list must be separated by
+        semicolon. While modules are defined or used this option is
+        mandatory.
+			</para>
+			<para>
+      	<option>-R</option>
+				Suppress folding constant expressions but those that either are
+        public constant values of modules or define parameters of type.
+			</para>
+			<para>
+				<option>-r</option>
+				Issue remarks, which are diagnostic messages even milder than
+        warnings.
+			</para>
+			<para>
+				<option>-U</option>
+				Case sensitivity for identifiers.
+			</para>
+			<para>
+				<option>-u</option>
+				Disable implicit typing of identifiers. This has the same
+        effect as IMPLICIT NONE statement as applied to the file.
+			</para>
+			<para>
+				<option>-A</option>
+				Warn about use of non-F90 features, disable features that
+        conflict with F90.
+			</para>
+			<para>
+      	<option>-Llfile</option>
+				Generate raw listing information in the file lfile. This
+        information is used to generate a formatted listing where each
+        line begins with a key character that identifies the type:
+        	N  - Normal line
+          S  - Comment line
+          R  - Remark diagnostics
+          W  - Warning diagnostics
+          E  - Error diagnostics
+          C  - Catastrophic error diagnostics.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Note</title>
+			<para>
+		  	The Fortran 90 parser included in PDT adheres very strictly
+		  	to the F90 language specification and does not comply with
+      	extensions to the language typically implemented by vendors.
+        This includes real*8 or integer*8 types, kind parameters,
+        and some continuation fields in fixed form. In some cases,
+        the source must be modified to comply with the standard before
+        the PDT front-end can parse the program. f95parse may be used
+        to parse codes that f90parse cannot handle.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para>
+				f90parse example.f90
+			</para>
+		</refsect1>
+	</refentry>
+	
+	<refentry id='f95parse'>
+  	<refmeta>
+    	<refentrytitle>f95parse</refentrytitle>
+    	<manvolnum>1</manvolnum>
+  	</refmeta>
+
+  	<refnamediv>
+    	<refname>f95parse</refname>
+    	<refpurpose>Shell scripts that executes the right parsers and IL analyzers</refpurpose>
+  	</refnamediv>
+  
+  	<refsynopsisdiv>
+    	<cmdsynopsis>
+      	<command>f95parse</command>
+      
+				<arg choice="req">
+					<replaceable class="parameter">Fortran file</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-F</option>
+				</arg>
+				<arg choice="opt">
+					<option>-I</option>
+					<replaceable class="parameter">directory</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-M</option>
+					<replaceable class="parameter">directory</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-R</option>
+				</arg>
+				<arg choice="opt">
+					<option>-r</option>
+				</arg>
+				<arg choice="opt">
+					<option>-U</option>
+				</arg>
+				<arg choice="opt">
+					<option>-u</option>
+				</arg>
+				<arg choice="opt">
+					<option>-A</option>
+				</arg>
+				<arg choice="opt">
+					<option>-Llfile</option>
+				</arg>
+				<arg choice="opt">
+					<option>-o</option>
+					<replaceable>pdbfile</replaceable>
+				</arg>
+   		</cmdsynopsis>
+  	</refsynopsisdiv>
+		
+		<refsect1>
+  		<title>Description</title>
+  		<para>
+	  		Fortran file is the source file for which a program database (PDB)
+	    	file is generated. The filename of the PDB file will have the basename of
+				the Fortran file and the suffix ".pdb".
+			</para>
+			<para>
+				You can also specify additional flags necessary for your program to
+				compile. The configure script will determine most, if not all,
+				flags and incorporate these in cparse. Local options, such as an
+				application include directory, can be specified here.
+			</para>
+		</refsect1>
+  
+		<refsect1>
+			<title>Options</title>
+		
+			<para>
+				<option>-v</option>
+				Verbose flag. In this mode, all error messages and warnings
+        are displayed.
+     	</para>
+			<para>
+				<option>-R free</option>
+				Specifies free form, -R fixed specifies fixed form for
+        the Fortran source code. If your Fortran source has a .f file
+        extension and uses free form, it is important to specify
+        this flag. By default the parser assumes fixed form for F77.
+        For other flags that f95parse accepts, please refer to the
+        etc/flint.hls file.
+			</para>
+			<para>
+				<option>-p</option>
+				invoke preprocessor.
+			</para>
+			<para>
+      	<option>-o&lt;pdbfile&gt;</option>
+				Specifies the name of the PDB file. Note: there is
+        no space between -o and the file name.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Note</title>
+			<para>
+      	You may specify multiple fortran files on the command-line to
+        resolve module dependencies. e.g.,
+				<screen>
+% f95parse `find . -name "*.f90" -print` -omerged.pdb
+				</screen>
+      	parses all files with .f90 suffix to produce merged.pdb file.
+			</para>
+		
+			<para>
+				Currently, f95parse can produce PDB files that have enough
+ 				information for use with the TAU profiling package. However,
+        it does not have argument and calltree information that may
+        be needed for other tools such as CHASM. This will be added
+        in future releases.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para>
+				f95parse example.f95
+			</para>
+		</refsect1>
+	</refentry>
+
+	<refentry>
+		
+		<refmeta>
+			<refentrytitle>pdbconv</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>pdbconv</refname>
+			<refpurpose>Simple tool that checks the consistency/correctness of a PDB file
+            and converts it to a more verbose, human-readable
+						format.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbconv</command>	
+				<arg choice="opt">
+					<option>-c</option>
+				</arg>
+				<arg choice="opt">
+					<option>-o</option>
+					<replaceable>&lt;outfile&gt;</replaceable>
+				</arg>
+				<arg choice="opt">
+					<option>-A</option>
+				</arg>
+				<arg choice="opt">
+					<option>-G</option>
+				</arg>
+				<arg choice="opt">
+					<option>-M</option>
+				</arg>
+				<arg choice="opt">
+					<option>-N</option>
+				</arg>
+				<arg choice="opt">
+					<option>-P</option>
+				</arg>
+				<arg choice="opt">
+					<option>-R</option>
+				</arg>
+				<arg choice="opt">
+					<option>-S</option>
+				</arg>
+				<arg choice="opt">
+					<option>-T</option>
+				</arg>
+				<arg choice="opt">
+					<option>-Y</option>
+				</arg>
+				<arg choice="req">
+					<replaceable>&lt;pdbfile&gt;</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+		
+		<refsect1>
+			<title>Description</title>
+			<para>
+      	Called without any options, pdbconv reads the PDB file
+ 				&lt;pdbfile&gt;
+        checks it for correctness, and prints it out again in a standard
+        form.  The following options are available:
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Options</title>
+			<para>
+      	<option>-c</option>
+				Check for correctness only
+			</para>
+			<para>
+				<option>-o &lt;outfile&gt;</option>
+				Write output to file &gt;outfile&lt;
+			</para>
+			<para>
+				<option>-A</option>
+				Convert (A)ll item output to verbose format
+			</para>
+			<para>
+				<option>-G</option>
+				Print only (G)roup items (in verbose format)
+			</para>
+			<para>
+				<option>-M</option>
+				Print only (M)acro items (in verbose format)
+			</para>
+			<para>
+				<option>-N</option>
+				Print only (N)amespace items (in verbose format)
+			</para>
+			<para>
+				<option>-P</option>
+				Print only (P)ragma items (in verbose format)
+			</para>
+			<para>
+				<option>-R</option>
+				Print only (R)outine items (in verbose format)
+			</para>
+			<para>
+				<option>-S</option>
+        Print only (S)ource file items (in verbose format)
+			</para>
+			<para>
+				<option>-T</option>
+        Print only (T)emplate items (in verbose format)
+			</para>
+			<para>
+				<option>-Y</option>
+        Print only t(Y)pe items (in verbose format)
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+%>pdbconv -Y testApp.pdb
+TY#1 double
+location:           [UNKNOWN]
+kind:               c/c++Float
+floatKind:          double
+...
+</screen></para>
+		</refsect1>
+
+	</refentry>
+
+	<refentry>
+		<refmeta>
+			<refentrytitle>pdbhtml</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>pdbhtml</refname>
+			<refpurpose>
+				Produces "htmlized" versions of all source and header files
+			</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbhtml</command>
+
+				<arg choice="req">
+					<replaceable>&lt;pdbfile&gt;</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+
+		<refsect1>
+			<title>Description</title>
+			<para>
+				Produces "htmlized" versions of all source and header files
+        contained in the program database file &lt;pdbfile&gt;. It also
+        produces an HTML index of Classes, Templates, Namespaces,
+        and Functions called "index.html".
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Options</title>
+			<para>
+				<option>&lt;pdbfile&gt;</option>
+			</para>
+		</refsect1>
+	</refentry>
+
+	<refentry>
+		<refmeta>
+			<refentrytitle>pdbmerge</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>pdbmerge</refname>
+			<refpurpose>
+				Takes a set of program database files and merges them into one.
+ 			</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbmerge</command>
+				
+				<arg choice="opt">
+					<option>-v</option>
+				</arg>
+				<arg choice="opt">
+					<option>-o</option>
+					<replaceable>&lt;outfile&gt;</replaceable>
+				</arg>
+				<arg>
+					<replaceable>&lt;pdbfiles&gt;</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+
+		<refsect1>
+			<title>Description</title>
+			<para>
+				<option>-v</option>
+				Verbose
+			</para>
+			<para>
+				<option>-o &lt;outfile&gt;</option>
+				Write merged database to file &lt;outfile&gt; instead of cout.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Note</title>
+			<para>
+				Namespace definitions spread over several files are
+				not merged correctly yet.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+%>pdbmerge -o new.pdb test1.pdb test2.pdb
+</screen></para>
+		</refsect1>
+
+	</refentry>
+
+
+	<refentry>
+		<refmeta>
+			<refentrytitle>pdbtree</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+		
+		<refnamediv>
+			<refname>pdbtree</refname>
+			<refpurpose>Prints the source file inclusion tree, class hierarchy (IS-A +
+			HAS-A), and function call graph.</refpurpose>
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbtree</command>
+
+				<arg choice="opt">
+					<option>-C</option>
+				</arg>
+				<arg choice="opt">
+					<option>-R</option>
+				</arg>
+				<arg choice="opt">
+					<option>-S</option>
+				</arg>
+				<arg choice="req">
+					<replaceable>&lt;pdbfile&gt;</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+
+		<refsect1>
+			<title>Description</title>
+			<para>
+				Prints the source file inclusion tree, class hierarchy (IS-A +
+				HAS-A), and function call graph.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Options</title>
+			<para>
+				<option>-C</option>
+				Print only the (C)lass hierarchy
+			</para>
+			<para>
+				<option>-R</option>
+				Print only the (R)outine call graph
+			</para>
+			<para>
+				<option>-S</option>
+				Print only the (S)ource file inclusion tree
+			</para>
+		</refsect1>
+		
+		<refsect1>
+			<title>Note</title>
+			<para>
+				Class hierarchy is a DAG, not a tree, and therefore display
+				is bad.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+%>pdbtree -R tutorial.pdb  
+void B::callA(A)
+`--> bool A::isZero(int)
+</screen></para>
+		</refsect1>
+	</refentry>
+	
+	<refentry>
+		<refmeta>
+			<refentrytitle>pdbcomment</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>pdbcomment</refname>
+			<refpurpose>
+				Scans all (non-system) source files related to a PDB file
+        for C, C++, Fortran comments, C/C++ pragmas, and Fortran
+				directives and prints out a new enhanced PDB file containing
+				this additional information.
+			</refpurpose>
+		</refnamediv>
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbcomment</command>
+				<arg choice="opt">
+					<option>-o &lt;outfile&gt;</option>
+				</arg>
+				<arg choice="opt">
+					<option>-c</option>
+				</arg>
+				<arg choice="opt">
+					<option>-p</option>
+				</arg>
+				<arg choice="opt">
+					<option>-d</option>
+				</arg>
+				<arg choice="opt">
+					<option>-v</option>
+				</arg>
+				<arg choice="opt">
+					<option>-D</option>
+					<replaceable>string</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+		
+		<refsect1>
+			<title>Description</title>
+
+			<para>
+				Scans all (non-system) source files related to a PDB file
+				for C, C++, Fortran comments, C/C++ pragmas, and Fortran
+				directives and prints out a new enhanced PDB
+				file containing this additional information.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Options</title>
+			
+			<para>
+				<option>-o &lt;outfile&gt;</option>
+				Write output to file &lt;outfile&gt;
+			</para>
+			<para>
+				<option>-c</option>
+				Only scan for comments (ignore pragmas)
+			</para>
+			<para>
+				<option>-p</option>
+				Only scan for pragmas (ignore comments)
+			</para>
+			<para>
+				<option>-d</option>
+				Fortran only: Consider lines with a 'D'
+				in the first column also as comments.
+			</para>
+			<para>
+				<option>-v</option>
+				Verbose mode
+			</para>
+			<para>
+				<option>-D string</option>
+				Fortran only: Scan also for directives
+        which are marked with the sentinel 'string'.
+        This option can be specified several times,
+        once for each directive sentinel to scan for.
+        Case does NOT matter when specifiying 'string'.
+        pdbcomment recognizes OpenMP (sentinel $omp)
+        by default.
+			</para>
+		</refsect1>
+
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+% pdbcomment test.pdb
+&lt;PDB 3.0&gt;
+lang c++
+
+so#1 testApp.cc
+scom co#0 c so#1 1 1 so#1 3 2 /*\n      class T\n*/
+scom co#1 c++ so#1 8 3 so#1 8 19 // create float. 
+			</screen></para>
+		</refsect1>
+	</refentry>
+
+	<refentry>
+
+		<refmeta>
+			<refentrytitle>pdbStmt</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>pdbStmt</refname>
+			<refpurpose>
+				Scans pdb file and prints every statement in the pdb file.
+			</refpurpose>
+
+		</refnamediv>
+
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>pdbStmt</command>
+
+				<arg choice="req">
+					<replaceable>pdbFile</replaceable>
+				</arg>
+			</cmdsynopsis>
+		</refsynopsisdiv>
+
+		<refsect1>
+			<title>Description</title>
+			<para>Scans pdb file and prints every statement in the pdb file.</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+% pdbstmt testApp.pdb
+--------------- int T::foo(double, int):
+st#1  (  7, 2)         :  {
+st#2  (  9, 3) (  9,12):    decl
+st#0  ( 10, 3) ( 10,13):    return
+               ( 11, 2):  }						 
+			</screen></para>
+		</refsect1>
+	</refentry>
+	
+	<refentry>
+
+		<refmeta>
+			<refentrytitle>xmlgen</refentrytitle>
+			<manvolnum>1</manvolnum>
+		</refmeta>
+
+		<refnamediv>
+			<refname>xmlgen</refname>
+			<refpurpose>Converts a PDB file to an XML file.</refpurpose>
+		</refnamediv>
+		<refsynopsisdiv>
+			<cmdsynopsis>
+				<command>xmlgen</command>
+				<arg choice="opt">
+					<option>-c</option>
+				</arg>
+				<arg choice="opt">
+					<option>-s</option>
+				</arg>
+				<arg choice="opt">
+					<option>-l</option>
+				</arg>
+			</cmdsynopsis>	
+		</refsynopsisdiv>
+
+		<refsect1>
+			<title>Options</title>
+			<para>
+				<option>-c</option>
+				optional flag.  forces generator to assume C, not C++.
+			</para>
+			<para>
+				<option>-s</option>
+				optional flag.  causes generator to emit statement level info.
+			</para>
+			<para>
+				<option>-l</option>
+				optional flag.  causes generator to emit locations with -s.
+			</para>
+		</refsect1>
+		
+		<refsect1>
+			<title>Note</title>
+			<para>
+				In the current release, support for Fortran is mostly 
+      	complete. C++ templates or multiple inheritance are not yet 
+      	supported. The CHASM project [http://sourceforge.net/projects/chasm-interop] 
+      	at LANL developed xmlgen.
+			</para>
+		</refsect1>
+		<refsect1>
+			<title>Example</title>
+			<para><screen>
+% xmlgen testApp.pdb
+			</screen></para>
+		</refsect1>
+	</refentry>	
+</chapter>
+

@@ -1,0 +1,890 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<chapter id="tauInstrumentation">
+  <title>Tau Instrumentation</title>
+
+<!--  
+  <sect1>
+    <title>Introduction</title>
+    
+    <para>
+      The Tuning and Analysis Utilities (TAU) offers two methods for
+      instrumenting C, C++, and Fortran code for profiling and tracing. The
+      first is to instrument software by hand.  While it gives the user
+      complete control over what methods are instrumented, it has several
+      disadvantages; the primary one being that process of inserting and
+      removing code can be time consuming and error prone.  The second method
+      is to have TAU automatically instrument your source using the MPI wrapper
+      library and the TAU Compiler.
+    </para>
+    
+    <para>
+      If you are only interested in time spent in MPI functions, you only
+      need to link your software to the TAU MPI wrapper library. See
+      "Profiling MPI Software using TAU" for more information on this
+      subject. However, most projects need a comprehensive picture of where
+      time is spent. The TAU Compiler provides a simple way to automatically
+      instrument an entire project.  The TAU Compiler can be used on C, C++,
+      fixed form Fortran, and free form Fortran.
+    </para>
+    
+  </sect1>
+  
+  <sect1>
+    <title>Installing TAU Compiler</title>
+    
+    <para>
+      The TAU compiler comes standard with the TAU distribution, but requires
+      that the Program Database Toolkit (PDT) be installed. TAU relies on the
+      parsers provided by PDT to automatically insert TAU instrumentation into
+      functions. Please see "Installing The Program Database Toolkit" for
+      information on how to install PDT. The rest of this section will provide
+      simple installation instructions for installing TAU to profile source
+      code. Please see "Installing The Tuning and Analysis Utilities" for more
+      information on the specific options available for a TAU installation.
+    </para>
+    
+    <para>
+      Download and extract TAU from the TAU pages at The University of Oregon.
+      In the extracted TAU directory, issue the command:
+      <screen>
+% ./configure -c++=&lt;compiler&gt; -cc=&lt;compiler&gt; \
+  -fortran=&lt;compiler&gt; -pdt=&lt;pdtdir&gt; -mpi \
+  -mpiinc=&lt;dir&gt; -mpilib=&lt;dir&gt; -PROFILE
+      </screen>
+
+      This configures TAU to instrument MPI programs C++, C and Fortran
+      programs, using PDT for automatic instrumentation. If you would like to
+      see what other options are available, you can issue:
+      
+      <screen>
+./configure -help
+      </screen>
+    
+      to get a complete listing of the configuration flags.
+    </para>
+
+    <para>
+      Configure will give you feedback on its progress. After the
+      configuration is complete, you will want to add the directory indicated
+      by TAU to your path; that is where the TAU Compiler will be located.
+      Now you can enter:
+      <screen>
+% make install
+      </screen>
+      to install TAU into the local directory.
+    </para>
+  </sect1>
+  <sect1>
+    <title>Instrumenting with TAU Compiler</title>
+    <para>
+      This section describes how the TAU Compiler can be used to instrument 
+      Fortran 90, C, and C++ projects. In general, the only necessary step is
+      to replace the compiler used to build your projects with the TAU
+      compiler command.
+    </para>
+    
+    
+    <para>
+      The combination of the TAU generated Makefile (found in
+      &lt;arch&gt;/lib) and tau_compiler.sh (found in &lt;atch&gt;/bin)
+      makes it particularly easy to instrument projects that use make to
+      control the build. Open your makefile, insert
+      <screen>
+include &lt;tau_dir&gt;/&lt;arch&gt;/lib/Makefile.tau-mpi-pdt
+      </screen>
+      in the top of it. This will include all of the header, library, 
+      and tool definitions that tau_compiler will need for your compiler,
+      mpi installation, and pdt installation. Note that if you configured
+      TAU with more options than listed in the installation section, the
+      name of the makefile may be slightly different.
+    </para>
+
+    <para>
+      Now, find the line that states which compiler is used for
+      compilation. For example, your Makefile might contain the line
+      <screen>
+CXX=g++
+      </screen>
+      Replace that line with
+      <screen>
+CXX=$(TAU_COMPILER) g++
+      </screen>
+      Perform this step for every Makefile in your project. Build your project
+      as normal. If everything goes well, the TAU Compiler will parse your
+      source files, instrument them with profiling code, save the instrumented
+      files in temporary files, build and link the temporary files, the
+      finally clean up the files. The build process will emit extra
+      information, but the resulting object files and binaries will be
+      completely instrumented. Now, when you run your program, it will write
+      one or more profile files to your working directory. These profiles can
+      be viewed using pprof or paraprof. For more information, see The
+      Paraprof User's Guide.
+    </para>
+
+</sect1>
+<sect1 id="tau_compiler">
+    <title>Using tau_compiler.sh</title>
+    <para>
+        If you want to instrument a single file, without using a makefile to
+        handle all of the heavy lifting, you can use tau_compiler.sh by itself
+        to instrument a file. Its syntax is:
+        <screen>
+% tau_compiler.sh &lt;tau_compiler_options&gt; &lt;compiler&gt; \
+    &lt;compiler_options&gt;
+</screen>
+        The options available for tau_compiler.sh are:
+        </para>
+
+        <itemizedlist>
+
+            <listitem><para><literal>-optVerbose</literal></para>
+                <para>Turn on verbose debugging messages.</para>
+            </listitem>
+
+            <listitem><para><literal>-optQuiet</literal></para>
+                <para>Suppresses excessive output.</para>
+            </listitem>
+            
+            <listitem><para><literal>-optPdtDir=&lt;dir&gt;</literal></para>
+                <para>The PDT architecture directory. Typically 
+                    <literal>$(PDTDIR)/$(PDTARCHDIR)</literal>.</para>
+            </listitem>
+
+
+            <listitem><para><literal>-optPdtF95Opts=&lt;opts&gt;</literal></para>
+                <para>Options for Fortran parser in PDT (f95parse).</para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtF95Reset=&lt;opts&gt;</literal></para>
+                <para>Reset options to the Fortran parser to the given list.</para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtCOpts=&lt;opts&gt;</literal></para>
+                <para>Options for C parser in PDT (cparse). Typically 
+                    <literal>$(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)</literal>.
+                </para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtCReset=&lt;opts&gt;</literal></para>
+                <para>Reset options to the C parser to the given list</para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtCxxOpts=&lt;opts&gt;</literal></para>
+	        <para>Options for C++ parser in PDT (cxxparse).  Typically 
+                    <literal>$(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)</literal>.
+                </para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtCReset=&lt;opts&gt;</literal></para>
+                <para>Reset options to the C++ parser to the given list</para>
+            </listitem>
+
+            <listitem><para><literal>-optPdtF90Parser=&lt;parser&gt;</literal></para>
+                <para>Specify a different Fortran parser. For e.g., 
+                    <literal>f90parse</literal> instead of 
+                    <literal>f95parse</literal>.</para>
+            </listitem>
+
+            <listitem><para><literal>-optGnuFortranParser=&lt;parser&gt;</literal></para>
+                <para>Specify the GNU <literal>gfortran</literal> Fortran parser
+								<literal>gfparse</literal> instead of
+								<literal>f95parse</literal>
+								</para>
+            </listitem>
+            <listitem><para><literal>-optPdtUser=&lt;opts&gt;</literal></para>
+                <para>Optional arguments for parsing source code.</para>
+            </listitem>
+
+            <listitem><para><literal>-optTauInstr=&lt;path&gt;</literal></para>
+                <para>Specify location of tau_instrumentor. Typically 
+                    <literal>$(TAUROOT)/$(CONFIG_ARCH)/bin/tau_instrumentor</literal>.</para>
+            </listitem>
+
+						<listitem><para><literal>-optDetectMemoryLeaks</literal></para>
+						    <para>Instructs TAU to detect any memory leaks in C/C++
+								programs. TAU then tracks the source location of the memory leak as
+								well as the place in the callstack where the memory allocation
+								was made.</para>
+						</listitem>
+
+						<listitem><para><literal>-optIncludeMemory</literal></para>
+								<para>For interal use only</para>
+						</listitem>
+
+            <listitem><para><literal>-optPreProcess</literal></para>
+                <para>Preprocess the source code before parsing. Uses
+								/usr/bin/cpp -P by default.
+            		</para>
+						</listitem>
+            
+						<listitem><para><literal>-optCPP=&lt;path&gt;</literal></para>
+                <para>Specify an alternative preprocessor and pre-process the
+								sources.
+            		</para>
+						</listitem>
+            
+						<listitem><para><literal>-optCPPOpts=&lt;options&gt;</literal></para>
+                <para>
+            		Specify additional options to the C pre-processor.</para>
+						</listitem>
+						
+						<listitem><para><literal>-optCPPReset=&lt;options&gt;</literal></para>
+                <para>
+								Reset C preprocessor options to the specified list.
+								</para>
+						</listitem>
+						<listitem><para><literal>-optTauSelectFile=&lt;file&gt;</literal></para>
+                <para>Specify selective instrumentation file for tau_instrumentor</para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optPDBFile=&lt;file&gt;</literal>
+                </para>
+                <para>
+                    Specify PDB file for tau_instrumentor. Skips parsing stage.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optTau=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Specify options for tau_instrumentor.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optCompile=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Options passed to the compiler. Typically 
+                    <literal>
+                        $(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)
+                    </literal>.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optTauDefs=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Options passed to the compiler by TAU. Typically
+										<literal>
+                    	$(TAU_DEFS)
+										</literal>.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optTauIncludes=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Options passed to the compiler by TAU. Typically
+										<literal>
+										$(TAU_MPI_INCLUDE) $(TAU_INCLUDE)
+										</literal>.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal>-optReset=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Reset options to the compiler to the given list
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optLinking=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Options passed to the linker. Typically 
+                    <literal>$(TAU_MPI_FLIBS) $(TAU_LIBS) $(TAU_CXXLIBS)
+                    </literal>.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optLinkReset=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Reset options to the linker to the given list.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optTauCC=&lt;cc&gt;</literal>
+                </para>
+                <para>
+                    Specifies the C compiler used by TAU.
+                </para>
+            </listitem>
+           
+            <listitem>
+                <para>
+                    <literal>-optOpariTool=&lt;path/opari&gt;</literal>
+                </para>
+                <para>
+                    Specifies the location of the Opari tool.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optOpariDir=&lt;path&gt;</literal>
+                </para>
+                <para>
+                    Specifies the location of the Opari directory.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optOpariOpts=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Specifies optional arguments to the Opari tool.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optOpariReset=&lt;opts&gt;</literal>
+                </para>
+                <para>
+                    Resets options passed to the Opari tool.
+                </para>
+            </listitem>
+            
+            <listitem>
+                <para>
+                    <literal>-optNoMpi</literal>
+                </para>
+                <para>
+                    Removes <literal>-l*mpi*</literal> 
+                    libraries during linking (default).
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optMpi</literal>
+                </para>
+                <para>
+                    Does not remove 
+                    <literal>-l*mpi*</literal> 
+                    libraries during linking.
+                </para>
+            </listitem>
+
+            <listitem>
+                <para>
+                    <literal>-optNoRevert</literal>
+                </para>
+                <para>
+                    Exit on error. Does not revert to the original compilation
+										rule on error.
+                </para>
+            </listitem>
+            
+						<listitem>
+                <para>
+                    <literal>-optRevert</literal>
+                </para>
+                <para>
+                Revert to the original compilation rule on error (default).
+								</para>
+            </listitem>
+            
+						<listitem>
+                <para>
+                    <literal>-optKeepFiles</literal>
+                </para>
+                <para>
+                    Does not remove intermediate 
+                    <literal>.pdb</literal> and 
+                    <literal>.inst.*</literal> files.
+                </para>
+            </listitem>
+
+            <listitem><para><literal>-optAppC</literal></para>
+              <para>
+                Sets the failsafe C compiler.
+              </para>
+            </listitem>
+            <listitem><para><literal>-optAppCXX</literal></para>
+              <para>
+                Sets the failsafe C++ compiler.
+              </para>
+            </listitem>
+            <listitem><para><literal>-optAppF90</literal></para>
+              <para>
+                Sets the failsafe F90 compiler
+              </para>
+            </listitem>
+        </itemizedlist>
+
+</sect1>
+
+-->
+<simplesect>
+    <para>
+          </para>
+	  <para>TAU provides three methods to track the performance of your
+	application. Library interposition using tau_exec, 
+	compiler directives or source transformation using PDT. Here is a
+	table that lists the features/requirement for each method:</para>
+	  
+	  <table>
+		  <title>Different methods of instrumenting applications</title>
+		  <tgroup cols='8'>
+      <thead>
+				<row>
+					<entry><emphasis>Method</emphasis></entry><entry>Requires
+					recompiling</entry><entry>Requires
+					PDT</entry><entry>Shows MPI events</entry><entry>Routine-level event</entry><entry>Low level
+					events (loops, phases, etc...)</entry><entry>Throttling to reduce
+					overhead</entry><entry>Ability to exclude file from
+					instrumentation</entry><entry>Ability to exclude
+			    other regions of code</entry>
+				</row>
+			</thead>
+			<tbody>
+				 <row><entry>Interposition</entry>
+						<entry></entry>
+						<entry></entry>
+						<entry>Yes</entry>
+						<entry></entry>
+						<entry></entry>
+						<entry>Yes</entry>
+						<entry></entry>
+						<entry></entry>
+				 </row>	
+				 <row><entry>Compiler</entry>
+						<entry>Yes</entry>
+						<entry></entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry></entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry></entry>
+				 </row>	
+				 <row><entry>Source</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+						<entry>Yes</entry>
+				 </row>	
+			</tbody>
+		 </tgroup>
+		</table>
+
+
+		The requirements for each method increases as we move down the table: tau_exec
+		only requires a system with shared library support. Compiler based
+		instrumentation requires re-compiling that target application and Source
+		instrumentation aditionally requires PDT. For this reason we often recommend that users
+		start with Library interposition and move down the table if more features
+		are needed.
+		
+<!--		<note>Runtime Interposition is only available on platforms that support
+		dynamic library loading, this method is not available on Cray or BlueGene
+		systems. We support these compilers for compiler based instrumentation: 
+		  GNU, Intel, PGI, Pathscale, and IBM.
+		</note> -->
+</simplesect>
+
+<sect1 id="TauLibraryInterposition">
+		<title>Dynamic instrumentation through library pre-loading</title>
+    
+		<para>Dynamic instrumentation is achieved through library pre-loading. The
+		libraries chosen for pre-loading determine the scope of instrumentation.
+		Some options include tracking MPI, io, memory, cuda, opencl library
+		calls. MPI instrumentation is included by default the others are enabled by command-line options to
+		<literal>tau_exec</literal>. More info at the <link
+		linkend='tau_exec'><literal>tau_exec</literal> manual page</link>. Dynamic
+		instrumentation can be used on both uninstrumented binaries and binaries
+		instrumented via one of the methods below, in this way different layers of
+		instrumentation can be combined.</para>
+		
+		<para>To use <literal>tau_exec</literal> place this command before the
+		application executable when running the application. In this example IO
+		instrumentation is requested.
+		<screen>
+%> tau_exec -io ./a.out
+%> mpirun -np 4 tau_exec -io ./a.out
+</screen>
+    </para>
+</sect1>
+
+<sect1>
+  <title>TAU scripted compilation</title>
+  
+  <simplesect>For more detailed profiles, TAU provides two means to compile your
+	application with TAU: through your compiler or through source transformation
+	using PDT.</simplesect>
+
+  <sect2>
+    <title>Compiler Based Instrumentation</title>
+ 
+    <para>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
+    instrument and compile Fortran, C, and C++ programs respectively. You might
+    use tau_cc.sh to compile a C program by typing: 
+    <screen>
+%> module load tau
+%> tau_cc.sh -tau_options=-optCompInst samplecprogram.c
+    </screen>
+	    On machines where a TAU module is not available, you will need to set the
+			tau makefile and/or options. The makefile and options controls how will
+			TAU will compile you application. Use
+		<screen>
+%>tau_cc.sh -tau_makefile=[path to makefile] \
+            -tau_options=[option] samplecprogram.c
+    </screen>
+    The Makefile can be found in the <literal>/[arch]/lib</literal>
+		directory of your TAU distribution, for example
+    <literal>/x86_64/lib/Makefile.tau-mpi-pdt</literal>.</para>
+
+    <para>You can also use a Makefile
+    specified in an environment variable. To run tau_cc.sh so it uses the
+    Makefile specified by environment variable <literal>TAU_MAKEFILE</literal>,
+    type:
+    
+    <screen>
+%>export TAU_MAKEFILE=[path to tau]/[arch]/lib/[makefile]
+%>export TAU_OPTIONS=-optCompInst
+%>tau_cc.sh sampleCprogram.c
+    </screen>
+
+    Similarly, if you want to set compile time options like
+    selective instrumentation you can use the <literal>TAU_OPTIONS</literal>
+    environment variable.</para>
+    
+
+  </sect2>
+	<sect2>
+    <title>Source Based Instrumentation</title>
+
+    <para>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
+    instrument and compile Fortran, C, and C++ programs respectively. You might
+    use tau_cc.sh to compile a C program by typing: 
+    <screen>
+%> module load tau
+%> tau_cc.sh samplecprogram.c
+    </screen>
+    When setting the TAU_MAKEFILE make sure the Makefile name contains
+		<literal>pdt</literal> because you will need a version of TAU built with
+		PDT.</para>
+
+		<para>A list of options for the TAU compiler scripts can be found by typing
+		<literal>man tau_compiler.sh</literal> or in this chapter of the <link
+		linkend='tau_compiler.sh'>reference guide</link>.</para>
+	</sect2>
+	<sect2 id="TAUCompilerOptions">
+		<title>Options to TAU compiler scripts</title>
+
+    <para>These are some commonly used options available to the TAU compiler
+		scripts. Either set them via the <literal>TAU_OPTIONS</literal> environment
+		variable or the <literal>-tau_options=</literal> option to
+		<literal>tau_f90.sh, tau_cc.sh, or tau_cxx.sh</literal></para>
+		<variablelist>
+		  <?dbfo list-presentation="bocks"?>
+			<varlistentry>
+				<term><literal>-optVerbose</literal></term>
+				<listitem>Enable verbose output (default: on)</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><literal>-optKeepFiles</literal></term>
+				<listitem>Do not remove intermediate files</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><literal>-optShared</literal></term>
+				<listitem>Use shared library of TAU (consider when using
+				<literal>tau_exec</literal></listitem>
+			</varlistentry>
+    </variablelist>
+	</sect2>
+</sect1>
+
+  <sect1 id="SelectiveProfiling">
+    <title>Selectively Profiling an Application</title>
+   
+   <sect2 id="ManualSelectiveProfiling">
+    <title>Custom Profiling</title>
+
+		<para>TAU allows you to customize the instrumentation of a program by using a
+		selective instrumentation file. This instrumentation file is used to
+      manually control which parts of the application are profiled and how they
+      are profiled. If you are using one of the TAU compiler wrapper scripts to instrument your
+			application you can use the <literal>-tau_options=-optTauSelectFile=&lt;file&gt;</literal>
+			option to enable selective instrumentation. 
+    </para>
+		<note>Selective instrumentation is only available when using source-level
+		instrumentation (PDT).</note>
+      To specify a selective instrumentation file, create a text file and use
+			the following guide to fill it in:
+			<itemizedlist>
+				<listitem>Wildcards for routine names are specified with the
+				<literal>#</literal> mark (because <literal>*</literal>
+				symbols show up in routine signatures.)  The <literal>#</literal> mark is unfortunately the comment character
+				as well, so to specify a leading wildcard, place the entry in quotes.
+				</listitem>
+				<listitem>
+					Wildcards for file names are specified with <literal>*</literal> symbols.  
+				</listitem>
+			</itemizedlist>
+<!--    <variablelist id="SelectiveProfilingOverview">
+      <formalpara>
+				<title>Selective Instrumentation File Specification</title>
+        <para>The selective instrumentation file has the following sections,
+			  each preceded and followed by:</para></formalpara>
+
+      <varlistentry><term><literal>BEGIN_EXCLUDE_LIST</literal> / 
+        <literal>END_EXCLUDE_LIST</literal> or <literal>BEGIN_INCLUDE_LIST</literal> / 
+        <literal>END_INCLUDE_LIST</literal> </term>
+        <listitem>
+          <para>
+            exclude/include list of routines and/or files for instrumentation. The
+            list of routines to be excluded from instrumentation is specified, one
+            per line, enclosed by <literal>BEGIN_EXCLUDE_LIST</literal> and
+            <literal>END_EXCLUDE_LIST</literal>. Instead of specifying which
+            routines should be excluded, the user can specify the list of routines
+            that are to be instrumented using the include list, one routine name per
+            line, enclosed by <literal>BEGIN_INCLUDE_LIST</literal> and
+            <literal>END_INCLUDE_LIST</literal>.
+          </para>
+        </listitem>
+      </varlistentry>  
+      <varlistentry><term><literal>BEGIN_FILE_EXCLUDE_LIST</literal> / 
+        <literal>END_FILE_EXCLUDE_LIST</literal> or <literal>BEGIN_FILE_INCLUDE_LIST</literal> / 
+        <literal>END_FILE_INCLUDE_LIST</literal> </term>
+        <listitem>
+          <para>
+            Similarly, files can be included or
+            excluded with the <literal>BEGIN_FILE_EXCLUDE_LIST, END_FILE_EXCLUDE_LIST,
+            BEGIN_FILE_INCLUDE_LIST, and END_FILE_INCLUDE_LIST </literal> lines. 
+		      </para>
+        </listitem>
+      </varlistentry> 
+      <varlistentry><term><literal>BEGIN_INSTRUMENT_SECTION</literal> /
+			  <literal>END_INSTRUMENT_SECTION</literal></term>
+        <listitem>
+          <para>Manually editing the selective instrumentation file gives you more
+            options. These tags allow you to control the type of instrumentation
+            performed in certain portions of your application.
+          </para>  
+				</listitem>
+      </varlistentry>      
+    </variablelist>        
+          <itemizedlist>
+            <listitem>
+              <para>Static and Dynamic timers can be set by specifying either
+              a range of line numbers or a routine.</para>
+              <screen>
+static timer name="foo_bar" file="foo.c" line=17 to line=18
+dynamic timer routine="int foo1(int)
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                Static and Dynamic phases can be set by specifying either a
+                range of line numbers or a routine. If you do not configure TAU
+                with <literal>-PROFILEPHASE</literal> these phases will be
+                converted to regular timers.
+              </para>
+              <screen>
+static phase routine="int foo(int)
+dynamic phase name="foo1_bar" file="foo.c" line=26 to line=27
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                Loops in the source code can be profiled by
+                specifying a routine in which all loop should be profiled, like:
+              </para>
+              <screen>
+loops file="loop_test.cpp" routine="multiply"
+              </screen>
+            </listitem>
+			      <listitem>
+              <para>
+                With <link linkend="memoryOptions">Memory Profiling</link> the following events are tracked: memory
+                allocation, memory deallocation, and memory leaks.
+              </para>
+              <screen>
+memory file="foo.f90" routine="INIT"
+              </screen>
+            </listitem>
+            <listitem>
+              <para>
+                IO Events track the
+                size, in bytes of read, write, and print statements.
+              </para>
+              <screen>
+io file="foo.f90" routine="RINB"
+              </screen>
+            </listitem>
+          </itemizedlist>
+          <para>
+            Both Memory and IO
+            events are represented along with their call-stack, the length of which can
+            the set with environment variable
+            <literal>TAU_CALLPATH_DEPTH</literal>.
+          </para>  
+          <note> 
+            <para>
+              Due to the limitations of the some compilers (IBM xlf, PGI pgf90, GNU
+              gfortran) The size of the memory reported for a Fortran Array is not the number of bytes but the number of elements. 
+            </para>
+          </note> -->
+<!-- <para>There are wildcards (#, *, ?) that can be used when specifying a file or
+  routine.For file names *
+	character can be used to specify any number of character, thus foo* matches
+	foobar, foo2, etc. also for file names ? can match a single character, ie.
+	foo? matches foo2, fooZ, but not foobar. You can use # as a wildcard for
+	routines, ie. b# matches bar, b2z etc. Example:</para>-->
+    <screen> 
+		<para>Here is a example file:</para>
+#Tell tau to not profile these functions
+BEGIN_EXCLUDE_LIST
+
+void quicksort(int *, int, int)
+# The next line excludes all functions beginning with "sort_" and having 
+# arguments "int *"
+void sort_#(int *)
+void interchange(int *, int *)
+
+END_EXCLUDE_LIST
+
+#Exclude these files from profiling
+BEGIN_FILE_EXCLUDE_LIST
+
+*.so
+
+END_FILE_EXCLUDE_LIST
+
+BEGIN_INSTRUMENT_SECTION
+
+# A dynamic phase will break up the profile into phase where
+# each events is recorded according to what phase of the application
+# in which it occured.
+dynamic phase name="foo1_bar" file="foo.c" line=26 to line=27
+
+# instrument all the outer loops in this routine
+loops file="loop_test.cpp" routine="multiply"
+
+# tracks memory allocations/deallocations as well as potential leaks
+memory file="foo.f90" routine="INIT"
+
+# tracks the size of read, write and print statements in this routine
+io file="foo.f90" routine="RINB"
+
+END_INSTRUMENT_SECTION
+</screen>
+
+<para>Selective instrumentation files can be created automatically from
+<literal><link linkend="ParaProfDoc">ParaProf</link></literal>
+by right clicking on a trial and selecting the <literal>Create Selective Instrumentation File</literal> menu
+item.</para>
+<!--	
+      <para>Within the <literal>BEGIN_INSTRUMENT_SECTION</literal> /
+      <literal>END_INSTRUMENT_SECTION</literal>
+			tags you can also insert code fragment within the source code by specifying the
+			file and line number, for example:
+			<screen>
+file = "line_test.cpp" line = 9 code = "printf(\"i=%d: \", i);"
+			</screen>
+
+			You may want to add code at the entry and exit of a particular routine,
+			for example:
+			<screen>
+exit routine ="int foo()" code = "cout &lt;&lt;\"exiting foo\"&lt;&lt;endl;"
+entry routine ="int foo()" code = "cout &lt;&lt;\"entering foo\"&lt;&lt;endl;"
+			</screen>
+
+			You can also insert code at initialization (at the beginning of
+			<literal>main</literal> for
+			C/C++ and at the start of <literal>program</literal> for Fortran.) You can
+			also insert code before a function's first statement is executed. For example:
+			<screen>
+init code="int i = 0;" lang="C"
+decl file="bar.C" routine="foo" code="int j;" lang="C++"
+			</screen>
+
+      Furthermore you can use the following substitutions: 
+			<itemizedlist>
+				<listitem><para><literal>@ARGV@</literal> => list of argument to
+				main (only in init construct).</para></listitem>
+				<listitem><para><literal>@ARGC</literal> => number of argument to main plus one for the
+				program name (only in init construct).</para></listitem>
+			 <listitem><para><literal>@FILE@</literal>       ==>    Name of source file</para></listitem>
+       <listitem><para><literal>@LINE@</literal>       ==>    Insertion line</para></listitem>
+       <listitem><para><literal>@COL@</literal>        ==>    Insertion column</para></listitem>
+<listitem><para>Additional substitutions for entry/exit:</para></listitem>
+       <listitem><para><literal>@ROUTINE@</literal>   ==>    Name of function/routine</para></listitem>
+       <listitem><para><literal>@BEGIN_LINE@</literal> ==>    routine.headBegin().line()</para></listitem>
+       <listitem><para><literal>@BEGIN_COL@</literal>  ==>    routine.headBegin().col()</para></listitem>
+       <listitem><para><literal>@END_LINE@</literal>   ==>    routine.bodyEnd().line()</para></listitem>
+       <listitem><para><literal>@END_COL@</literal>    ==>    routine.bodyEnd().col()</para></listitem>
+			 </itemizedlist>
+		</para> -->
+    </sect2>
+	</sect1>
+<!--
+  <sect1 id="RunningDynInstAIP">
+    <title>Running an application using DynInstAPI</title>
+    <para>TAU also allow you to dynamically instrument your application using
+		the DynInst package. There are a few limitation to DyInst-only function
+		level event will be captured and your application must be compiler with
+		debugging symbols: <literal>-g</literal>.</para>
+    <para>To install DynInstAPI package, configure TAU with -dyinst= option
+		which will point TAU to where dyninst is installed. Use the
+		<literal>tau_run</literal> tool to instrument your application at runtime.</para>
+
+    <para>The command-line options accepted by tau_run are:</para>
+
+    <screen>
+Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
+       [-f &lt;instrumentation file&gt; ] &lt;application&gt; [args]
+</screen>
+
+    <para>By default, <literal>libTAU</literal>. so is loaded by
+    tau_run. However, the user can override this and specify another file
+    using the -Xrun&lt;Taulibrary&gt;. In this case lib&lt;Taulibrary&gt;.so
+    will be loaded using <literal>LD_LIBRARY_PATH</literal>. </para>
+	 
+
+    <para>To use <literal>tau_run</literal>, TAU is configured with
+    DyninstAPI as shown below:</para>
+
+    <screen>
+% configure -dyninst=/usr/local/packages/dyninstAPI
+% make install
+% cd tau/examples/dyninst
+% make install
+% tau_run klargest 2500 23
+% pprof; paraprof
+</screen>
+
+    <para>Support for new platforms and compilers is being added and this DyninstAPI option is experimental for now. </para>
+
+  </sect1>
+-->
+</chapter>
+

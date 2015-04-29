@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "../tools/docbook-xml-4.4/docbookx.dtd" [
+<!ENTITY profile SYSTEM "profile.xml"> 
+]>
+
+
+<article>
+  <title><literal>KTAU</literal> Manual</title>
+
+  <articleinfo> 
+
+    <edition>1.5</edition>
+ 
+    <date>6/2005</date>
+
+    <authorgroup>
+
+      <author>
+        <firstname>University of</firstname>
+        <surname>Oregon</surname>
+      </author>
+
+    </authorgroup>
+
+    <editor>
+      <firstname>Suravee</firstname>     
+      <surname>Suthikulpanit</surname>
+      <firstname>Aroon</firstname>     
+      <surname>Natarai</surname>
+    </editor>
+
+
+    <copyright>
+      <year>2005</year>
+      <holder>University of Oregon Performance Research Lab</holder>
+    </copyright>
+  </articleinfo>
+
+
+  <!-- Content -->
+
+
+  <sect1 id="intro">
+    <title>Introduction</title>
+
+    <para><literal>KTAU</literal> (Kernel <literal>TAU</literal>) is a
+    kernel profiling/tracing tool designed to extend profiling capabilities
+    of <literal>TAU</literal> into kernel space. Besides,
+    <literal>KTAU</literal> can be used as a stand-alone kernel
+    profiling/tracing tool, which allows <literal>KTAU</literal> to be
+    integrated into various frameworks. Considering two framework, 1)
+    application-base scheme and 2) daemon- base scheme.  In application-base
+    scheme, the application is responsible for accessing and managing the
+    profile/trace data.  In this case, <literal>KTAU</literal> provides an
+    interface that allows an application to access information in
+    kernel-space through /proc filesystem. In daemon- base scheme,
+    <literal>KTAU</literal>D (<literal>KTAU</literal> Daemon) is configured
+    to periodically export the profiling/tracing data from memory to disk.
+    </para>
+
+    <para>For instance, in <literal>TAU</literal> framework, an
+    application is profiled by <literal>TAU</literal> instrumentation.  At a
+    certain point, <literal>TAU</literal> accesses kernel profile data using
+    <literal>KTAU</literal> API library.  Then, <literal>TAU</literal> can
+    output two separate sets of profile data, user-space and kernel-space;
+    or <literal>TAU</literal> can merge two profile data and simultaneously
+    analyze the overall user/kernel space performance of the application. 
+    In contrast, another framework uses <literal>KTAU</literal>D
+    (<literal>KTAU</literal> daemon) to collect kernel profile/trace data
+    during the execution of an application.  This framework does not require
+    application source code to be instrumented, which is often useful in the
+    case when the source code is not available. </para>
+
+    <para><literal>KTAU</literal> maintains the profiling/tracing data
+    in per "context-of-execution" fashion.  In Linux, both process and
+    thread are referred to as "task".  Each task has a corresponding
+    "task_struct", which maintains the current runtime state. 
+    <literal>KTAU</literal> modifies each task_struct to maintain the
+    profile/trace data.  This allows various schemes of data access with low
+    perturbation since we often only consider execution of a certain subset
+    of processes while the rest of processes are scheduled out. </para>
+
+  </sect1>
+
+  <sect1 id="architecture">
+    <title>architecture overview</title>
+
+    <para><literal>KTAU</literal> comprises four individual modules.</para>
+    <itemizedlist>
+      <listitem><para>TAU Instrumentation</para></listitem>
+      <listitem><para>KTAU Infrastructure</para></listitem>
+      <listitem><para>KTAU Proc Interface</para></listitem>
+      <listitem><para>KTAU User-space API Library and Utilities</para></listitem>
+    </itemizedlist>
+    <figure>
+      <title><literal>KTAU</literal> Infrastructure</title>
+
+      <graphic fileref="infrastructure.gif" />
+    </figure>
+    
+    <sect2 id="instrumentation">
+      <title><literal>KTAU</literal> Instrumentation</title>
+
+      <para><literal>KTAU</literal> places instrumentation points in
+      Linux kernel source to intercept the execution path in order to extract
+      the performance data of interest.  For instance, <literal>KTAU</literal>
+      places instrumentation at the entry and exit point of a kernel routine
+      to measure the amount of time spending inside the routine.  Time
+      measurement is in tick, which is obtained from the timestamp counter in
+      the processor.  In most Intel processors, tick rate is normally equal to
+      the clock speed of the processor. </para>
+
+      <para>For each function being instrumented,
+      <literal>KTAU</literal> assigns a unique ID at runtime.  This ID is
+      assigned dynamically depending on the order the function was executed. 
+      It is assigned once at the first time a process execute the function,
+      and will be maintained as long as the system is running.  In other word,
+      the ID is not bound to the function across the system reboot.  This ID
+      is used as an index into a table, which stores profile data of each
+      function. This technique allows profile data to be accessed directly
+      with out searching through a list of functions. </para>
+
+    </sect2>
+
+    <sect2 id="infrastructure">
+      <title><literal>KTAU</literal> Infrastructure</title>
+
+      <para><literal>KTAU</literal> main infrastructure resides in
+      task_struct of each process.  It consists of a profile table, a circular
+      trace buffer, locks, and state variables.  The profile table is used to
+      store profile data (i.e. amount of time a process spent inside a
+      function, counter, etc).  The function ID is used to index into the
+      table.  Currently, the table has 1024 entries, which are grouped into
+      ranges that adopt different indexing schemes.  Please refer to appendix
+      A for more detail. </para>
+
+      <para>With the existing instrumentation, <literal>KTAU</literal>
+      can trace execution path and maintain the history in the circular trace
+      buffer.  The buffer has 1024 entries, which wraps over once all entries
+      are filled up.  Currently, the buffer does not handle trace lost due to
+      the wrap over.  The wrap over period depends on the speed of processor,
+      and amount of instrumentation in the kernel.  <literal>KTAU</literal>D
+      can be used to export the trace data periodically.  However,
+      applications can export this information directly through the provided
+      <literal>KTAU</literal> API library. </para>
+
+    </sect2>
+ 
+    <sect2 id="Proc_Interface">
+      <title><literal>KTAU</literal> Proc Interface</title>
+
+      <para><literal>KTAU</literal> uses /proc filesystem as a
+      communication channel between kernel-space and user-space.
+      /proc/<literal>KTAU</literal>/profile and
+      /proc/<literal>KTAU</literal>/trace are used for accessing profile data
+      and trace data respectively.  Generally, applications from user-space
+      access the data through provided API library, which uses ioctl as
+      underlying communication method. </para>
+
+    </sect2>
+
+    <sect2 id="API">
+      <title><literal>KTAU</literal> API Library and Utilities</title>
+
+      <para><literal>KTAU</literal> provides API library for accessing
+      profile/trace data inside the kernel.  Currently, only data-access API
+      is provided, but more API can be extended to implement runtime
+      management mechanism.  Please refer to
+      <literal>KTAU</literal>/user-src/include/<literal>KTAU</literal>_proc_interface.h
+      for more detail.  Furthermore, utilities are provided to help analyzing
+      the profile/trace data.  For example, each function being profiled
+      registers its memory address into the corresponding entry in the profile
+      table.  This memory address is used to represent the function instead of
+      the function name.  Therefore, the output obtained from the read API
+      returns profile data with memory addresses.  <literal>KTAU</literal>
+      provides funcMap tool to map the memory addresses in the trace/profile
+      output to the corresponding function name listed in kernel symbol table
+      (i.e. System.map or /proc/kallsyms).  Please see
+      <literal>KTAU</literal>/user-src/src/README" and
+      "<literal>KTAU</literal>/user-src/src/example.txt"for detail on
+      <literal>KTAU</literal>D and funcMap. </para>
+
+    </sect2>
+  </sect1>
+
+  <sect1 id="config"> 
+    <title>Distribution, Configuration and Installation</title>
+
+    <sect2 id="distribution">
+      <title><literal>KTAU</literal> Distribution Overview</title>
+
+      <para><literal>KTAU</literal> distribution is organized as in following hierarchy.</para>
+
+      <itemizedlist>
+ 
+        <listitem><para>TAU/patches/ : Contains patches for various versions of
+		  Linux kernel</para></listitem>
+
+        <listitem><para>KTAU/src/  : Contains extension to Linux kernel which is
+		  independent from version of the kernel.</para></listitem>
+
+        <listitem><para>KTAU/user-src/  : Contains user-space libraries and
+		  utilities. </para></listitem>
+
+        <listitem><para>misc/  : Contains works in progress.</para></listitem>
+
+      </itemizedlist>
+
+    </sect2>
+    
+    <sect2 id="installation">
+      <title>Installation Steps</title>
+
+      <orderedlist>
+
+        <listitem><para>btain a <literal>KTAU</literal> distribution.</para></listitem>
+
+        <listitem><para>Obtain a vanilla Linux kernel.</para></listitem>
+
+        <listitem><para>To install the kernel extension, in "<literal>KTAU</literal>/src/linux-2.x/", run 
+          <screen>
+sh INSTALL-kernel.sh &lt;path of kernel source&gt; &lt;<literal>KTAU</literal> patch name&gt;
+</screen>
+ 
+          This script will patch the kernel source with the specified patch name, and 
+          Then install the <literal>KTAU</literal> extension to Linux kernel.
+			 </para></listitem>
+
+        <listitem><para>To install libraries and utilities, in "<literal>KTAU</literal>/user-src/src", run  
+          <screen>  
+make clean all install KERNEL_SRC=&lt;path to kernel source&gt;
+</screen> 
+
+          This will build and put all the libraries and utilities in
+			 "<literal>KTAU</literal>/user-src/bin", which must be included in
+			 $PATH variable.  </para></listitem>
+
+<listitem><para>At kernel source root, run make menuconfig and configure the
+kernel. Configure KTAU as discussed in section 3.3. </para></listitem>
+
+        <listitem><para>Compile and build the kernel as usual. At kernel root, run 
+          <screen>
+make clean dep bzImage modules modules_install  (for Linux-2. 4) 
+</screen>
+          or 
+<screen>
+make clean bzImage modules modules_install
+</screen>
+          (for Linux-2.6)</para> </listitem>
+
+        <listitem><para>Install kernel image (bzImage for ix86) and configure
+		  the bootloader (i.e. lilo, grub) to choose the installed kernel image.
+		  </para></listitem>
+      </orderedlist>
+
+        <para><emphasis>NOTE:</emphasis>please see "<literal>KTAU</literal>/<literal>KTAU</literal>_installation.log" for an installation demo. </para>
+
+
+
+    </sect2>
+
+    <sect2 id="Configuration">
+      <title>Configuration</title>
+
+      <para><literal>KTAU</literal> configuration is integrated into
+      the Linux kernel configuration utility (i.e. make menuconfig).  It is
+      listed under <literal>KTAU</literal> Profiling and Profiling Support in
+      Linux-2.4 and Linux-2.6 respectively.  Each option enables
+      instrumentations for each aspect of the kernel.  Figure 2 shows a
+      screenshot of <literal>KTAU</literal> configuration screen in
+      Linux-2.4.30 after the kernel is patched with <literal>KTAU</literal>.</para>
+
+      <figure>
+        <title> <literal>KTAU</literal> configuration screenshot.</title>
+        <graphic fileref="config.gif" />
+      </figure>
+
+      <para>Figure 2 shows a general configuration of
+      <literal>KTAU</literal>.  In this case, it enables profiling and tracing
+      on all aspects.  However, the option Merging <literal>KTAU</literal>
+      Profile with <literal>TAU</literal>'is to be used together with
+      <literal>TAU</literal> to generate a merged profile output from both
+      kernel and user- space.  However, this option limits the number of
+      aspects that <literal>KTAU</literal> can profile since merging profile
+      requires the profile data must be accessed only from process context,
+      and not from interrupt context. </para>
+
+      </sect2>
+    </sect1>
+
+  <!-- Apendix -->
+
+  &profile;
+
+
+</article>
+
+

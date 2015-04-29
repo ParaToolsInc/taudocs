@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+ "../tools/docbook-xml-4.4/docbookx.dtd" [
+<!ENTITY ch01 SYSTEM "ch01.xml">
+<!ENTITY ch02 SYSTEM "ch02.xml">
+<!ENTITY ch03 SYSTEM "ch03.xml">
+<!ENTITY ch04 SYSTEM "ch04.xml">
+<!ENTITY ch05 SYSTEM "ch05.xml">
+<!ENTITY ch06 SYSTEM "ch06.xml">
+<!ENTITY ch07 SYSTEM "ch07.xml">
+<!ENTITY references SYSTEM "references.xml">
+]>
+
+<book id="TauDoc">
+    <title>The New TAU Users Guide</title>
+
+    <bookinfo>
+
+        <edition>Second</edition>
+        <isbn>0-00000-000-0</isbn>
+        <authorgroup>
+            
+            <author>
+                <firstname>University of</firstname>
+                <surname>Oregon</surname>
+            </author>
+
+        </authorgroup>
+
+        <editor>
+            <firstname>Christian</firstname>
+            <surname>Hoge</surname>
+        </editor>
+
+        <pagenums>1 (est.)</pagenums>
+        <pubdate>(TBA)</pubdate>
+
+        <copyright>
+            <year>2005</year>
+            <holder>University of Oregon Performance Research Lab</holder>
+        </copyright>
+    </bookinfo>
+
+    <!-- Content references -->
+
+    &ch01;
+    &ch02;	
+    &ch03;
+    &ch04;
+    &ch05;
+    &ch06;   
+    &ch07; 
+    &references;
+ 
+</book>

@@ -1,0 +1,2278 @@
+<chapter id="tau.instrumentation">
+
+  <title>Instrumentation</title>
+
+  <simplesect>
+    <para> For TAU instrumentation, macros must be added to the source
+    code to identify routine transitions. It can be done automatically using
+    the C++ instrumentor -  <literal>tau_instrumentor</literal> , based on the Program Database
+    Toolkit, manually using the instrumentation API (Application Programmers
+    Interface) or using the  <literal>tau_run</literal> , a runtime instrumentor, based on the
+    DynInstAPI dynamic instrumentation package. Python applications can be
+    instrumented automatically by using the tau python package. Java
+    applications can be instrumented automatically by using the JVMPI TAU
+    library. </para>
+
+  </simplesect>
+
+  <sect1 id="Automatic Instrumentation">
+  
+    <title>Automatic Instrumentation of C++, C and F90 source code</title>
+
+    <para>tau_instrumentor inserts TAU instrumentation in C++ source
+    code using PDT [PDT-URL]. </para>
+
+    <orderedlist>
+
+      <listitem>
+        <para>Install pdtoolkit. Refer to the README file in the PDT directory</para>.
+
+        <screen>
+% ./configure -arch=IRIX64 -KCC
+</screen>
+
+        </listitem>
+        <listitem>
+          <para>Install TAU using the -pdt configuration option.</para>
+
+          <screen>
+% ./configure -pdt=/usr/local/packages/pdtoolkit-1.0 
+-c++=KCC -arch=sgi64 -SGITIMERS
+% make install
+</screen>
+
+        </listitem>
+        <listitem>
+          <para>Modify the makefile to invoke cxxparse from PDT which generates a program database file (.pdb) that contains program entities (such as routine locations) and tau_instrumentor which uses the .pdb file and the C++ source code to generate an instrumented version of the source code. </para>
+
+        </listitem>
+        <listitem>
+          <para>tau_instrumentor takes the following commandline options:</para>
+
+          <screen>Usage: /apps/tau-2.x/sgi64/bin/tau_instrumentor
+&lt;pdbfile&gt; &lt;sourcefile&gt; [-o &lt;outputfile&gt;] [-noinline] [-noinit][-g
+groupname] [-i headerfile] [-c|-c++|-fortran] [-f &lt;instr_req_file&gt; ]
+[-rn &lt;return_keyword&gt;] [-rv &lt;return_void_keyword&gt;]
+</screen>
+
+          <para>The -noinline option prevents the instrumentation of
+          inlined routines. All routines in the source file can be logically
+          grouped into a TAU group using the -g "groupname" option. An alternate
+          header file can be used (instead of the default Profiler.h using the -i
+          headerfile option. For a C/C++ program, TAU inserts the TAU_INIT call to
+          parse the commandline parameters in main. To prevent this default
+          behavior, specify -noinit on the commandline. The instrumentor can
+          automatically deduce the language of the source file by examining the
+          pdb file. The user can override this behavior using the -c, -c++ or
+          -fortran option by specifying the language associated with the source
+          file. This affects the placement of instrumentation in the source file.
+          To specify a selective instrumentation file, use the -f file option. A 
+          selective instrumentation file can contain a list of routines to exclude
+          from instrumentation (one per line bracketed by  <literal>BEGIN_EXCLUDE_LIST</literal>  and
+           <literal>END_EXCLUDE_LIST</literal> ). Alternately, you can specify a list of routines that
+          should be included for instrumentation (no other routines are
+          instrumented besides the ones in this list). Such a list is bracketed by
+           <literal>BEGIN_INCLUDE_LIST</literal>  and  <literal>END_INCLUDE_LIST</literal>  as shown in the
+          &lt;taudir&gt;/examples/autoinstrument/select file. The final -rn and -rv
+          &lt;keywords&gt; options to tau_instrumentor allows the user to specify a
+          macro that calls return in a routine with a non-void and a void return
+          type respectively. TAU timers need to be stopped before a return
+          statement. When the source code contains a macro that calls return, it
+          is important to stop the timers before the macro is invoked in the
+          instrumented source code. These -rn and -rv options help the
+          tau_instrumentor identify the location of subroutine exits.</para>
+
+
+        </listitem>
+
+        <listitem>
+	  <para> See  <literal>examples/autoinstrument/Makefile</literal> For example, the original makefile</para>
+
+          <screen>
+CXX             = CC
+CFLAGS          =
+LIBS 		           = -lm
+TARGET          = klargest
+##############################################
+# Original Rules
+##############################################
+all:           $(TARGET)
+$(TARGET):     $(TARGET).o
+       $(CXX) $(LDFLAGS) $(TARGET).o -o $@ $(LIBS)
+$(TARGET).o : $(TARGET).cpp
+       $(CXX) $(CFLAGS) -c $(TARGET).cpp
+clean:
+       $(RM) $(TARGET).o $(TARGET)
+##############################################
+is modified as follows. Some changes are shown in bold font.
+TAUROOTDIR      = /usr/local/packages/tau2/
+include $(TAUROOTDIR)/sgi64/Makefile.tau
+CXX             = $(TAU_CXX)
+CFLAGS		          = $(TAU_INCLUDES) $(TAU_DEFS)
+LIBS	            = -lm $(TAU_LIBS)
+PDTPARSE =$(PDTDIR)/$(CONFIG_ARCH)/bin/cxxparse
+TAUINSTR =$(TAUDIR)/$(CONFIG_ARCH)/bin/tau_instrumentor
+##############################################
+# Modified Rules
+##############################################
+
+all:    $(TARGET) $(PDTPARSE) $(TAUINSTR)
+
+$(TARGET): $(TARGET).o
+      $(CXX) $(LDFLAGS) $(TARGET).o -o $@ $(LIBS)
+
+# Use the instrumented source code to generate the object code
+$(TARGET).o : $(TARGET).inst.cpp
+       $(CXX) -c $(CFLAGS) $(TARGET).inst.cpp  -o $(TARGET).o
+
+# Generate the instrumented source from the original source and 
+# the pdb file
+$(TARGET).inst.cpp : $(TARGET).pdb $(TARGET).cpp $(TAUINSTR)
+    	   $(TAUINSTR) $(TARGET).pdb $(TARGET).cpp \
+           -o $(TARGET).inst.cpp
+
+# Parse the source file to generate the pdb file
+$(TARGET).pdb : $(PDTPARSE) $(TARGET).cpp
+        $(PDTPARSE) $(TARGET).cpp $(CFLAGS)
+
+clean:
+        $(RM) $(TARGET).o $(TARGET).inst.cpp $(TARGET) \
+        $(TARGET).pdb
+##############################################
+$(PDTPARSE):
+  @echo "****************************************"
+  @echo "Download and Install Program Database Toolkit"
+  @echo "ERROR: Cannot find $(PDTPARSE)"
+  @echo "*************************************"
+
+$(TAUINSTR):
+  @echo "*************************************"
+  @echo "Configure TAU with -pdt=&lt;dir&gt; option to use"
+
+  @echo "C++ instrumentation with PDT"
+  @echo "ERROR: Cannot find $(TAUINSTR)"
+  @echo "*************************************"
+</screen>
+
+        </listitem>
+
+        <listitem>
+          <para>Compile and execute the application.</para>
+
+        </listitem>
+      </orderedlist>
+
+      <para>The user may also opt to manually insert TAU macros in the
+      source code using the C++ instrumentation API. The following section
+      describes this API in detail.  </para>
+
+    </sect1>
+
+    <sect1 id="UsingTAU_PDT_MPI">
+      <title>Using TAU with PDT and MPI</title>
+
+      <para>To use PDT for source code instrumentation and TAU's MPI
+      wrapper interposition library, modify the default compilation rule as
+      shown in the example below:</para>
+
+      <screen>
+TAUROOTDIR = /usr/local/packages/tau-2.x
+include $(TAUROOTDIR)/include/Makefile
+USE_TAU = 1
+# Comment above line to disable TAU
+
+CXX             = $(TAU_CXX)
+PDTCXXPARSE     = $(PDTDIR)/$(PDTARCHDIR)/bin/cxxparse
+TAUINSTR = $(TAUROOTDIR)/$(CONFIG_ARCH)/bin/ tau_instrumentor
+
+CFLAGS   = $(TAU_INCLUDE) $(TAU_DEFS) $(TAU_MPI_INCLUDE)
+LIBS  = $(TAU_MPI_LIBS) $(TAU_LIBS) $(LEXTRA1) 
+$(EXTRALIBS) -lm
+
+LDFLAGS  = $(USER_OPT)  $(TAU_LDFLAGS)
+
+##############################################
+ifdef USE_TAU
+COMP_RULE = $(PDTCXXPARSE) $&lt; $(CFLAGS); \
+       $(TAUINSTR) $*.pdb $&lt;o -o $*.inst.cpp -g RING;\ 
+       $(CXX) $(CFLAGS) -c $*.inst.cpp -o $@ ; \        rm -f $*.pdb ;
+else
+# DISABLE TAU INSTRUMENTATION
+TAU_DEFS =
+# Don't use TAU MPI wrapper library
+TAU_MPI_LIBS = -L/usr/local/lib -lmpich
+TAU_LIBS =
+TAU_WRAPPER_LIB =
+TAU_INCLUDE =
+COMP_RULE = $(CXX) $(CFLAGS) -c $&lt; -o $@ ;
+endif
+########################
+TARGET = ring
+all:            $(TARGET)
+OBJS = $(TARGET).o 
+$(TARGET):      $(OBJS)
+        $(CXX) $(LDFLAGS) $(OBJS) -o $@ $(LIBS)
+# Compilation rule
+.cpp.o:
+        $(COMP_RULE)
+</screen>
+
+    </sect1>
+    <sect1 id="Using TAU_PDT_F90">
+      <title>Using TAU with PDT for an F90 MPI application</title>
+
+      <para>A typical Fortran90 MPI program uses a Makefile that builds
+      object files from a set of Fortran90 source files and links libraries
+      with the objects to build an executable. The original Makefile might
+      look like this:</para>
+
+      <screen>
+LIBS=&lt;libraries&gt;
+OBJS=&lt;list of object files&gt;
+app: $(OBJS)  
+	$(F90) $(LDFLAGS) $(OBJS) -o app
+.f90.o: 
+	$(F90) $(FFLAGS) -c $&lt; -o $@
+First the user inserts the TAU stub Makefile and defines 
+the Makefile variables. For e.g.
+include /usr/local/packages/tau-2.13/rs6000/lib/ \
+Makefile.tau-papiwallclock-multiplecounters-papivirtual-mpi-papi-pdt
+
+F90		= $(TAU_F90)
+PDTF90PARSE 	= $(PDTDIR)/$(PDTARCHDIR)/bin/f95parse
+TAUINSTR	= $(TAUROOTDIR)/$(CONFIG_ARCH)/bin/tau_instrumentor
+FFLAGS		= $(TAU_F90_SUFFIX) $(TAU_MPI_INCLUDE)
+LIBS		= $(TAU_MPI_FLIBS) $(TAU_LIBS) $(TAU_FORTRANLIBS)
+LINKER		= $(TAU_LINKER)
+</screen>
+
+      <para>Next, the compilation rule is changed to first parse the
+      original file using PDT's parser, then instrument the source code and
+      compile the instrumented source code. The PDT script f95parser invokes
+      the new Cleanscape Software International's Flint based F95 parser
+      whereas f90parse invokes the older Mutek Solution's F90 parser. Please
+      refer to PDT's README file for a listing of f90parse and f95parse
+      commandline options. </para>
+
+      <para>In case there are any errors in parsing the source code, a
+      fall-back rule is introduced to keep the original compilation rule in
+      place. </para>
+
+      <screen>
+COMP_RULE= -$(PDTPARSE $&lt; $(FFLAGS) -Mpdt_modules; \
+	    $(TAUINSTR) $*.pdb $&lt; -o $*.inst.f90 -f select.dat; \
+	    $(F90) $(FFLAGS) -c $*.inst.f90 -o $@; \
+		if [ ! -f $@ ] ; then \
+      		   echo "Error in compiling $*.f90: \
+                         trying without PDT" \	
+	    $(F90) $(FFLAGS) -c $&lt; -o $@; \
+		fi ; \
+		rm -f $*.pdb; 
+</screen>
+
+      <para>The - before <screen>$(PDTPARSE)</screen> allows make to
+      proceed when there is an error from any command in the rule. The
+      -Mpdt_modules option reads and writes the .mod module files in a
+      directory called pdt_modules (which should be created prior to invoking
+      make) if you're using f90parse. It is not required for f95parse.
+      f95parse can also parse multiple F90 files together when these are 
+      specified on the command line. The -o&lt;file.pdb&gt; option should be used
+      for specifying the merged PDB file name if more than one file is parsed
+      at a time. Once a PDB file is generated, it is processed by the next
+      stage in the instrumentation process using tau_instrumentor. The -f
+      select.dat specifies a selective instrumentation list where the user can
+      specify which routines and/or files should be excluded from 
+      instrumentation. An optional -g &lt;groupname&gt; argument to tau_instrumentor
+      puts all routines in a given file in a named profile group. Groups can
+      be used to enable or disable the performance instrumentation for a group
+      of logically related routines. The user introduces the compilation rule
+      as below:</para>
+
+      <screen>
+app: $(OBJS)  
+	$(LINKER) $(LDFLAGS) $(OBJS) Do app
+.f90.o: 
+	$(COMP_RULE)
+</screen>
+
+    </sect1>
+
+    <sect1 id="TAU_PDT_Opari">
+      <title>Using TAU with PDT and Opari</title>
+
+      <para>The following example shows the use of PDT and Opari for
+      OpenMP instrumentation in a Makefile. </para>
+
+      <screen>
+TAUROOTDIR	= /usr/local/tau-2.x
+include $(TAUROOTDIR)/include/Makefile
+CXX		= $(TAU_CXX) 
+CC		= $(TAU_CC) 
+F90		= $(TAU_F90) 
+PDTCPARSE       = $(PDTDIR)/$(PDTARCHDIR)/bin/cparse
+PDTF90PARSE     = $(PDTDIR)/$(PDTARCHDIR)/bin/f90parse
+TAUINSTR        = $(TAUROOTDIR)/$(CONFIG_ARCH)/bin/tau_instrumentor
+OPARI_TOOL	= $(OPARIDIR)/tool/opari
+CFLAGS 		= $(TAU_INCLUDE) $(TAU_DEFS) 
+FFLAGS        	= 
+LIBS            =  $(TAU_LIBS)  $(TAU_FORTRANLIBS)  $(LEXTRA1)
+#LIBS            = $(TAU_DISABLE)  $(TAU_FORTRANLIBS)
+
+LDFLAGS	      	= $(USER_OPT) 
+MAKEFILE      	= Makefile
+TARGET	      	= mandel
+##############################################
+
+install: 	$(TARGET)
+$(TARGET):	ppm.o $(TARGET).o mytimer.o opari.tab.o
+	@echo "********************************************"
+	@echo "LINKING: "
+	$(TAU_LINKER) $(LDFLAGS) $(TARGET).o ppm.o mytimer.o \
+        opari.tab.o -o $@ $(LIBS)
+
+$(TARGET).o : $(TARGET).f90 ppm.o 
+	@echo "*******************************************"
+	@echo "Creating $(TARGET).o:"
+	$(RM) opari.rc
+	$(OPARI_TOOL) -nosrc -table opari.tab.c $*.f90 $*.pomp.f90
+	$(PDTF90PARSE) $*.pomp.f90 -MPDT_MODULES
+	$(TAUINSTR) $*.pomp.pdb $*.pomp.f90 -o $*.inst.f90
+	$(F90) $(FFLAGS) -c $*.inst.f90 -o $@
+
+ppm.o : ppm.f90
+	@echo "********************************************"
+	@echo "Creating ppm.o: "
+	$(PDTF90PARSE) $&lt;
+	if [ -d PDT_MODULES ] ; then true; \
+	  else mkdir PDT_MODULES ; fi
+	if [ ! -f PPM.mod ] ; then true ; \
+	  else mv PPM.mod PDT_MODULES ; fi 
+	   
+	$(TAUINSTR) $*.pdb $&lt; -o $*.inst.f90
+	$(F90) $(FFLAGS) -c $*.inst.f90 -o $@
+
+opari.tab.o: $(TARGET).o
+		@echo "*****************************************"
+		@echo "Creating opari.tab.o:"
+	$(CC) $(CFLAGS) -c opari.tab.c
+
+mytimer.o : mytimer.c
+	@echo "*************************************"
+@echo "Creating mytimer.o:"	$(PDTCPARSE) $&lt;
+
+	$(TAUINSTR) $*.pdb $&lt; -o $*.inst.c
+	$(CC) $(CFLAGS) -c $*.inst.c -o $@
+</screen>
+
+    </sect1>
+
+    <sect1 id="Selctive Instrumentation">
+      <title>Selective Instrumentation</title>
+
+      <para>When all routines in a source file are instrumented,
+      frequently executing lightweight routines may cause an instrumentation
+      overhead that distorts the performance data. To reduce the
+      instrumentation overhead, the user can select routines that should not
+      be instrumented and specify this in the selective instrumentation file
+      that can be specified as a commandline argument to tau_instrumentor (-f
+      &lt;file&gt; ). The format of this file is shown below:</para>
+
+      <screen>
+
+BEGIN_INCLUDE_LIST
+main
+foo
+f12
+END_INCLUDE_LIST
+
+</screen>
+
+      <para>instruments main, foo and f12 routines only.</para>
+
+      <screen>
+BEGIN_EXCLUDE_LIST
+domain
+f1
+f2
+f4
+END_EXCLUDE_LIST
+</screen>
+
+      <para>excludes routines domain, f1, f2 and f4 from instrumentation.</para>
+
+      <screen>
+
+BEGIN_FILE_INCLUDE_LIST
+Main.f90
+Foo?.f
+END_FILE_INCLUDE_LIST
+</screen>
+
+      <para>specifies that main.f90 and foo?.f files (foo3.f, foo9.f) are instrumented.</para>
+
+      <screen>
+BEGIN_FILE_EXCLUDE_LIST
+*.cpp
+bar.f90
+END_FILE_EXCLUDE_LIST
+</screen>
+
+      <para>excludes all files with that end in a .cpp suffix, and
+      bar.f90 from instrumentation. The user should specify either an exclude
+      list or an include list, but not both. Sometimes, it is difficult to
+      build this selective instrumentation file manually. The tool tau_reduce
+      may be used to construct this file automatically.</para>
+
+    </sect1>
+
+    <sect1 id="TAU_REDUCE">
+      <title>TAU_REDUCE: A tool for reducing instrumentation overhead</title>
+
+      <para>When all routines in a source file are instrumented,
+      frequently executing lightweight routines may cause an instrumentation
+      overhead that distorts the performance data. To reduce the
+      instrumentation overhead, the user can select routines that should not
+      be instrumented and specify this in a selective instrumentation file
+      that can be specified as a commandline argument to tau_instrumentor or
+      tau_run. However, creating lists of routines manually can be tedious. To
+      aid the user in identifying which routines should be removed, tau_reduce
+      may be used. </para>
+
+      <para>tau_reduce is an application that will apply a set of
+      user-defined rules to a pprof dump file in order to create a select file
+      that will include an exclude list for selective implementation for TAU.
+      The user must specify the name of the pprof dump file that this
+      application will use. This is done with the -f filename flag. If no rule
+      file is specified, then a single default rule will be applied to the 
+      file. This rule is:</para>
+
+      <screen>
+numcalls &gt; 1000000 &amp; usecs/call &lt; 2, 
+</screen>
+
+      <para>which will exclude all routines that are called at least
+      1,000,000 times and average less then two microseconds per call. If a
+      rule file is specified, then this rule is not applied. If no output file
+      is specified, then the results will be printed out to the screen.</para>
+
+      <sect2>
+        <title>OPTIONS</title>
+
+        <para>tau_reduce has the following options available at the command line:</para>
+ 
+        <itemizedlist>
+
+          <listitem>
+          <para>-f &lt;filename*gt; : specify Filename of pprof dump file (default: temp.out)</para>
+
+          </listitem>
+          <listitem>
+          <para>-p : Print out all routines with their attributes (for debugging)</para>
+
+          </listitem>
+          <listitem>
+          <para>-o &lt;filename&gt; : specify filename for select file Output (default: print  to screen)</para>
+
+          </listitem>
+          <listitem>
+          <para>-r &lt;filename&gt; : specify filename for Rule file</para>
+
+          </listitem>
+          <listitem>
+          <para>-v : Verbose mode (for each rule, print out rule and all routines 	 that it excludes)</para>
+          </listitem>
+        </itemizedlist>
+
+      </sect2>
+
+      <sect2>
+        <title>RULES:</title>
+
+        <para>Users can specify a set of rules for tau_reduce to apply.
+        The rules should be specified in a separate file, one rule per line, and
+        the file name should be specified with the appropriate option on the
+        command line. The grammar for a rule is:</para>
+
+        <screen>
+[GROUPNAME:]FIELD OPERATOR NUMBER. 
+</screen>
+
+        <para>The GROUPNAME followed by the colon (:) is optional. If
+        included, the rule will only be applied to routines that are a member of
+        the group specified. Only one group name can be applied to each rule,
+        and a rule must follow a groupname. If only a groupname is given, then
+        an unrecognized field error will be returned. If the desired effect is
+        to exclude all routines that belong to a certain group, then a trivial
+        rule, such as GROUP:numcalls > -1 may be applied. If a groupname is
+        given, but the data does not contain any groupname data, then an error
+        message will be given, but the rule will still be applied to the date
+        ignoring the groupname specification.</para>
+
+        <para>A FIELD is any of the routine attributes listed in the following table:</para>
+
+        <table frame='all'><title>TABLE 1. Fields used in specifying rules in tau_reduce</title>
+          <tgroup cols='2' align='left'>
+            <colspec colname='Attribute Name'/>
+            <colspec colname='Meaning'/>
+            <thead>
+              <row>
+                <entry>ATTRIBUTE NAME</entry>
+                <entry>MEANING</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry align='center'>numcalls</entry>
+                <entry align='center'>Number of times this routine is called</entry>
+              </row>
+              <row>
+                <entry align='center'>numsubrs</entry>
+                <entry align='center'>Number of subroutines that this routine contains</entry>
+              </row>
+              <row>
+                <entry align='center'>percent</entry>
+                <entry align='center'>Percent of total implementation time</entry>
+              </row>
+              <row>
+                <entry align='center'>cumusec</entry>
+                <entry align='center'>Inclusive routine running time, in microseconds</entry>
+              </row>
+              <row>
+                <entry align='center'>count</entry>
+                <entry align='center'>Exclusive hardware count</entry>
+              </row>
+              <row>
+                <entry align='center'>totalcount</entry>
+                <entry align='center'>Inclusive hardware count</entry>
+              </row>
+              <row>
+                <entry align='center'>stddev</entry>
+                <entry align='center'>Standard deviation</entry>
+              </row>
+              <row>
+                <entry align='center'>usecs/call</entry>
+                <entry align='center'>Microseconds per call</entry>
+              </row>
+              <row>
+                <entry align='center'>counts/call</entry>
+                <entry align='center'>Hardware counts per call</entry>
+              </row>
+            
+            </tbody>
+          </tgroup>
+        </table>
+
+       <para>Some FIELDS are only available for certain files. If
+       hardware counters are used, then usec, cumusec, usecs/per call are not
+       applicable and a error is reported. The opposite is true if timing data
+       is used rather than hardware counters. Also, stddev is only available
+       for certain files that contain that data (when TAU is configured with
+       -PROFILESTATS). An OPERATOR is any of the following: &lt; (less than), &gt;
+       (greater than), or = (equals). A NUMBER is any number. A compound rule
+       may be formed by using the &amp; (and) symbol in between two simple rules.
+       There is no OR because there is an implied or between two separate
+       simple rules, each on a separate line. (i.e. the compound rule
+        <literal>usec &lt; 1000</literal>  OR  <literal>numcalls = 1</literal>  is the
+       same as the two simple rules  <literal>usec &lt; 1000</literal>  and
+        <literal>numcalls = 1</literal> </para>
+
+	
+
+      </sect2>
+
+      <sect2>
+        <title>Examples:</title>
+
+        <screen>
+#exclude all routines that are members of TAU_USER and have less than 
+#1000 microseconds
+TAU_USER:usec &lt; 1000     
+
+#exclude all routines that have less than 1000 microseconds and are 
+#called only once.
+usec &lt; 1000 &amp; numcalls = 1   
+			     
+#exclude all routines that have less than 1000 usecs per call OR 
+#have a percent less than 5
+usecs/call &lt; 1000
+percent &lt; 5
+</screen>
+
+        <para><emphasis>Note:</emphasis>Any line in the rule file that
+        begins with a # is a comment line. For clarity, blank lines may be
+        inserted in between rules and will also be ignored.</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="C++MeasurementAPI">
+      <title>C++ Measurement API</title>
+
+      <para>The API is a set of macros that can be inserted in the C++
+      source code. An extension of the same API is available to instrument C
+      and Fortran sources. This is discussed later. </para>
+
+      <para>At the beginning of each instrumented source file, include the following header</para>
+
+      <screen>
+#include &lt;Profile/Profiler.h&gt;
+</screen>
+
+      <sect2>
+        <title>TAU_PROFILE(function_name, type, group);</title>
+
+         <parameter>
+Arguments: 
+char *function_name or string&amp; function_name
+char *type_name or string&amp; type
+TauGroup_t group
+</parameter> 
+        
+        <para>With  <literal>TAU_PROFILE</literal> , the function
+         <literal>function_name</literal>  is profiled.  <literal>TAU_PROFILE</literal> 
+        identifies the function uniquely by the combination of its name and type
+        parameters. Each function is also associated with the group specified.
+        This information can selectively enable or disable instrumentation in a
+        set of profile groups. A function that belongs to the
+         <literal>TAU_DEFAULT</literal>  group is always profiled. Other user
+        defined groups are <screen>TAU_USER, TAU_USER1, TAU_USER2, TAU_USER3,
+        TAU_USER4</screen>. The top level function in any thread must be
+        profiled using the  <literal>TAU_DEFAULT</literal>  group. For details on
+        using selective instrumentation, please refer to the section Running the
+        application in Chapter 4. </para>
+
+        <para>Example:</para>
+
+        <screen>
+int main(int argc, char **argv)
+{
+TAU_PROFILE(main()","int (int, char **)",TAU_DEFAULT);
+</screen>
+      
+      </sect2>
+
+      <sect2>
+        <title>string&amp; CT(variable);</title>
+
+         <parameter>
+Arguments: 
+&lt;type&gt; variable 
+</parameter> 
+        <para>The  <literal>CT</literal>  macro returns the runtime type
+        information string of a variable. This is useful in constructing the
+        type parameter of the  <literal>TAU_PROFILE</literal>  macro. For templates,
+        the type information can be constructed using the type of the return and
+        the type of each of the arguments (parameters) of the template. The
+        example in the following macro will clarify this.</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_TYPE_STRING(variable, type_string);</title>
+
+       <parameter>
+Arguments: 
+string &amp; variable;
+string &amp; type_string;
+</parameter> 
+
+       <para>This macro assigns the string constructed in type_string to
+       the variable. The + operator and the CT macro can be used to construct
+       the type string of an object. This is useful in identifying templates
+       uniquely, as shown below.</para>
+
+       <para>Example:</para>
+
+       <screen>
+
+template&lt;class PLayout&gt;
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const ParticleBase&lt;PLayout&gt;&amp; P) {
+ TAU_TYPE_STRING(taustr, "ostream (ostream, " + CT(P) + " )");
+TAU_PROFILE("operator&lt;&lt;()"taustr, TAU_PARTICLE | TAU_IO);
+... 
+}
+</screen>
+
+       <para>When PLayout is instantiated with
+       " <literal>UniformCartesian&lt;3U, double&gt;</literal> ",this generates the
+       unique template name: </para>
+
+       <screen>
+
+"operator&lt;&lt;() ostream const 
+ParticleBase&lt;UniformCartesian&lt;3U, double&gt; &gt; )"
+</screen>
+
+       <para>The following example illustrates the usage of the CT macro
+       to extract the name of the class associated with the given object using
+       CT(*this);</para>
+
+       <screen>
+template&lt;class PLayout&gt;
+unsigned ParticleBase&lt;PLayout7&gt;::GetMessage(Message&amp; msg, int node) {
+  TAU_TYPE_STRING(taustr, CT(*this) + "unsigned (Message, int)");
+  TAU_PROFILE("ParticleBase::GetMessage()", taustr, TAU_PARTICLE);
+...
+}
+</screen>
+
+       <para>When PLayout is instantiated with " <literal>UniformCartesian&lt;3U, double&gt;</literal> ",this generates the unique template name:</para>
+
+       <screen>
+"ParticleBase::GetMessage() ParticleBase&lt;UniformCartesian&lt;3U, double&gt; &gt; unsigned (Message, int)"
+</screen>
+
+    </sect2>  
+
+    <sect2>
+      <title>TAU_PROFILE_TIMER(timer, name, type, group);</title>
+
+       <parameter>
+Arguments: 
+Profiler timer; 
+char *name or string&amp; name;
+char *type or string&amp; type;
+TauGroup_t group;
+</parameter> 
+
+      <para>With  <literal>TAU_PROFILE_TIMER</literal> , a group of one or more statements is profiled. This macro has a timer variable as its first argument, and then strings for name and type, as described earlier. It associates the timer to the profile group specified in the last parameter. </para>
+
+      <screen>
+Example:
+template&lt; class T, unsigned Dim &gt;
+void BareField&lt;T,Dim&gt;::fillGuardCells(bool reallyFill)
+{
+  // profiling macros
+  TAU_TYPE_STRING(taustr, CT(*this) + " void (bool)" );
+  TAU_PROFILE("BareField::fillGuardCells()", taustr, TAU_FIELD);
+
+  TAU_PROFILE_TIMER(sendtimer, "fillGuardCells-send",
+                    taustr, TAU_FIELD);
+  TAU_PROFILE_TIMER(localstimer, "fillGuardCells-locals",
+                    taustr, TAU_FIELD);
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_START(timer); </title>
+
+       <parameter>
+
+Arguments:
+Profiler timer;
+</parameter> 
+
+      <para>The macro  <literal>TAU_PROFILE_START</literal>  starts the timer associated with the set of statements that are to be profiled. </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_STOP(timer);</title>
+
+       <parameter>
+
+Arguments:
+Profiler timer;
+</parameter> 
+
+      
+      <para>The macro  <literal>TAU_PROFILE_STOP</literal>  stops the timer.</para>
+
+      <para>It is important to note that timers can be nested, but not
+      overlapping. TAU detects programming errors that lead to such overlaps
+      at runtime, and prints a warning message. </para>
+
+      <para>Example:</para>
+
+      <screen>
+
+template&lt; class T, unsigned Dim &gt;
+void BareField&lt;T,Dim&gt;::fillGuardCells(bool reallyFill)
+{
+  // profiling macros
+  TAU_TYPE_STRING(taustr, CT(*this) + " void (bool)" );
+  TAU_PROFILE("BareField::fillGuardCells()", taustr, TAU_FIELD);
+
+  TAU_PROFILE_TIMER(sendtimer, "fillGuardCells-send",
+                    taustr, TAU_FIELD);
+  TAU_PROFILE_TIMER(localstimer, "fillGuardCells-locals",
+                    taustr, TAU_FIELD);
+// ...
+  TAU_PROFILE_START(sendtimer);
+    // set up messages to be sent
+    Message** mess = new Message*[nprocs];
+    int iproc;
+    for (iproc=0; iproc&lt;nprocs; ++iproc) {
+      mess[iproc] = NULL;
+      recvmsg[iproc] = false; }//... other code
+  TAU_PROFILE_STOP(sendtimer);
+  ...
+}
+</screen>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_GLOBAL_TIMER(timer, name, type, group);</title>
+
+         <parameter>
+Arguments:
+Profiler timer;
+string name, type;
+TauGroup_t group;
+</parameter> 
+
+        <para>As  <literal>TAU_PROFILE_TIMER</literal>  is used within the
+        scope of a block (typically a routine),
+         <literal>TAU_GLOBAL_TIMER</literal>  can be used across different routines
+        in the same file. </para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_GLOBAL_TIMER_START(timer);</title>
+
+         <parameter>
+Arguments:
+Profiler timer;
+</parameter> 
+        <para> <literal>TAU_GLOBAL_TIMER_START</literal>  starts the timer. The timer in this case is declared in the file scope. </para>
+
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_GLOBAL_TIMER_STOP(timer);</title>
+
+         <parameter>
+Arguments:
+Profiler timer;
+</parameter> 
+
+
+        <para> <literal>TAU_GLOBAL_TIMER_STOP</literal>  stops the timer which is declared in the file scope. </para>
+
+        <para>Example:</para>
+
+        <screen>
+
+TAU_GLOBAL_TIMER(looptimer, "Loops in foo.cpp", " ", TAU_USER);
+void foo()
+{
+TAU_GLOBAL_TIMER_START(looptimer);
+for (i=0; i&lt;N; i++) { /* do something */ }
+TAU_GLOBAL_TIMER_STOP(looptimer);
+}
+void bar()
+{
+TAU_GLOBAL_TIMER_START(looptimer);
+for(j=0; j&lt;N; j++) { /* do something */ }
+TAU_GLOBAL_TIMER_STOP(looptimer);
+}
+</screen>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_PROFILE_SET_GROUP_NAME(groupname);</title>
+
+
+         <parameter>
+Arguments:
+char *groupname;
+</parameter> 
+
+        <para> <literal>TAU_PROFILE_SET_GROUP_NAME</literal>  macro allows
+        the user to change the group name associated with the instrumented
+        routine. This macro must be called within the instrumented routine. 
+        </para>
+
+        <screen>
+
+void foo()
+{
+  TAU_PROFILE("foo()", "void ()", TAU_USER);
+  TAU_PROFILE_SET_GROUP_NAME("Particle"); 
+  /* gives a more meaningful group name */
+}
+</screen>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_PROFILE_TIMER_SET_GROUP_NAME(timer, groupname);</title>
+
+         <parameter>
+Arguments:
+Profiler timer;
+char *groupname;
+</parameter> 
+
+        <para> <literal>TAU_PROFILE_TIMER_SET_GROUP_NAME</literal>  changes the group name associated with a given timer.</para>
+
+        <para>Example:</para>
+
+
+        <screen>
+void foo()
+{
+TAU_PROFILE_TIMER(looptimer, "foo: loop1", " ", TAU_USER);
+TAU_PROFILE_START(looptimer);
+for (int i = 0; i &lt; N; i++) { /* do something */ }
+TAU_PROFILE_STOP(looptimer);
+TAU_PROFILE_TIMER_SET_GROUP_NAME("Field");
+}
+</screen>
+        </sect2>
+
+        <sect2>
+          <title>TAU_PROFILE_STMT(statement); </title>
+
+           <parameter>
+Arguments: 
+statement;
+</parameter> 
+
+          <para> <literal>TAU_PROFILE_STMT</literal>  declares a variable
+          that is used only during profiling or for execution of a statement that
+          takes place only when the instrumentation is active.  When
+          instrumentation is inactive (i.e., when profiling and tracing are turned
+          off as described in Chapter 2), all macros are defined as null. </para>
+
+
+          <para>Example:</para>
+
+          <screen>
+
+TAU_PROFILE_STMT(T obj;); // T is a template parameter)
+TAU_TYPE_STRING(str, "void () " + CT(obj) );
+</screen>
+        </sect2>
+
+        <sect2>
+          <title>TAU_PROFILE_INIT(argc, argv);</title>
+
+           <parameter>
+Arguments: 
+int argc; 
+char **argv;
+</parameter> 
+          <para> <literal>TAU_PROFILE_INIT</literal>  parses the
+          command-line arguments for the names of profile groups that are to be
+          selectively enabled for instrumentation. By default, if this macro is
+          not used, functions belonging to all profile groups are enabled. </para>
+
+          <para>Example:</para>
+
+          <screen>
+int main(int argc, char **argv){
+  TAU_PROFILE("main()", "int (int, char **)", TAU_DEFAULT);
+  TAU_PROFILE_INIT(argc, argv);
+...
+}
+</screen>
+
+       </sect2>
+
+       <sect2>
+         <title>TAU_PROFILE_SET_NODE(myNode); </title>
+
+
+          <parameter>
+Arguments: 
+int myNode;
+</parameter> 
+
+         <para>The  <literal>TAU_PROFILE_SET_NODE</literal>  macro sets the
+         node identifier of the executing task for profiling and tracing. Tasks
+         are identified using node, context and thread ids. The profile data
+         files generated will accordingly be named
+         profile.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.</para>
+
+       </sect2>
+  
+       <sect2>
+         <title>TAU_PROFILE_SET_CONTEXT(myContext);</title>
+
+         <parameter>
+Argument: 
+int myContext;
+</parameter>
+
+         <para> <literal>TAU_PROFILE_SET_CONTEXT</literal>  sets the context
+         parameter of the executing task for profiling and tracing purposes. This
+         is similar to setting the node parameter with
+          <literal>TAU_PROFILE_SET_NODE</literal> .</para>
+
+       </sect2>
+
+       <sect2>
+         <title>TAU_REGISTER_THREAD();</title>
+
+         <para>To register a thread with the profiling system, invoke
+         the  <literal>TAU_REGISTER_THREAD</literal>  macro in the run method of the
+         thread prior to executing any other TAU macro. This sets up thread
+         identifiers that are later used by the instrumentation system.</para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_REGISTER_FORK(nodeid, option);</title>
+
+         <parameter>
+Arguments:
+int nodeid;
+enum TauFork_t  option; 
+/* TAU_INCLUDE_PARENT_DATA or TAU_EXCLUDE_PARENT_DATA*/
+</parameter> 
+
+        <para>To register a child process obtained from the fork()
+        syscall, invoke the  <literal>TAU_REGISTER_FORK</literal>  macro. It takes 
+        two parameters, the first is the node id of the child process (typically
+        the process id returned by the fork call or any 0..N-1 range integer).
+        The second parameter specifies whether the performance data for the
+        child process should be derived from the parent at the time of fork
+        ( <literal>TAU_INCLUDE_PARENT_DATA</literal> ) or should be independent of
+        its parent at the time of fork
+        ( <literal>TAU_EXCLUDE_PARENT_DATA</literal> ). If the process id is used as
+        the node id, before any analysis is done, all profile files should be
+        converted to contiguous node numbers (from 0..N-1). It is highly
+        recommended to use flat contiguous node numbers in this call for
+        profiling and tracing. </para>
+
+        <para>Example:</para>
+
+        <screen>
+
+
+   pID = fork();
+ if (pID == 0)      {
+   printf("Parent : pid returned %d\n", pID)
+ }     else { 
+// If we'd used the TAU_INCLUDE_PARENT_DATA, we get
+//  the performance data from the parent in this process
+//  as well.
+        TAU_REGISTER_FORK(pID, TAU_EXCLUDE_PARENT_DATA);        
+	printf("Child : pid = %d", pID);
+  }
+</screen>
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_EXIT(message);</title>
+
+      <parameter>
+Argument: 
+const char * message;
+</parameter>
+
+      <para> <literal>TAU_PROFILE_EXIT</literal>  should be called prior to an error exit from the program so that any profiles or event traces can be dumped to disk before quitting.</para>
+
+      <para>Example</para>
+
+      <screen>
+if ((ret = open(...)) &lt; 0) {
+  TAU_PROFILE_EXIT("ERROR in opening a file");
+  perror("open() failed");
+  exit(1);
+}
+</screen>
+     </sect2>
+
+     <sect2>
+       <title>TAU_PROFILE_TIMER_SET_NAME(t, newname)</title>
+
+        <parameter>
+Arguments:
+Profiler timer;
+string newname;
+</parameter> 
+
+       <para> <literal>TAU_PROFILE_TIMER_SET_NAME</literal>  macro changes the name associated with a timer to the newname argument. </para>
+
+       <para>Example:</para>
+
+       <screen>
+void foo()
+{
+TAU_PROFILE_TIMER(timer1, "foo:loop1", " ", TAU_USER);
+...
+TAU_PROFILE_TIMER_SET_NAME(timer1, "foo:lines 21-34");
+}
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_TIMER_SET_TYPE(t, newtype)</title>
+
+       <parameter>
+Arguments:
+Profiler t;
+string newtype;
+</parameter> 
+  
+       <para>This macro changes the type string associated with the timer. Similar to  <literal>TAU_PROFILE_TIMER_SET_NAME</literal> . </para>
+       
+     </sect2>
+
+     <sect2>
+       <title>TAU_PROFILE_TIMER_SET_GROUP(t, group)</title>
+
+        <parameter>
+Arguments:
+Profiler t;
+TauGroup_t group;
+</parameter> 
+
+        <para> <literal>TAU_PROFILE_TIMER_SET_GROUP</literal>  changes the group associated with a timer.</para>
+
+        <para>Example:</para>
+
+        <screen>
+void foo()
+{
+ TAU_PROFILE_TIMER(t, "foo loop timer", " ", TAU_USER1);
+...
+ TAU_PROFILE_TIMER_SET_GROUP(t, TAU_USER3);
+}
+</screen>
+
+    </sect2>
+ 
+    <sect2>
+      <title>TAU_DISABLE_INSTRUMENTATION();</title>
+
+      <para> <literal>TAU_DISABLE_INSTRUMENTATION</literal>  macro disables
+      all entry/exit instrumentation within all threads of a context. This
+      allows the user to selectively enable and disable instrumentation in
+      parts of his/her code. It is important to re-enable the instrumentation
+      within the same basic block and scope. </para>
+
+    </sect2>
+ 
+    <sect2>
+      <title>TAU_ENABLE_INSTRUMENTATION();</title>
+
+      <para> <literal>TAU_ENABLE_INSTRUMENTATION</literal>  macro re-enables
+      all TAU instrumentation. All instances of functions and statements that
+      occur between the disable/enable section are ignored by TAU. This allows
+      a user to limit the trace size, if the macros are used to disable
+      recording of a set of iterations that have the same characteristics as,
+      for example, the first recorded instance.</para>
+
+      <para>Example:</para>
+
+      <screen>
+main() { 
+  foo();
+  TAU_DISABLE_INSTRUMENTATION();
+  for (int i =0; i &lt; N; i++) { 
+    bar();  // not recorded
+  }
+  TAU_ENABLE_INSTRUMENTATION();
+  bar(); // recorded
+} 
+</screen>
+
+     </sect2>
+
+     <sect2>
+       <title>TAU_ENABLE_GROUP(group);</title>
+
+        <parameter>
+Arguments:
+TauGroup_t group;
+</parameter> 
+
+       <para> <literal>TAU_ENABLE_GROUP</literal>  macro turns on instrumentation in all routines associated with the profile group. </para>     
+ 
+       <para>Example</para>
+
+       <screen>
+void foo()
+{
+  TAU_PROFILE("foo()", " ", TAU_USER);
+
+  ...
+  TAU_ENABLE_GROUP(TAU_USER);
+}
+</screen>
+     </sect2>
+
+     <sect2>
+       <title>TAU_DISABLE_GROUP(group);</title>
+
+        <parameter>
+Arguments:
+TauGroup_t group;
+</parameter> 
+
+       <para> <literal>TAU_DISABLE_GROUP</literal>  macro turns off instrumentation in all routines associated with the profile group. </para>
+
+       <para>Examples:</para>
+
+       <screen>
+void foo()
+{
+  TAU_PROFILE("foo()", " ", TAU_USER);
+
+  ...
+  TAU_DISABLE_GROUP(TAU_USER);
+}
+</screen>
+     </sect2>
+
+     <sect2>
+       <title>TAU_GET_PROFILE_GROUP(groupname);</title>
+
+        <parameter>
+Arguments:
+string groupname;
+</parameter> 
+
+        <para> <literal>TAU_GET_PROFILE_GROUP</literal>  allows the user to
+        dynamically create groups based on strings, rather than use predefined,
+        statically assigned groups such as  <literal>TAU_USER1, TAU_USER2</literal> 
+        etc. This allows names to be associated in creating unique groups that
+        are more meaningful, using names of files or directories for instance.
+        </para>
+
+        <para>Example:</para>
+
+        <screen>
+#define PARTICLES TAU_GET_GROUP("PARTICLES")
+void foo()
+{
+  TAU_PROFILE("foo()", " ", PARTICLES);
+}
+void bar()
+{
+  TAU_PROFILE("bar()", " ", PARTICLES);
+}
+</screen>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_ENABLE_GROUP_NAME(groupname);</title>
+
+         <parameter>
+Arguments:
+string groupname;
+</parameter> 
+
+        <para> <literal>TAU_ENABLE_GROUP_NAME</literal>  macro can turn on the instrumentation associated with routines based on a dynamic group assigned to them. It is important to note that this and the  <literal>TAU_DISABLE_GROUP_NAME</literal>  macros apply to groups created dynamically using  <literal>TAU_GET_PROFILE_GROUP.</literal>  </para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_DISABLE_GROUP_NAME(groupname);</title>
+
+         <parameter>
+Arguments:
+string groupname;
+</parameter> 
+
+        <para>Similar to  <literal>TAU_ENABLE_GROUP_NAME</literal> , this macro turns off the instrumentation in all routines associated with the dynamic group created using  <literal>TAU_GET_PROFILE_GROUP.</literal> </para>
+
+        <para>Example:</para>
+
+        <screen>
+#define PARTICLES TAU_GET_PROFILE_GROUP("PARTICLES");
+void foo()
+{
+ TAU_DISABLE_GROUP_NAME("PARTICLES");
+  /* after some work */
+  TAU_ENABLE_GROUP_NAME("PARTICLES");
+}
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_ENABLE_ALL_GROUPS();</title>
+
+      <para>This macro turns on instrumentation in all groups</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_DISABLE_ALL_GROUPS();</title>
+
+      <para>This macro turns off instrumentation in all groups.</para>
+
+      <para>Examples:</para>
+
+      <screen>
+void foo()
+{
+  TAU_DISABLE_ALL_GROUPS();
+  TAU_ENABLE_GROUP_NAME("PARTICLES");
+}
+</screen>
+
+     </sect2>
+
+     <sect2>
+       <title>TAU_REGISTER_EVENT(variable, event_name);</title>
+
+        <parameter>
+Arguments: 
+TauUserEvent &amp; variable;
+char * event_name;
+</parameter> 
+
+       <para>TAU can profile user-defined events using  <literal>TAU_REGISTER_EVENT</literal> . The meaning of the event is determined by the user. </para>   
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_EVENT(variable, value);</title>
+
+       <parameter>
+Arguments: TauUserEvent &amp; variable; 
+double value;
+</parameter> 
+
+      <para> <literal>TAU_EVENT</literal>  associates a value with some
+      user-defined event. When the event is triggered and this macro is
+      executed, TAU maintains statistics, such as maximum, minimum values,
+      standard deviation, number of samples, etc. for tracking this
+      event.</para>
+
+      <para>Example:</para>
+
+      <screen>
+int ArraySend(int arrayid)
+{ 
+  TAU_REGISTER_EVENT(taumsgsize, \
+  "Size of message associated with Arrays");
+  int size = GetArraySize(arrayid);
+  TAU_EVENT(size); 
+// ...
+}
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_REPORT_STATISTICS(); </title>
+
+      <para> <literal>TAU_REPORT_STATISTICS</literal>  prints the aggregate
+      statistics of user events across all threads in each node. Typically,
+      this should be called just before the main thread exits. </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_REPORT_THREAD_STATISTICS();</title>
+
+      <para> <literal>TAU_REPORT_THREAD_STATISTICS</literal>  prints the
+      aggregate, as well as per thread user event statistics. Typically, this
+      should be called just before the main thread exits. </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_TRACE_SENDMSG(tag, destination, length); </title>
+
+       <parameter>
+Arguments: 
+int tag; 
+int destination;
+int length;
+</parameter> 
+
+       <para> <literal>TAU_TRACE_SENDMSG</literal>  traces an inter-process message communication when a tagged message is sent to a destination process. </para>
+
+     </sect2>
+
+     <sect2>
+       <title>TAU_TRACE_RECVMSG(tag, source, length); </title>
+
+        <parameter>
+Arguments: 
+int tag; 
+int source;
+int length;
+</parameter> 
+
+        <para> <literal>TAU_TRACE_RECVMSG</literal>  traces a receive operation where tag represents the type of the message received from the source process.</para>
+
+        <para>Example:</para>
+
+        <screen>
+if (pid == 0){
+  TAU_TRACE_SENDMSG(currCol, sender, ncols * sizeof(T));
+  MPI_Send(vctr2, ncols * sizeof(T), MPI_BYTE, sender, \
+           currCol, MPI_COMM_WORLD);
+} else {
+  MPI_Recv(&amp;ans, sizeof(T), MPI_BYTE, MPI_ANY_SOURCE, \
+           MPI_ANY_TAG,MPI_COMM_WORLD, &amp;stat);
+  MPI_Get_count(&amp;stat, MPI_BYTE, &amp;recvcount);
+  TAU_TRACE_RECVMSG(stat.MPI_TAG, stat.MPI_SOURCE, recvcount);
+}
+</screen>
+
+        <para><emphasis>NOTE:</emphasis> When TAU is configured to use
+        MPI (-mpiinc=&lt;dir&gt; -mpilib=&lt;dir&gt;), the
+         <literal>TAU_TRACE_RECVMSG</literal>  and
+         <literal>TAU_TRACE_SENDMSG</literal>  macros are not required. The wrapper
+        interposition library in <screen>$(TAU_MPI_LIBS)</screen> uses these
+        macros internally for logging messages. </para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_DB_DUMP_PREFIX(prefix);</title>
+        
+         <parameter>
+Arguments:
+char *prefix;
+</parameter> 
+
+        <para> <literal>TAU_DB_DUMP_PREFIX</literal>  macro dumps all
+        profile data to disk and records a checkpoint or a snapshot of the
+        profile statistics at that instant. The dump files are named
+        &lt;prefix&gt;.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;. If prefix is
+        "profile", the files are named profile.0.0.0, etc. and may be read by
+        paraprof/pprof tools as the application executes.</para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_DB_DUMP_INCR();</title>
+
+        <para>This is similar to the TAU_DB_DUMP macro but it produces
+        dump files that have a timestamp in their names. This allows the user to
+        record timestamped incremental dumps as the application executes.
+        </para>
+
+      </sect2>
+  
+      <sect2>
+        <title>TAU_GET_FUNC_NAMES(functionList, numFuncs); </title>
+
+         <parameter>
+Arguments:
+char **functionList;
+int numFuncs;
+</parameter> 
+
+        <para>This macro fills the funcList argument with the list of
+        timer and routine names. It also records the number of routines active
+        in the numFuncs argument. </para>
+   
+      </sect2>
+
+      <sect2>
+        <title>TAU_DUMP_FUNC_NAMES(); </title>
+
+        <para>This macro writes the names of active functions to a file named dump_functionnames_&lt;node&gt;.&lt;context&gt;.</para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_GET_COUNTER_NAMES(counterList, numCounters);</title>
+
+         <parameter>
+Arguments:
+char **counterList;
+int numCounters;
+</parameter> 
+
+        <para> <literal>TAU_GET_COUNTER_NAMES</literal>  returns the list of
+        counter names and the number of counters used for measurement. When
+        wallclock time is used, the counter name of "default" is
+        returned.</para>
+
+      </sect2>
+
+      <sect2>
+        <title>TAU_GET_FUNC_VALS(inFuncs, numRoutines, counterExclusiveValues, counterInclusiveValues, numCalls, numSubrs, counterNames, numOfCounters);</title>
+
+        <para>It gets detailed performance data for the list of
+        routines. The user specifies inFuncs and the number of routines; TAU
+        then returns the other arguments with the performance data.
+        counterExclusiveValues and counterInclusiveValues are two dimensional
+        arrays: the first dimension is the routine id and the second is counter
+        id. The value is indexed by these two dimensions. numCalls and numSubrs
+        (or child routines) are one dimensional arrays. </para>
+
+        <para>Examples:</para>
+
+        <screen>
+
+  const char **inFuncs;
+  /* The first dimension is functions, and the 
+     second dimension is counters */
+  double **counterExclusiveValues;
+  double **counterInclusiveValues;
+  int *numOfCalls;
+  int *numOfSubRoutines;
+  const char **counterNames;
+  int numOfCouns;
+
+  TAU_GET_FUNC_NAMES(functionList, numOfFunctions);
+
+  /* We are only interested in the first two routines 
+     that are executing in this context. So, we allocate 
+     space for two routine names and get the performance 
+     data for these two routines at runtime. */
+  if(numOfFunctions &gt;=2 ){
+    inFuncs = (const char **) malloc(sizeof(const char *) * 2);
+
+    inFuncs[0] = functionList[0];
+    inFuncs[1] = functionList[1];
+
+    //Just to show consistency.
+    TAU_DB_DUMP();
+
+    TAU_GET_FUNC_VALS(inFuncs, 2,
+                      counterExclusiveValues,
+                      counterInclusiveValues,
+                      numOfCalls,
+                      numOfSubRoutines,
+                      counterNames,
+                      numOfCouns);
+
+    TAU_DUMP_FUNC_VALS_INCR(inFuncs, 2);
+
+
+  cout &lt;&lt; "@@@@@@@@@@@@@@@" &lt;&lt; endl;
+  cout &lt;&lt; "The number of counters is: " &lt;&lt; numOfCouns &lt;&lt; endl;
+  cout &lt;&lt; "The first counter is: " &lt;&lt; counterNames[0] &lt;&lt; endl;
+
+  cout &lt;&lt; "The Exclusive value of: " &lt;&lt; inFuncs[0]
+       &lt;&lt; " is: " &lt;&lt; counterExclusiveValues[0][0] &lt;&lt; endl;
+  cout &lt;&lt; "The numOfSubRoutines of: " &lt;&lt; inFuncs[0]
+       &lt;&lt; " is: " &lt;&lt; numOfSubRoutines[0]
+       &lt;&lt; endl;
+
+
+  cout &lt;&lt; "The Inclusive value of: " &lt;&lt; inFuncs[1]
+       &lt;&lt; " is: " &lt;&lt; counterInclusiveValues[1][0]
+       &lt;&lt; endl;
+  cout &lt;&lt; "The numOfCalls of: " &lt;&lt; inFuncs[1]
+       &lt;&lt; " is: " &lt;&lt; numOfCalls[1]
+       &lt;&lt; endl;
+
+  cout &lt;&lt; "@@@@@@@@@@@@@@@" &lt;&lt; endl;
+  }
+
+  TAU_DB_DUMP_INCR();
+
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_DUMP_FUNC_VALS(inFuncs, numFuncs);</title>
+
+       <parameter>
+Arguments:
+char **inFuncs;
+int numFuncs;
+</parameter> 
+
+      <para> <literal>TAU_DUMP_FUNC_VALS</literal>  writes the data
+      associated with the routines listed in inFuncs to disk. The number of
+      routines is specified by the user in numFuncs.</para>
+
+
+   </sect2>
+
+   <sect2>
+     <title>TAU_DUMP_FUNC_VALS_INCR(inFuncs, numFuncs); </title>
+
+
+      <parameter>
+Arguments:
+char **inFuncs;
+int numFuncs;
+</parameter> 
+
+     <para>Similar to <literal>TAU_DUMP_FUNC_VALS</literal>. This macro
+     creates an incremental selective dump and dumps the results with a date
+     stamp to the filename such as
+     sel_dump__Thu-Mar-28-16:30:48-2002__.0.0.0. In this manner the previous
+     <literal>TAU_DUMP_FUNC_VALS_INCR(...)</literal> are not overwritten
+     (unless they occur within a second).</para>
+
+   </sect2>
+
+   <sect2>
+     <title>TAU Mapping API</title>
+
+     <para>TAU allows the user to map performance data of entities from
+     one layer to another in multi-layered software. Mapping is used in
+     profiling (and tracing) both synchronous and asynchronous models of
+     computation. For mapping, the following macros are used. First locate
+     and identify the higher-level statement using the
+     <literal>TAU_MAPPING</literal> macro. Then, associate a function
+     identifier with it using the <literal>TAU_MAPPING_OBJECT</literal>.
+     Associate the high level statement to a FunctionInfo object that will be
+     visible to lower level code, using <literal>TAU_MAPPING_LINK</literal>,
+     and then profile entire blocks using
+     <literal>TAU_MAPPING_PROFILE</literal>. Independent sets of statements
+     can be profiled using <literal>TAU_MAPPING_PROFILE_TIMER,
+     TAU_MAPPING_PROFILE_START</literal>, and
+     <literal>TAU_MAPPING_PROFILE_STOP</literal> macros using the
+     FunctionInfo object. The TAU <filename>examples/mapping</filename> directory has
+     two examples (embedded and external) that illustrate the use of this
+     mapping API for generating object-oriented profiles.</para>
+
+   </sect2>
+
+   <sect2>
+     <title>TAU_MAPPING(statement, key);</title>
+
+      <parameter>
+Arguments: 
+statement ; // any C++ statement
+TauGroup_t key; // TAU group/unique key associated
+</parameter> 
+
+     <para><literal>TAU_MAPPING</literal> is used to encapsulate the C++
+     statement that we want to map to some other layer. The other layer can
+     execute synchronously or asynchronously with respect to this statement.
+     The key corresponds to a number that the lower layer will use to refer
+     to this statement. For example, </para>
+
+     <screen>
+
+int main()
+{
+Array &lt;2&gt; A(N, N), B(N, N), C(N,N), D(N, N);
+//Original statement:
+A = B + C + D;
+//Instrumented statement:
+TAU_MAPPING(A = B + C + D; , TAU_USER);
+... 
+}
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_MAPPING_CREATE(name, type, key, groupname, tid);</title>
+
+       <parameter>
+Arguments: 
+char *name, type, groupname;
+TauGroup_t key; // TAU group/unique key associated
+int tid; // Thread id
+</parameter> 
+
+
+      <para><literal>TAU_MAPPING_CREATE</literal> is similar to
+      <literal>TAU_MAPPING</literal> but it requires the name, type and group
+      name parameters (as character strings) to be specified. It creates a
+      mapping and associates it with the key that is specified. Later, this
+      key may be specified to retrieve the FunctionInfo object associated with
+      this key for timing purposes. The thread identifier is specified in the
+      <literal>tid</literal> parameter.</para>
+
+
+      <para>Example:</para>
+
+      <screen>
+
+TAU_MAPPING_CREATE("foo()", "void ()", function_id,"USER", tid);
+</screen>
+
+    </sect2> 
+
+    <sect2>
+      <title>TAU_MAPPING_OBJECT(FuncIdVar);</title>
+
+       <parameter>
+Arguments: FunctionInfo *FuncIdVar;
+</parameter> 
+
+      <para>To create storage for an identifier associated with a higher
+      level statement that is mapped using <literal>TAU_MAPPING</literal>, we
+      use the <literal>TAU_MAPPING_OBJECT</literal> macro. For example, in the
+      <literal>TAU_MAPPING</literal> example, the array expressions are
+      created into objects of a class ExpressionKernel, and each statement is
+      an object that is an instance of this class. To embed the identity of
+      the statement we store the mapping object in a data field in this class.
+      This is shown below:</para>
+
+      <screen>
+ template&lt;class LHS,class Op,class RHS,class EvalTag&gt;
+class ExpressionKernel : public Pooma::Iterate_t
+{
+public:
+
+  typedef ExpressionKernel&lt;LHS,Op,RHS,EvalTag&gt; This_t;
+  //
+  // Construct from an Expr.
+  // Build the kernel that will evaluate the expression on the 
+  // given domain.
+  // Acquire locks on the data referred to by the expression.
+  //
+  ExpressionKernel(const LHS&amp;,const Op&amp;,const RHS&amp; , \
+                   Pooma::Scheduler_t&amp;);
+
+
+  virtual ~ExpressionKernel();
+
+  //
+  // Do the loop.
+  //
+  virtual void run();
+
+private:
+
+  // The expression we will evaluate.
+  LHS lhs_m;
+  Op  op_m;
+  RHS rhs_m;
+  TAU_MAPPING_OBJECT(TauMapFI)
+};
+</screen>
+
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_MAPPING_LINK(FuncIdVar, Key);</title>
+
+       <parameter>
+Arguments: FunctionInfo *FuncIdVar; 
+TauGroup_t Key;
+</parameter> 
+
+      <para><literal>TAU_MAPPING_LINK </literal>creates a link between
+      the object defined in <literal>TAU_MAPPING_OBJECT</literal> (that
+      identifies a statement) and the actual higher-level statement that is
+      mapped with <literal>TAU_MAPPING</literal>. The Key argument represents a
+      profile group to which the statement belongs, as specified in the
+      <literal>TAU_MAPPING</literal> macro argument. For the example of array
+      statements, this link should be created in the constructor of the class
+      that represents the expression. <literal>TAU_MAPPING_LINK</literal>
+      should be executed before any measurement takes place. It assigns the
+      identifier of the statement to the object to which FuncIdVar refers. For
+      example</para>
+
+      <screen>
+
+//
+// Constructor
+// Input an expression and record it for later use.
+//
+template&lt;class LHS,class Op,class RHS,class EvalTag&gt;
+ExpressionKernel&lt;LHS,Op,RHS,EvalTag&gt;::
+ExpressionKernel(const LHS&amp; lhs,const Op&amp; op,const RHS&amp;  rhs, \
+                 Pooma::Scheduler_t&amp; scheduler) : Pooma::Iterate_t(scheduler,        forEachTag(MakeExpression&lt;LHS&gt;::make(lhs),  DataBlockTag&lt;CountBlocks&gt;(),SumCombineTag()) +  forEachTag(MakeExpression&lt;RHS&gt;::make(rhs), DataBlockTag&lt;CountBlocks&gt;(), \
+                 SumCombineTag()), -1), lhs_m(lhs), op_m(op), rhs_m(rhs)
+{
+  TAU_MAPPING_LINK(TauMapFI, TAU_USER)
+// .. rest of the constructor
+}
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_MAPPING_PROFILE (FuncIdVar);</title>
+
+     <parameter>
+Arguments; FunctionInfo *FuncIdVar;
+</parameter> 
+
+    <para>The <literal>TAU_MAPPING_PROFILE</literal> macro measures the
+    time and attributes it to the statement mapped in
+    <literal>TAU_MAPPING</literal> macro. It takes as its argument the
+    identifier of the higher level statement that is stored using
+    <literal>TAU_MAPPING_OBJECT</literal> and linked to the statement using
+    <literal>TAU_MAPPING_LINK</literal> macros. 
+    <literal>TAU_MAPPING_PROFILE</literal> measures the time spent in the
+    entire block in which it is invoked. For example, if the time spent in
+    the run method of the class does work that must be associated with the
+    higher-level array expression, then, we can instrument it as
+    follows:</para>
+
+
+    <screen>
+//
+// Evaluate the kernel
+// Just tell an InlineEvaluator to do it.
+//
+
+template&lt;class LHS,class Op,class RHS,class EvalTag&gt;
+void
+ExpressionKernel&lt;LHS,Op,RHS,EvalTag&gt;::run()
+{
+  TAU_MAPPING_PROFILE(TauMapFI)
+
+  // Just evaluate the expression.
+  KernelEvaluator&lt;EvalTag&gt;().evalate(lhs_m,op_m,rhs_m);
+  // we could release the locks here or in dtor 
+}
+</screen>
+
+    </sect2>
+   
+    <sect2>
+      <title>TAU_MAPPING_PROFILE_TIMER(timer, FuncIdVar);</title>
+
+       <parameter>
+
+Arguments: Profiler timer;
+FunctionInfo * FuncIdVar;
+</parameter> 
+
+      <para><literal>TAU_MAPPING_PROFILE_TIMER</literal> enables timing
+      of individual statements, instead of complete blocks. It will attribute
+      the time to a higher-level statement. The second argument is the
+      identifier of the statement that is obtained after
+      <literal>TAU_MAPPING_OBJECT</literal> and
+      <literal>TAU_MAPPING_LINK</literal> have executed. The timer argument in
+      this macro is any variable that is used subsequently to start and stop
+      the timer.</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_MAPPING_PROFILE_START(timer, tid);</title>
+
+      <parameter>
+
+Argument: 
+Profiler timer;
+int tid;
+</parameter>
+
+      <para><literal>TAU_MAPPING_PROFILE_START</literal> starts the
+      timer that is created using
+      <literal>TAU_MAPPING_PROFILE_TIMER</literal>. This will measure the
+      elapsed time in groups of statements, instead of the entire block. A
+      corresponding stop statement stops the timer as described next. The
+      thread identifier is specified in the tid parameter.</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_MAPPING_PROFILE_STOP(tid);</title>
+
+       <parameter>
+
+Arguments: 
+int tid;
+TAU_MAPPING_PROFILE_STOP stops the timer associated with the mapped lower-level statements. This is used in conjunction with TAU_MAPPING_PROFILE_TIMER and TAU_MAPPING_PROFILE_START macros. Example:
+template&lt;class LHS,class Op,class RHS,class EvalTag&gt;
+void
+ExpressionKernel&lt;LHS,Op,RHS,EvalTag&gt;::run()
+{
+  TAU_MAPPING_PROFILE_TIMER(timer, TauMapFI);
+  printf("ExpressionKernel::run() this = 4854\n", this);
+  // Just evaluate the expression.
+  
+  TAU_MAPPING_PROFILE_START(timer);
+      KernelEvaluator&lt;EvalTag&gt;().evaluate(lhs_m, op_m, rhs_m);
+  TAU_MAPPING_PROFILE_STOP();
+  // we could release the locks here instead of in the dtor.
+}
+</parameter> 
+
+      <para>This concludes our Mapping section. </para>
+
+    </sect2>
+
+
+  </sect1>  
+
+  <sect1>
+    <title>C Measurement API</title>
+
+    <para>The API for instrumenting C source code is similar to the C++
+    API. The difference is that the <literal>TAU_PROFILE()</literal> macro
+    is not available for identifying an entire block of code or function.
+    Instead, routine transitions are explicitly specified using
+    <literal>TAU_PROFILE_TIMER()</literal> macro with
+    <literal>TAU_PROFILE_START()</literal> and
+    <literal>TAU_PROFILE_STOP()</literal> macros to indicate the entry and
+    exit from a routine. Note that, <literal>TAU_TYPE_STRING()</literal> and
+    CT() macros are not applicable for C. It is important to declare the
+    <literal>TAU_PROFILE_TIMER()</literal> macro after all the variables
+    have been declared in the function and before the execution of the first
+    C statement. </para>
+
+
+    <para>Example:</para>
+
+    <screen>
+
+int main (int argc, char **argv)
+{
+  int ret;
+  pthread_attr_t  attr;
+  pthread_t       tid;
+  TAU_PROFILE_TIMER(tautimer,"main()", "int (int, char **)", \
+                    TAU_DEFAULT);
+  TAU_PROFILE_START(tautimer);
+  TAU_PROFILE_INIT(argc, argv);
+  TAU_PROFILE_SET_NODE(0);
+
+  pthread_attr_init(&amp;attr);
+  printf("Started Main...\n");
+  // other statements
+  TAU_PROFILE_STOP(tautimer);
+	  return 0;
+}
+</screen>
+
+  </sect1>
+ 
+  <sect1>
+    <title>Fortran90 Measurement API</title>
+
+    <para>The Fortran90 TAU API allows source code written in Fortran to
+    be instrumented for TAU. This API is comprised of Fortran routines. As
+    explained in Chapter 2, the instrumentation can be disabled in the
+    program by using the TAU stub makefile variable
+    <literal>TAU_DISABLE</literal> on the link command line. This points to
+    a library that contains empty TAU instrumentation routines.</para>
+
+    <sect2>
+      <title>TAU_PROFILE_INIT()</title>
+
+      <para><literal>TAU_PROFILE_INIT</literal> routine must be called
+      before any other TAU instrumentation routines. It is called once, in the
+      top level routine (program). It initializes the TAU library.</para>
+    
+      <para>Example:</para>
+
+      <screen>
+Example:
+      PROGRAM SUM_OF_CUBES
+      integer profiler(2)
+      save profiler
+
+       call TAU_PROFILE_INIT()
+</screen>
+
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_TIMER(profiler, name)</title>
+
+       <parameter>
+Arguments:
+integer profiler(2)
+character name(size)
+</parameter> 
+
+      <para>To profile a block of Fortran code, such as a function,
+      subroutine, loop etc., the user must first declare a profiler, which is
+      an integer array of two elements (pointer) with the save attribute, and
+      pass it as the first parameter to the
+      <literal>TAU_PROFILE_TIMER</literal> subroutine. The second parameter
+      must contain the name of the routine, which is enclosed in a single
+      quote. <literal>TAU_PROFILE_TIMER</literal> declares the profiler that
+      must be used to profile a block of code. The profiler is used to profile
+      the statements using <literal>TAU_PROFILE_START</literal> and
+      <literal>TAU_PROFILE_STOP</literal> as explained later.  Example:</para>
+
+      <screen>
+subroutine bcast_inputs
+implicit none
+integer profiler(2)
+save profiler
+
+include 'mpinpb.h'
+include 'applu.incl'
+
+interger IERR
+
+call TAU_PROFILE_TIMER(profiler, 'bcast_inputs')
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_START(profiler)</title>
+
+       <parameter>
+Arguments:
+integer profiler(2)
+</parameter> 
+
+      <para><literal>TAU_PROFILE_START</literal> starts the timer for
+      profiling a set of statements. The timer (or the profiler) must be
+      declared using <literal>TAU_PROFILE_TIMER</literal> routine, prior to
+      using <literal>TAU_PROFILE_START</literal>.</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_STOP(profiler)</title>
+
+       <parameter>
+Arguments:
+integer profiler(2)
+</parameter> 
+
+      <para><literal>TAU_PROFILE_STOP</literal> stops the timer used to
+      profile a set of statements. It is used in conjunction with
+      <literal>TAU_PROFILE_TIMER</literal> and
+      <literal>TAU_PROFILE_START</literal> subroutines. </para>
+
+      <para>Example:</para>
+
+      <screen>
+subroutine setbv
+implicit none
+
+include 'applu.incl'
+c--------------------------------------------------
+
+c   local variables
+c--------------------------------------------------    
+integer profiler(2)
+save profiler
+integer i, j, k
+integer iglob, jglob
+
+     call TAU_PROFILE_TIMER(profiler, 'setbv')
+     call TAU_PROFILE_START(profiler)
+c   set the dependent variable values along the top and c   bottom faces
+      do j = 1, ny
+       jglob = jpt + j
+       do i = 1, nx
+         iglob = ipt + i
+          call exact( iglob, jglob, 1, u( 1, i, j, 1 ) )           
+          call exact( iglob, jglob, nz, u( 1, i, j, nz ))
+        end do
+      end do
+      call TAU_PROFILE_STOP(profiler)
+      return
+      end
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_SET_NODE(myNode)</title>
+
+       <parameter>
+Arguments: 
+integer myNode
+</parameter> 
+
+      <para>The <literal>TAU_PROFILE_SET_NODE</literal> macro sets the
+      node identifier of the executing task for profiling and tracing. Tasks
+      are identified using node, context and thread ids. The profile data
+      files generated will accordingly be named
+      <literal>profile.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.</literal></para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_SET_CONTEXT(myContext)</title>
+
+      <parameter>
+Argument: 
+integer myContext
+</parameter>
+
+      <para><literal>TAU_PROFILE_SET_CONTEXT</literal> sets the context
+      parameter of the executing task for profiling and tracing purposes. This
+      is similar to setting the node parameter with
+      <literal>TAU_PROFILE_SET_NODE</literal>.</para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_PROFILE_REGISTER_THREAD()</title>
+
+      <para>To register a thread with the profiling system, invoke the
+      <literal>TAU_PROFILE_REGISTER_THREAD</literal> routine in the run method
+      of the thread prior to executing any other TAU routine. This sets up
+      thread identifiers that are later used by the instrumentation system.
+      </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_DISABLE_INSTRUMENTATION()</title>
+
+      <para><literal>TAU_DISABLE_INSTRUMENTATION</literal> macro
+      disables all entry/exit instrumentation within all threads of a context.
+      This allows the user to selectively enable and disable instrumentation
+      in parts of his/her code. It is important to re-enable the
+      instrumentation within the same basic block. </para>
+
+    </sect2>
+ 
+    <sect2>
+      <title>TAU_ENABLE_INSTRUMENTATION()</title>
+
+      <para><literal>TAU_ENABLE_INSTRUMENTATION</literal> macro
+      re-enables all TAU instrumentation. All instances of functions and
+      statements that occur between the disable/enable section are ignored by
+      TAU. This allows a user to limit the trace size, if the macros are used
+      to disable recording of a set of iterations that have the same
+      characteristics as, for example, the first recorded instance.</para>
+
+      <para>Example:</para>
+
+      <screen>
+call TAU_DISABLE_INSTRUMENTATION()
+...
+call TAU_ENABLE_INSTRUMENTATION()
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title> TAU_PROFILE_EXIT(message) </title>
+
+      <parameter>
+Argument: 
+character message(size)
+</parameter>
+
+      <para><literal>TAU_PROFILE_EXIT</literal> should be called prior
+      to an error exit from the program so that any profiles or event traces
+      can be dumped to disk before quitting.</para>
+
+      <para>Example:</para>
+
+      <screen>
+call TAU_PROFILE_EXIT('about called')
+</screen>
+
+    </sect2>
+  
+    <sect2>
+      <title>TAU_REGISTER_EVENT(variable, event_name)</title>
+
+       <parameter>
+Arguments: 
+int variable(2)
+character event_name(size)
+</parameter> 
+
+      <para>TAU can profile user-defined events using
+      <literal>TAU_REGISTER_EVENT</literal>. The meaning of the event is
+      determined by the user. The first argument to
+      <literal>TAU_REGISTER_EVENT</literal> is the pointer to an integer
+      array. This array is declared with a save attribute as shown
+      below.</para>
+
+      <para>Example:</para>
+
+      <screen>
+integer eventid(2)
+save eventid
+call TAU_REGISTER_EVENT(eventid, 'Error in Iteration')
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_EVENT(variable, value)</title>
+
+       <parameter>
+Arguments: 
+integer variable(2)
+real value
+</parameter> 
+
+      <para><literal>TAU_EVENT</literal> associates a value with some
+      user-defined event. When the event is triggered and this macro is
+      executed, TAU maintains statistics, such as maximum, minimum values,
+      standard deviation, number of samples, etc. for tracking this
+      event.</para>
+
+      <para>Example:</para>
+
+      <screen>
+  call TAU_REGISTER_EVENT(taumsgsize, 'Message size')
+  call TAU_EVENT(size)
+
+</screen>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_REPORT_STATISTICS()</title>
+
+      <para><literal>TAU_REPORT_STATISTICS</literal> prints the
+      aggregate statistics of user events across all threads in each node.
+      Typically, this should be called just before the main thread exits.
+      </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_REPORT_THREAD_STATISTICS()</title>
+
+      <para>TAU_REPORT_THREAD_STATISTICS prints the aggregate, as well
+      as per thread user event statistics. Typically, this should be called
+      just before the main thread exits. </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_TRACE_SENDMSG(tag, destination, length)</title>
+
+       <parameter>
+Arguments: 
+integer tag 
+integer destination
+integer length
+</parameter> 
+
+       <para>TAU_TRACE_SENDMSG traces an inter-process message
+       communication when a tagged message is sent to a destination process.
+       </para>
+
+    </sect2>
+
+    <sect2>
+      <title>TAU_TRACE_RECVMSG(tag, source, length)</title>
+
+       <parameter>
+Arguments: 
+integer tag
+integer source
+integer length
+</parameter> 
+
+      <para><literal>TAU_TRACE_RECVMSG</literal> traces a receive
+      operation where tag represents the type of the message received from the
+      source process.</para>
+
+    </sect2>
+
+  </sect1>
+  
+  <sect1 id="SectionSummary">
+    <title>Summary</title>
+
+    <para>In C++, a single macro <literal>TAU_PROFILE</literal>, is
+    sufficient to profile a block of statements. In C and Fortran, the user
+    must use statement level timers to achieve this, using
+    <literal>TAU_PROFILE_TIMER</literal>,
+    <literal>TAU_PROFILE_START</literal> and
+    <literal>TAU_PROFILE_STOP</literal>. Instrumentation of C++ source code
+    can be done manually or by using tau_instrumentor, a tool that can
+    automatically insert TAU annotations in the source code. Implementation
+    of a Fortran 90 instrumentor is in progress. </para>
+
+
+  </sect1>
+
+
+ 
+</chapter>                
+
+

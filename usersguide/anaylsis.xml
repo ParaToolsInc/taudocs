@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+<chapter id="Analysis">
+  <title>Analyzing Parallel Applications</title>
+
+  <sect1 id='pprof'>
+		<title>Text summary</title>
+
+		<para>For a quick view summary of TAU performance, use
+		<literal>pprof</literal> It reads and prints a summary of the TAU data in the
+		current directory. For performance data with multiple metrics, move into one
+		of the directories to get information about that metric:<screen>
+%> cd MULTI__P_WALL_CLOCK_TIME
+%> pprof
+Reading Profile files in profile.*
+
+NODE 0;CONTEXT 0;THREAD 0: 
+--------------------------------------------------------------------------------------- 
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name 
+              msec   total msec                          usec/call  
+--------------------------------------------------------------------------------------- 
+100.0           24          590           1           1     590963 main 
+ 95.9           26          566           1           2     566911 multiply 
+ 47.3          279          279           1           0     279280 multiply-opt 
+ 44.1          260          260           1           0     260860 multiply-regular 
+ </screen>
+
+   </para>
+	 </sect1>
+	 <sect1 id="ParaProf.brief">
+	   <title>ParaProf</title>
+
+     <para>To launch ParaProf, execute paraprof from the command line where
+		 the profiles are located. Launching ParaProf will bring up the manager window and 
+		 a window displaying the profile data as shown below. </para>
+
+    <figure id="paraprof.maindatawindow1.figure"> <title>Main Data Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="../paraprof/maindatawindow.gif" scalefit="0"
+		       width="3.78in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+     
+		 <para>For more information see the <link linkend="ParaProfDoc">ParaProf section in the reference
+		 guide</link>.
+		 </para>
+	</sect1>
+
+	<sect1 id="Jumpshot.brief">
+	  <title>Jumpshot</title>
+
+		<para>To use Argonne's Jumpshot (bundled with TAU), first merge and convert TAU traces to slog2  
+format:  
+<screen> 
+% tau_treemerge.pl 
+% tau2slog2 tau.trc tau.edf -o tau.slog2 
+% jumpshot tau.slog2 
+</screen> 
+Launching Jumpshot will bring up the main display window showing the entire trace, zoom in  
+to see more detail.</para>
+    <figure id="jumpshot.overview.figure"> <title>Main Data Window</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="jumpshot-overview.gif" scalefit="0"
+		       width="3.78in" align="center"/></imageobject>
+      </mediaobject>
+    </figure>
+
+	</sect1>
+</chapter>
+

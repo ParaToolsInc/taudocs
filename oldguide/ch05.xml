@@ -1,0 +1,186 @@
+<chapter id="Tracing">
+  <title>Tracing</title>
+
+  <simplesect><para>Typically, profiling shows the distribution of execution
+  time across routines. It can show the code locations associated with
+  specific bottlenecks, but it does not show the temporal aspect of
+  performance variations. Tracing the execution of a parallel program
+  shows when and where an event occurred, in terms of the process that
+  executed it and the location in the source code. This chapter discusses
+  how TAU can be used to generate event traces.</para>
+  
+  <para>Figure 1 show the possible interations btween different trace file
+  formats.</para>
+
+  <figure>
+  	<title>Performance Data IO Chart</title>
+
+	<graphic fileref="TAUChart.gif"></graphic>
+  </figure>
+  
+  </simplesect>
+
+  <sect1 id="GeneratingEventTraces">
+    <title>Generating Event Traces</title>
+
+    <para>TAU must be configured with the <literal>-TRACE</literal>
+    option to generate event traces. This can be used in conjunction with
+    <literal>-PROFILE</literal> to generate both profiles and traces. The
+    traces are stored in a directory specified by the environment variable
+    <literal>TRACEDIR</literal>, or the current directory, by default.
+    Example:</para>
+
+    <screen>
+% ./configure -SGITIMERS -arch=sgi64 -TRACE  -c++=KCC
+% make clean; make install
+% setenv TRACEDIR /users/sameer/tracedata/experiment56
+% mpirun -np 4 matrix
+</screen>
+
+    <para>This generates files named</para>
+
+    <screen>
+tautrace.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.trc and events.&lt;node&gt;.edf 
+</screen>
+
+    <para>Using the utility tau_merge, these traces are then merged as shown below:</para>
+
+    <screen>
+% tau_merge 
+usage: tau_merge [-a] [-r] inputtraces* (outputtrace|-)
+Note: tau_merge assumes edf files are named 
+      events.&lt;nodeid&gt;.edf, and generates a merged edf file tau.edf
+% tau_merge tautrace*.trc matrix.trc
+</screen>
+
+    <para>This generates matrix.trc as the merged trace file and tau.edf as the merged event description file.</para>
+
+    <para>To convert merged or per-thread traces to another trace format, the utility tau_convert is used as shown below:</para>
+
+    <screen>
+% tau_convert
+usage: tau_convert [-alog | -SDDF | -dump | -paraver [-t] | -pv | 
+       -vampir [-longsymbolbugfix] [-compact] [-user|-class|-all] 
+       [-nocomm]] inputtrc edffile [outputtrc]
+ Note: -vampir option assumes multiple threads/node
+ Note: -t option used in conjunction with -paraver option assumes 
+       multiple threads/node
+</screen>
+
+    <para>To view the dump of the trace in text form, use</para>
+
+    <screen>
+% tau_convert -dump matrix.trc tau.edf 
+</screen>
+
+    <para>tau_convert can also be used to convert traces to the Vampir
+    trace format <literal>[VAMPIR-URL]</literal>. For single-threaded
+    applications (such as the MPI application above), the
+    <literal>-pv</literal> option is used to generate Vampir traces as
+    follows:</para>
+
+    <screen>
+% tau_convert -pv matrix.trc tau.edf matrix.pv
+% vampir matrix.pv &amp;
+</screen>
+
+    <para>To convert TAU traces to <literal>SDDF</literal> or
+    <literal>ALOG</literal> trace formats, <literal>-SDDF</literal> and
+    <literal>-alog</literal> options may be used. When multiple threads are
+    used on a node (as with <literal>-jdk, -pthread or
+    -tulipthread</literal> options during configure), the
+    <literal>-vampir</literal> option is used to convert the traces to the
+    vampir trace format, as shown below:</para>
+
+    <screen>
+
+% tau_convert -vampir smartsapp.trc tau.edf smartsapp.pv
+% vampir smartsapp.pv &amp;
+</screen>
+
+    <para>To convert to the Paraver trace format, use the
+    <literal>-paraver</literal> option for single threaded programs and
+    <literal>-paraver -t</literal> option for multi-threaded programs.
+    </para>
+
+    <para><emphasis>NOTE:</emphasis> To ensure that inter-process
+    communication events are recorded in the traces, in addition to the
+    routine transitions, it is necessary to insert
+    <literal>TAU_TRACE_SENDMSG</literal> and
+    <literal>TAU_TRACE_RECVMSG</literal> macro calls in the source code
+    during instrumentation. This is not needed when the TAU MPI Wrapper
+    library is used. </para>
+
+  </sect1>
+
+  <sect1 id="Vampir">
+    <title>Vampir: Visualizing TAU traces</title>
+
+    <para>Vampir is a robust parallel trace visualization tool sold by
+    Pallas GmbH <literal>[PALLAS-URL]</literal>. It provides a convenient
+    way to graphically analyze the performance characteristics of a parallel
+    application. A variety of graphical displays present important aspects
+    of the application runtime behavior:</para>
+
+    <itemizedlist>
+
+      <listitem>detailed timeline views of events and communication</listitem>
+
+      <listitem>statistical analysis of program execution</listitem>
+ 
+      <listitem>statistical analysis of communication operations</listitem>
+
+      <listitem>system snapshot and animation</listitem>
+
+      <listitem>dynamic calling tree</listitem>
+
+    </itemizedlist>
+      
+    <para>When interprocess communication is recorded, it shows up as
+    directed line-segments connecting the sending and receiving processes.
+    The details of a message can be obtained by clicking on it.</para>
+
+    <para>In Figure 15, "Scheduling work packets in SMARTS," on
+    page 106, we show how Vampir can be used to display scheduling of work
+    packets or iterates in the Shared Memory Asynchronous Runtime System
+    (SMARTS) [SMARTS-URL]</para>
+
+    <para>In the next figure, we see the symbol legend and the dynamic call tree views provided by Vampir.</para>
+
+    <para>Vampir has been used to compare the scheduling policies of the SMARTS package.</para>
+
+    <para>The following figures illustrate the use of Vampir with Java
+    applications. After converting the traces and invoking Vampir, choose
+    appropriate colors for groups of methods using
+    Preferences-&gt;Colors-&gt;Activities menu in Vampir.</para>
+
+    <para>Clicking on a process(thread) selects it. Then the user can
+    see the dynamic call tree of the process by choosing the Process
+    Displays-&gt;Call Tree menu item as shown below.</para>
+
+    <para>Vampir has a rich set of global displays. By choosing the
+    Global Displays -&gt;Parallelism View the user can see how many threads
+    participate in an activity belonging to a group at any point in time.
+    All timeline displays support a zoom option where the user can zoom into
+    or out of a section of the trace.</para>
+
+    <para>By choosing other global displays such as Summary chart or
+    Activity chart, the user can see a global summary of the time spent in
+    different groups of methods as shown in the following figure.</para>
+
+    <para>Hybrid execution models can be traced in TAU by enabling
+    support for the appropriate message passing model and thread package.
+    One example of such a mixed model program is shown in the following
+    figure. It shows a trace of an OpenMP+MPI (OpenMPI) program that uses
+    OpenMP threads for loop-level parallelism and MPI for inter-context
+    message communication. The figure shows a timeline display. </para>
+
+    <para>Another example of mixed model programming is shown below. It
+    shows an mpiJava <literal>[MPIJAVA-URL]</literal> program that uses the
+    message passing interface (MPI) for inter-node communication and uses
+    Java threads within each node for computation. </para>
+
+  </sect1>
+
+</chapter>
+

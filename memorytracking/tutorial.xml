@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+ "../tools/docbook-xml-4.4/docbookx.dtd">
+ <chapter>
+		<title>TAU Memory Profiling Tutorial</title>
+
+	<sect1 id="memoryOptions">
+		<title>TAU's memory API options</title>
+
+		<para>TAU can evaluate the following memory events:</para>
+		<orderedlist>
+		<listitem><para> Memory utilization options that examine how much heap memory
+		is currently used, and</para></listitem>
+		<listitem><para>Memory headroom evaluation options that examine how much a
+		program can grow (or how much headroom it has) before it runs out of free
+		memory on the heap. During memory headroom evaluation TAU tries to call malloc with chunks that
+		progressively increase in size, until all memory is exhausted. Then it
+		frees those chunks, keeping track of how much memory it successfully
+		allocated.</para></listitem>
+		<listitem><para>Memory leaks in C/C++ programs TAU will track malloc through the
+		execuation issuing user event when the program fails to the allocated
+		memory.</para></listitem>
+		</orderedlist>
+	</sect1>
+
+	<sect1 id="tauExecMemory">
+		<title>Using tau_exec</title>
+		<para>
+		The <xref linkend="tau_exec" /> command allow you to track
+		these memory events with either an instrumented or uninstrumented binary. If
+		you want to instead track memory usage in select locations in the source
+		code consider the TAU API calls below.
+		</para>
+	</sect1>
+	
+
+	<sect1 id="profilingMemory">
+		<title>Evaluating Memory Utilization</title>
+
+
+		<sect2><title>TAU_TRACK_MEMORY</title>
+
+			<para>When <literal>TAU_TRACK_MEMORY</literal> is called an interrupt is generated every 10 seconds and the memory event
+			is triggered with the current value. This interrupt interval can
+			be changed by calling
+			<literal>TAU_SET_INTERRUPT_INTERVAL(value)</literal>. The tracking of
+	    	memory events in both cases can be explictly enabled or disabled by
+		    calling the macros <literal>TAU_ENABLE_TRACKING_MEMORY()</literal> or
+		   <literal>TAU_DISABLE_TRACKING_MEMORY()</literal> respectively.
+			</para>
+			
+			<para>TAU_TRACK_MEMORY() can be inserted into the source code:
+      <screen>
+int main(int argc, char **argv)
+{
+	TAU_PROFILE("main()", " ", TAU_DEFAULT);
+	TAU_PROFILE_SET_NODE(0);
+
+	TAU_TRACK_MEMORY();
+
+	sleep(12);
+
+	int *x = new int[5*1024*1024];
+
+	sleep(12);
+
+	return 0;
+}
+</screen>			
+			
+			Resulting profile data:
+			</para>
+
+			<screen>
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         2  2.049E+04      2.891  1.024E+04  1.024E+04  Memory Utilization
+			(heap, in KB)
+---------------------------------------------------------------------------------------
+</screen>
+		
+ 		</sect2>
+
+		<sect2><title>TAU_TRACK_MEMORY_HERE</title>
+
+			<para>Triggers memory tracking at a given execution point. For
+			example:</para>
+
+			<screen>
+int main(int argc, char **argv) {
+	TAU_PROFILE("main()", " ", TAU_DEFAULT);
+	TAU_PROFILE_SET_NODE(0);
+
+	TAU_TRACK_MEMORY_HERE();
+
+	int *x = new int[5*1024*1024];
+	TAU_TRACK_MEMORY_HERE();
+	return 0;
+}
+
+</screen>
+
+		<para>Here is the resulting profile:</para>
+
+		<screen>
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         2  2.049E+04      2.891  1.024E+04  1.024E+04  Memory Utilization
+			(heap, in KB)
+---------------------------------------------------------------------------------------
+</screen>
+	</sect2>	
+
+		<sect2><title>-PROFILEMEMORY</title>
+
+		<para>Specifies tracking heap memory utilization for each instrumented
+		function. When any function entry takes place, a sample of the heap memory
+		used is taken. This data is stored as user-defined event data in
+		profiles/traces.</para>
+
+		</sect2>
+
+</sect1>
+
+
+	<sect1 id="ProfilingHeadroom">
+		<title>Evaluating Memory Headroom</title>
+
+		<sect2><title>TAU_TRACK_MEMORY_HEADROOM()</title>
+	
+			<para>This call sets up a signal handler that is invoked every 10
+			seconds by an
+			interrupt. Inside, it evaluates how much memory it can allocate and
+			associates
+			it with the callstack. The user can vary the size of the callstack by
+			setting
+			the environment variable <literal>TAU_CALLSTACK_DEPTH</literal> (default is 2).
+			The examples/headroom/track subdirectory has an example that
+			illustrates the
+			use of this call.  To disable tracking this headroom at runtime, the
+			user
+			may call:
+			<literal>TAU_DISABLE_TRACKING_MEMORY_HEADROOM()</literal> and call
+			<literal>TAU_ENABLE_TRACKING_MEMORY_HEADROOM()</literal> to re-enable 
+			tracking of the headroom.
+			To set a different interrupt interval, call
+			<literal>TAU_SET_INTERRUPT_INTERVAL(value)</literal>
+			where value (in seconds) represents the inter-interrupt interval.
+			</para>
+	
+			<para>A sample profile generated has:</para>
+			<screen>
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         3       4067       4061       4065      2.828  Memory Headroom Left (in
+			MB)
+         3       4067       4061       4065      2.828  Memory Headroom
+         Left (in MB) : void quicksort(int *, int, int)   => void
+         quicksort(int *, int, int)
+--------------------------------------------------------------------------------
+</screen>						
+
+			
+		</sect2>
+		
+		<sect2><title>TAU_TRACK_MEMORY_HEADROOM_HERE()</title>
+			
+			<para>Sometimes it is useful to track the memory available at a certain
+			point in the
+			program, rather than rely on an interrupt.
+			<literal>TAU_TRACK_MEMORY_HEADROOM_HERE()</literal>
+			allows us to examine the memory available at a particular location in
+			the source
+			code and associate it with the currently executing callstack.
+			The examples/headroom/here subdirectory has an example that illustrates
+			this usage.</para>
+
+			<screen>
+  ary = new double [1024*1024*50];
+    TAU_TRACK_MEMORY_HEADROOM_HERE(); /* takes a sample here!  */
+	   sleep(1);
+</screen>
+
+			<para>A sample profile looks like this:</para>
+
+			<screen>
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         3       3672       3672       3672          0  Memory Headroom Left (in
+			MB)
+         1       3672       3672       3672          0  Memory Headroom
+						Left (in MB) : main() (calls f1, f5) => f1() (sleeps 1 sec,
+						calls f2, f4)
+         1       3672       3672       3672          0  Memory
+						Headroom Left (in MB) : main() (calls f1, f5) => f1()
+						(sleeps 1 sec, calls f2, f4) => f4() (sleeps 4 sec,
+						calls f2)
+         1       3672       3672       3672			  0  Memory Headroom Left 
+						(in MB) : main() (calls f1, f5) => f5() (sleeps 5 sec)
+---------------------------------------------------------------------------------------
+</screen>												
+
+
+		</sect2>
+
+		<sect2><title>-PROFILEHEADROOM</title>
+			
+			<para>Similar to the -PROFILEMEMORY configuration option that takes a
+			sample of the
+			memory utilization at each function entry, we now have
+			<literal>-PROFILEHEADROOM</literal>. In this
+			<literal>-PROFILEHEADROOM</literal> option, a sample is taken at instrumented function's
+			entry and
+			associated with the function name. This option is meant to be used as a
+			debugging aid due the high cost associated with executing a series of
+			malloc
+			calls. The cost was 106 microseconds on an IBM BG/L (700 MHz CPU). To
+			use this
+			option, simply configure TAU with the
+			<literal>-PROFILEHEADROOM</literal> option and
+			choose any
+			method for instrumentation (PDT, MPI, hand instrumentation). You do not
+			need
+			to annotate the source code in any special way (as is required for 2a
+			and 2b).
+			The examples/headroom/available subdirectory has a simple example that
+			produces the following profile when TAU is configured with the
+			<literal>-PROFILEHEADROOM</literal> option.
+			</para>
+
+			<screen>
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         1       4071       4071       4071          0  f1() (sleeps 1 sec,
+			calls f2, f4) - Memory Headroom Available (MB)
+         2       3671       3671       3671          0  f2() (sleeps 2
+			sec, calls f3) - Memory Headroom Available (MB)         
+         2       3671       3671       3671          0  f3() (sleeps 3 sec) -
+			Memory Headroom Available (MB)         
+         1       3671       3671       3671          0  f4() (sleeps 4 sec, 
+			calls f2) - Memory Headroom Available (MB)         
+         1       3671       3671       3671          0  f5() (sleeps 5 sec) - 
+			Memory Headroom Available (MB)         
+         1       4071       4071       4071          0  main() (calls f1, f5) 
+			- Memory Headroom Available (MB)
+---------------------------------------------------------------------------------------
+</screen>
+
+		
+		</sect2>	
+	
+	</sect1>
+	<sect1>
+		<title>DetectingMemoryLeaks</title>
+
+		<para>TAU's memory leak detection feature can be initiated by giving
+		tau_compiler.sh the option <literal>-optDetectMemoryLeaks</literal>. For
+		a demonstration consider this C++ program:</para>
+<screen>
+
+#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+
+
+/* there is a memory leak in bar when it is invoked with 5 &lt; value &lt;= 15 */
+int bar(int value)
+{
+  printf("Inside bar: %d\n", value);
+  int *x;
+
+  if (value &gt; 5)
+  {
+    printf("looks like it came here from g!\n");
+    x = (int *) malloc(sizeof(int) * value);
+    x[2]= 2;
+    /* do not free it! create a memory leak, unless the value is &gt; 15 */
+    if (value &gt; 15) free(x);
+  }
+  else
+  { /* value  &lt;=5 no leak */
+    printf("looks like it came here from foo!\n");
+    x = (int *) malloc(sizeof(int) * 45);
+    x[23]= 2;
+    free(x);
+  }
+  return 0;
+}
+    
+int g(int value)
+{
+  printf("Inside g: %d\n", value);
+  return bar(value);
+}
+
+int foo(int value)
+{
+  printf("Inside f: %d\n", value);
+  
+  if (value &gt; 5) g(value);
+  else bar(value);
+	
+  return 0;
+}
+int main(int argc, char **argv)
+{
+  int *x;
+  int *y;
+  printf ("Inside main\n");
+
+  foo(12); /* leak */
+  foo(20); /* no leak */
+  foo(2);  /* no leak */
+  foo(13); /* leak */
+}
+</screen>
+
+		<para>Notice that bar fails to free allocated memory on input between 5 and 15 and
+		that foo will call g that calls bar when the input to foo is greater than 5.
+		</para> 
+
+		<para>Now configuring TAU with <literal>-PROFILECALLPATH</literal> run the file
+		by:</para>
+		<screen>
+%> cd examples/memoryleakdetect/
+%> make
+%> ./simple
+...
+USER EVENTS Profile :NODE 0, CONTEXT 0, THREAD 0
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         2         52         48         50          2  MEMORY LEAK! malloc size &lt;file=simple.inst.cpp, line=18&gt; : int g(int)   =&gt; int bar(int)  
+         1         80         80         80          0  free size &lt;file=simple.inst.cpp, line=21&gt;
+         1         80         80         80          0  free size &lt;file=simple.inst.cpp, line=21&gt; : int g(int)   =&gt; int bar(int)  
+         1        180        180        180          0  free size &lt;file=simple.inst.cpp, line=28&gt;
+         1        180        180        180          0  free size &lt;file=simple.inst.cpp, line=28&gt; : int foo(int)   =&gt; int bar(int)  
+         3         80         48         60      14.24  malloc size &lt;file=simple.inst.cpp, line=18&gt;
+         3         80         48         60      14.24  malloc size &lt;file=simple.inst.cpp, line=18&gt; : int g(int)   =&gt; int bar(int)  
+         1        180        180        180          0  malloc size &lt;file=simple.inst.cpp, line=26&gt;
+         1        180        180        180          0  malloc size &lt;file=simple.inst.cpp, line=26&gt; : int foo(int)   =&gt; int bar(int)  
+---------------------------------------------------------------------------------------
+</screen>
+
+		<para>Notice that the first row show the two Memory leaks along with the callpath
+		tracing where the unallocated memory was requested.</para>
+	</sect1>
+
+  <sect1 id="MemoryTrackingInFortran">
+    <title>Memory Tracking In Fortran</title>
+
+    <para>To profile memory usage in Fortran 90 use TAU's ability to selectively
+    instrument a program. The option
+    <literal>-optTauSelectFile=&lt;file&gt;</literal> for tau_compilier.sh let
+    you specify a selective instrumentation file which defines regions of the
+    source code to instrument.</para>
+    
+    <para>To begin memory profiling, state which file/routines to profile by
+    typing:</para><screen>
+
+BEGIN_INSTRUMENT_SECTION
+memory file="memory.f90" routine="INIT"
+END_INSTRUMENT_SECTION
+</screen>
+
+    <para>Wildcard can be used to instrument multiple routines. For file names *
+    character can be used to specify any number of character, thus foo* matches
+    foobar, foo2, etc. also for file names ? can match a single charater, ie.
+    foo? matches foo2, fooZ, but not foobar. You can use # as a wildcard for
+    routines, ie. b# matches bar, b2z etc.</para>
+  
+    <para>Memory Profile in Fortran gives you these three metrics:
+    
+    <itemizedlist>
+      <listitem><para>Total size of memory for each <literal>malloc</literal> and
+        <literal>free</literal> in the source code.</para></listitem>
+      <listitem><para>The callpath for each occurrence of <literal>malloc</literal> or
+        <literal>free</literal>.</para></listitem>
+      <listitem><para>A list of all variable that were not deallocated in the source
+      code.</para></listitem> 
+    </itemizedlist>
+    
+    </para>
+  
+    <note><para>Due to the limitations of the <literal>xlf</literal> compiler, The
+    size of the memory reported for Fortran Array (compilied with
+    <literal>xlf</literal>) is not the number of bytes but the number of
+    elements.</para></note>
+
+
+    <para>Here is the profile for the
+    <literal>example/memoryleakdetect/f90/foo.f90</literal> file. </para><screen>
+%> pprof
+..
+---------------------------------------------------------------------------------------
+NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
+---------------------------------------------------------------------------------------
+         1         16         16         16          0  MEMORY LEAK! malloc size &lt;file=foo.f90, var=X, line=7&gt; : MAIN =&gt; FOO =&gt; BAR 
+         2         52         48         50          2  MEMORY LEAK! malloc size &lt;file=foo.f90, var=X, line=7&gt; : MAIN =&gt; FOO =&gt; G =&gt; BAR 
+         1         80         80         80          0  free size &lt;file=foo.f90, var=X, line=10&gt;
+         1         80         80         80          0  free size &lt;file=foo.f90, var=X, line=10&gt; : MAIN =&gt; FOO =&gt; G =&gt; BAR 
+         1        180        180        180          0  free size &lt;file=foo.f90, var=X, line=15&gt;
+         1        180        180        180          0  free size &lt;file=foo.f90, var=X, line=15&gt; : MAIN =&gt; FOO =&gt; BAR 
+         1        180        180        180          0  malloc size &lt;file=foo.f90, var=X, line=13&gt;
+         1        180        180        180          0  malloc size &lt;file=foo.f90, var=X, line=13&gt; : MAIN =&gt; FOO =&gt; BAR 
+         4         80         16         49      22.69  malloc size &lt;file=foo.f90, var=X, line=7&gt;
+         1         16         16         16          0  malloc size &lt;file=foo.f90, var=X, line=7&gt; : MAIN =&gt; FOO =&gt; BAR 
+         3         80         48         60      14.24  malloc size &lt;file=foo.f90, var=X, line=7&gt; : MAIN =&gt; FOO =&gt; G =&gt; BAR 
+---------------------------------------------------------------------------------------
+</screen>
+    
+  </sect1>
+		
+</chapter>

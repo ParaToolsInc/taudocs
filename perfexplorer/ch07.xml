@@ -1,0 +1,362 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+				 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+
+
+<chapter id="Charts">
+	<title>Charts</title>
+	<sect1 id="SettingChartParameters">
+		<title>Setting Parameters</title>
+		<para>There are a few parameters which need to be set when
+		doing comparisons between trials in the database.  If any
+		necessary setting is not configured before requesting a
+		chart, you will be prompted to set the value.  The following
+		settings may be necessary for the various charts available:
+		</para>
+		<sect2 id="GroupOfInterest">
+		<title>Group of Interest</title>
+		<para>TAU events are often associated with common groups,
+		such as "MPI", "TRANSPOSE", etc.  This value is used for
+		showing what fraction of runtime that this group of
+		events contributed to the total runtime.</para>
+   		<figure id="perfexplorer.charts.groupofinterest">
+			<title>Setting Group of Interest</title>
+    		<mediaobject>
+    			<imageobject><imagedata fileref="groupofinterest.gif"
+   				scalefit="0" width="2in" align="center"/></imageobject>
+    		</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="MetricOfInterest"><title>Metric of Interest</title>
+		<para>Profiles may contain many metrics gathered for a
+		single trial.  This selects which of the available metrics
+		the user is interested in.</para>
+   		<figure id="perfexplorer.charts.metricofinterest">
+			<title>Setting Metric of Interest</title>
+    		<mediaobject>
+    			<imageobject><imagedata fileref="metricofinterest.gif"
+   				scalefit="0" width="2in" align="center"/></imageobject>
+    		</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="EventOfInterest"><title>Event of Interest</title>
+		<para>Some charts examine events in isolation.  This setting
+		configures which event to examine.</para>
+   		<figure id="perfexplorer.charts.eventofinterest">
+			<title>Setting Event of Interest</title>
+    		<mediaobject>
+    			<imageobject><imagedata fileref="eventofinterest.gif"
+   				scalefit="0" width="2in" align="center"/></imageobject>
+    		</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="TotalNumberOfTimesteps"><title>Total Number of
+		Timesteps</title>
+		<para>One chart, the "Timesteps per second" chart, will
+		calculate the number of timesteps completed per second.
+		This setting configures that value.</para>
+   		<figure id="perfexplorer.charts.timesteps">
+			<title>Setting Timesteps</title>
+    		<mediaobject>
+    			<imageobject><imagedata fileref="timesteps.gif"
+   				scalefit="0" width="2in" align="center"/></imageobject>
+    		</mediaobject>
+   		</figure>
+		</sect2>
+	</sect1>
+	<sect1 id="ChartTypes">
+		<title>Standard Chart Types</title>
+
+		<sect2 id="TimestepsPerSecond"><title>Timesteps Per
+		Second</title>
+		<para>The Timesteps Per Second chart shows how an application
+		scales as it relates to time-to-solution.  If the timesteps are
+		not already set, you will be prompted to enter the total number
+		of timesteps in the trial (see <xref 
+		linkend="TotalNumberOfTimesteps"/> ).  If there is more than
+		one metric to choose from, you may be prompted to select the
+		metric of interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.timestepspersecond">
+			<title>Timesteps per Second</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="timestepspersecond.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeEfficiency"><title>Relative
+		Efficiency</title>
+		<para>The Relative Efficiency chart shows how an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativeefficiency">
+			<title>Relative Efficiency</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="relativeefficiency.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeEfficiencyByEvent"><title>Relative Efficiency by
+		Event</title>
+		<para>The Relative Efficiency By Event chart shows how each
+		event in an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativeefficiencybyevent">
+			<title>Relative Efficiency by Event</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativeefficiencybyevent.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeEfficiencyOneEvent"><title>Relative Efficiency for
+		One Event</title>
+		<para>The Relative Efficiency for One Event chart shows how one
+		event from an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  
+		If there is more than one event to choose from, and you have not
+		yet selected an event of interest, you may be prompted to select
+		the event of interest (see <xref linkend="EventOfInterest"/>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativeefficiencyoneevent">
+			<title>Relative Efficiency one Event</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativeefficiencyoneevent.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeSpeedup"><title>Relative
+		Speedup</title>
+		<para>The Relative Speedup chart shows how an application
+		scales with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativespeedup">
+			<title>Relative Speedup</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="relativespeedup.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeSpeedupByEvent"><title>Relative Speedup by
+		Event</title>
+		<para>The Relative Speedup By Event chart shows how the events
+		in an application
+		scale with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativespeedupbyevent">
+			<title>Relative Speedup by Event</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativespeedupbyevent.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeSpeedupOneEvent"><title>Relative Speedup for One
+		Event</title>
+   		<para>The Relative Speedup for One Event chart shows how one
+		event in an application
+		scales with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  
+		If there is more than one event to choose from, and you have not
+		yet selected an event of interest, you may be prompted to select
+		the event of interest (see <xref linkend="EventOfInterest"/>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+		<figure id="perfexplorer.charts.relativespeeduponeevent">
+			<title>Relative Speedup one Event</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativespeeduponeevent.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="PercentOfTotal"><title>Group % of Total
+		Runtime</title>
+		<para>
+		The Group % of Total Runtime chart shows how the fraction of the
+		total runtime for one group of events changes as the number of
+		processors increases.  
+		If there is more than one group
+		to choose from, and you have not yet selected a group of
+		interest, you may be prompted to select the group of
+		interest (see <xref linkend="GroupOfInterest"/>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.percentoftotal">
+			<title>Group % of Total Runtime</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="percentoftotal.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RuntimeBreakdown"><title>Runtime
+		Breakdown</title>
+		<para>
+		The Runtime Breakdown chart shows the fraction of the total
+		runtime for all events in the application, and how the fraction
+		changes as the number of processors increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.runtimebreakdown">
+			<title>Runtime Breakdown</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="runtimebreakdown.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+	</sect1>
+	<sect1 id="PhaseChartTypes">
+		<title>Phase Chart Types</title>
+		<para>TAU now provides the ability to break down profiles with
+		respect to phases of execution.  One such application would be
+		to collect separate statistics for each timestep, or group of
+		timesteps.  In order to visualize the variance between the
+		phases of execution, a number of phase-based charts are
+		available.
+		</para>
+
+		<sect2 id="RelativeEfficiencyPhase"><title>Relative Efficiency per Phase</title>
+		<para>
+		The Relative Efficiency Per Phase chart shows the relative
+		efficiency for each phase, as the number of processors
+		increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativeefficiencybyphase">
+			<title>Relative Efficiency per Phase</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativeefficiencybyphase.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="RelativeSpeedupPhase"><title>Relative Speedup per Phase</title>
+		<para>
+		The Relative Speedup Per Phase chart shows the relative
+		speedup for each phase, as the number of processors
+		increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.relativespeedupbyphase">
+			<title>Relative Speedup per Phase</title>
+    			<mediaobject>
+    				<imageobject><imagedata
+					fileref="relativespeedupbyphase.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+
+		<sect2 id="PhaseBreakdown"><title>Phase Fraction of Total
+		Runtime</title>
+		<para>
+		The Phase Fraction of Total Runtime chart shows the breakdown of
+		the execution by phases, and shows how that breakdown changes as
+		the number of processors increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <xref linkend="MetricOfInterest"/>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</para>
+   		<figure id="perfexplorer.charts.phasebreakdown">
+			<title>Phase Fraction of Total Runtime</title>
+    			<mediaobject>
+    				<imageobject><imagedata fileref="phasebreakdown.gif"
+   				scalefit="0" width="4in" align="center"/></imageobject>
+    			</mediaobject>
+   		</figure>
+		</sect2>
+	</sect1>
+</chapter>

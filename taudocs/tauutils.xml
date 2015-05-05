@@ -2315,9 +2315,15 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
        <varlistentry><term>-cupti</term>
     <listitem><para>track GPU events via Nvidia's CUPTI interface (Must be configured with -cupti=&lt;dir&gt;, Preferred for CUDA 4.1 or later).</para></listitem></varlistentry>
 
+     <varlistentry><term>-um</term>
+    <listitem><para>in conjunction with -cupti adds support for the Unified Memory GPUs. Requires CUDA 6.5 or later.</para></listitem></varlistentry>
+
      <varlistentry><term>-opencl</term>
     <listitem><para>track GPU events via OpenCL</para></listitem></varlistentry>
 
+     <varlistentry><term>-openacc</term>
+    <listitem><para>track openacc events. Supports TAU configurations with -arch=craycnl or PGI compilers on x86_64 Linux</para></listitem></varlistentry>
+    
      <varlistentry><term>-armci</term>
     <listitem><para>track ARMCI events via PARMCI (Must be configured with -armci=&lt;dir&gt;)</para></listitem></varlistentry>
     

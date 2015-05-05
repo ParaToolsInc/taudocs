@@ -30,6 +30,39 @@
       displayed with the Vampir or Paraver trace visualization tools.  
       This chapter discusses installation of the TAU portable profiling 
       package.</para>
+      
+      <para>
+      Some tau options allow external resources to be automatically downloaded 
+      and built when TAU is configured. To obtain these resources in a single
+      package download  http://tau.uoregon.edu/ext.tgz and unpack it in TAU's
+      root directory. When you configure TAU with:
+      
+      <itemizedlist>
+		<listitem>
+			<para>
+				<literal>
+				-bfd=download
+				</literal>
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<literal>
+				-unwind=download
+				</literal>
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<literal>
+				-ompt=download
+				</literal>
+			</para>
+		</listitem>
+	</itemizedlist>
+      these packages will be provided by the ext.tgz package and no additional
+      network activity will be required.
+      </para>
 <!--  </simplesect> -->
 
   <sect1 id="installing.tau">

@@ -214,7 +214,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
 		<title>Profiling with Hardware counters</title>
     <para>LIST OF COUNTERS:</para>
 
-    <para>Set the following values for the COUNTER&lt;1-25&gt; environment variables.</para>
+    <para>Set the TAU_METRICS environment variable with a comma separated list of metrics or to use the old method set the following values for the COUNTER&lt;1-25&gt; environment variables.</para>
 
     <itemizedlist>
 
@@ -241,6 +241,12 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
       <listitem><para><literal>TAU_MPI_MESSAGE_SIZE</literal> - For tracking
       the cumulative message size for all MPI operations by a node for each
       routine. </para></listitem>
+      
+       <listitem><para><literal>ENERGY</literal> - For tracking
+      the power use of the application in joules. Requires an -arch=craycnl configuration. </para></listitem>
+      
+       <listitem><para><literal>ACCEL_ENERGY</literal> - For tracking
+      the power use of the application on accelerators in joules. Requires an -arch=craycnl configuration. </para></listitem>
 
     </itemizedlist>
 

@@ -6382,6 +6382,136 @@ pytau.trackMemoryHere()
 </refentry>
 
 
+<refentry id="TAU_TRACK_MEMORY_FOOTPRINT">
+  <refmeta>
+    <refentrytitle>TAU_TRACK_MEMORY_FOOTPRINT</refentrytitle>
+    <manvolnum>3</manvolnum>
+  </refmeta>
+  <refnamediv><refname>TAU_TRACK_MEMORY_FOOTPRINT</refname>
+  <refpurpose>Initializes memory footprint tracking system</refpurpose></refnamediv>
+  
+  <refsynopsisdiv>
+    <funcsynopsis><funcsynopsisinfo>C/C++:</funcsynopsisinfo>
+    <funcprototype>
+      <funcdef><function>TAU_TRACK_MEMORY_FOOTPRINT</function></funcdef>
+      <void/>
+    </funcprototype>
+    </funcsynopsis>
+
+    <funcsynopsis><funcsynopsisinfo>Fortran:</funcsynopsisinfo>
+    <funcprototype>
+      <funcdef><function>TAU_TRACK_MEMORY_FOOTPRINT</function></funcdef>
+      <void/>
+    </funcprototype>
+    </funcsynopsis>
+  </refsynopsisdiv>
+
+  
+  <refsect1><title>Description</title>
+    <para>Similar to TAU_TRACK_MEMORY but uses the Virtual Memory Resident Set Size (VmRSS) and High Water Mark (VmHWM) to produce an interval event and an atomic event respectively.</para>
+
+  </refsect1>
+  
+  <refsect1><title>Example</title>
+    
+    <para><emphasis role="bold">C/C++ :</emphasis></para>
+    <screen>
+TAU_TRACK_MEMORY_FOOTPRINT();      
+    </screen>
+
+    <para><emphasis role="bold">Fortran :</emphasis></para>
+    <screen>
+call TAU_TRACK_MEMORY_FOOTPRINT()
+    </screen>
+    
+  </refsect1>
+
+  <refsect1>
+    <title>See Also</title>
+    <para>
+      <xref linkend="TAU_ENABLE_TRACKING_MEMORY" />,
+      <xref linkend="TAU_DISABLE_TRACKING_MEMORY" />,
+      <xref linkend="TAU_SET_INTERRUPT_INTERVAL" />,
+      <xref linkend="TAU_TRACK_MEMORY_HERE" />,
+      <xref linkend="TAU_TRACK_MEMORY" />,
+      <xref linkend="TAU_TRACK_MEMORY_FOOTPRINT_HERE" />,
+      <xref linkend="TAU_TRACK_MEMORY_HEADROOM" />
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+
+<refentry id="TAU_TRACK_MEMORY_FOOTPRINT_HERE">
+  <refmeta>
+    <refentrytitle>TAU_TRACK_MEMORY_FOOTPRINT_HERE</refentrytitle>
+    <manvolnum>3</manvolnum>
+  </refmeta>
+  <refnamediv><refname>TAU_TRACK_MEMORY_FOOTPRINT_HERE</refname>
+  <refpurpose>Triggers memory footprint tracking at a given execution point</refpurpose></refnamediv>
+  
+  <refsynopsisdiv>
+    <funcsynopsis><funcsynopsisinfo>C/C++:</funcsynopsisinfo>
+    <funcprototype>
+      <funcdef><function>TAU_TRACK_MEMORY_FOOTPRINT_HERE</function></funcdef>
+      <void/>
+    </funcprototype>
+    </funcsynopsis>
+
+    <funcsynopsis><funcsynopsisinfo>Fortran:</funcsynopsisinfo>
+    <funcprototype>
+      <funcdef><function>TAU_TRACK_MEMORY_FOOTPRINT_HERE</function></funcdef>
+      <void/>
+    </funcprototype>
+    </funcsynopsis>
+  </refsynopsisdiv>
+
+  
+  <refsect1><title>Description</title>
+    <para>Similar to TAU_TRACK_MEMORY_HERE but uses the Virtual Memory Resident Set Size (VmRSS) and High Water Mark (VmHWM) to produce an interval event and an atomic event respectively.</para>
+
+  </refsect1>
+  
+  <refsect1><title>Example</title>
+    
+    <para><emphasis role="bold">C/C++ :</emphasis></para>
+    <screen>
+int main(int argc, char **argv) {
+  TAU_PROFILE("main()", " ", TAU_DEFAULT);
+  TAU_PROFILE_SET_NODE(0);
+
+  TAU_TRACK_MEMORY_FOOTPRINT_HERE();
+
+  int *x = new int[5*1024*1024];
+  TAU_TRACK_MEMORY_FOOTPRINT_HERE();
+  return 0;
+}
+    </screen>
+
+    <para><emphasis role="bold">Fortran :</emphasis></para>
+    <screen>
+INTEGER, ALLOCATABLE :: STORAGEARY(:)
+allocate(STORAGEARY(1:999), STAT=IERR)
+
+
+call TAU_TRACK_MEMORY_FOOTPRINT_HERE()
+
+    </screen>
+		
+  </refsect1>
+
+
+  <refsect1>
+    <title>See Also</title>
+    <para>
+      <xref linkend="TAU_TRACK_MEMORY_FOOTPRINT" />
+    </para>
+  </refsect1>
+
+</refentry>
+
+
 <refentry id="TAU_ENABLE_TRACKING_MEMORY_HEADROOM">
   <refmeta>
     <refentrytitle>TAU_ENABLE_TRACKING_MEMORY_HEADROOM</refentrytitle>

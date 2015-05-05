@@ -114,6 +114,23 @@ NumSamples   MaxValue   MinValue  MeanValue  Std. Dev.  Event Name
 ---------------------------------------------------------------------------------------
 </screen>
 	</sect2>	
+	
+	
+	<sect2><title>TAU_TRACK_MEMORY_FOOTPRINT</title>
+
+			<para>Similar to TAU_TRACK_MEMORY but uses the Virtual Memory Resident Set Size (VmRSS) and High Water Mark (VmHWM) to produce an interval event and an atomic event respectively.</para>
+
+			
+	</sect2>	
+	
+	
+			<sect2><title>TAU_TRACK_MEMORY_FOOTPRINT_HERE</title>
+
+				<para>Similar to TAU_TRACK_MEMORY_HERE but uses the Virtual Memory Resident Set Size (VmRSS) and High Water Mark (VmHWM) to produce an interval event and an atomic event respectively.</para>
+
+
+			
+	</sect2>	
 
 		<sect2><title>-PROFILEMEMORY</title>
 

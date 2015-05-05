@@ -132,7 +132,7 @@
 							</row>
 							
 							<row>
-								<entry>TAU_TRACK_MEMORY</entry>
+								<entry>TAU_TRACK_MEMORY_FOOTPRINT</entry>
 								<entry>When set TAU will track resident set size (VmRSS) and peak memory usage (VmHWM) or the
     high water mark of resident set size, the same values provided by the 'top' command.
                 </entry>

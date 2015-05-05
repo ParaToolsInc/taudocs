@@ -1,3 +1,5 @@
+
+5/5/2015:  Hope to switch to sphinx soon.
 Here are the basic guidelines for using docbook:
 
 See the bottom of this README for instructions on installing the documentation.
@@ -22,7 +24,7 @@ Important tags and that should be used throughout the Document:
 checkout http://www.docbook.org/tdg/en/html/docbook.html for a more
 complete list of available tags.
 
-<chapter id="[chapter title]">  Denotes the beginning and end of chapters. 
+<chapter id="[chapter title]">  Denotes the beginning and end of chapters.
 
 <sect1 id="[section title]">    Denotes the major section within a chapter.
 
@@ -39,7 +41,7 @@ immediately following the <chapter>, <sect1> or <sect2> tag.
 
 <listitem> Denotes an element of either a itemizedlist or a orderedlist.
 
-<para> Should be used regardless of the size of paragraph, in some cases 
+<para> Should be used regardless of the size of paragraph, in some cases
 for a single word.
 
 <parameter> Denotes a list arguments for a function.
@@ -54,14 +56,14 @@ need to do text wrapping please follow these guidelines:
 
 1) Shell commands that wrap should wrap in a way that preserve the
 ability to cut and paste, let the last character on the line be a slash,
-with the following line indented. For example: 
+with the following line indented. For example:
 <screen> % mpirun -np 4
 Some very long winded \
     command
 </screen>
 
-2) Program output should be formatted by hand to be visibly appealing  
-and to not confuse the reader. For example, if we're showing output  
+2) Program output should be formatted by hand to be visibly appealing
+and to not confuse the reader. For example, if we're showing output
 from a help command:
 <screen>
 % paraprof -h
@@ -70,8 +72,8 @@ from a help command:
 -h --help    This message
 </screen>
 
-3) Makefiles should be modified to be syntactically correct, which  
-means slashes for line continuations, except on comments, where the  
+3) Makefiles should be modified to be syntactically correct, which
+means slashes for line continuations, except on comments, where the
 next line should begin with a pound. For example:
 <screen>
 # This is a long Makefile
@@ -107,6 +109,6 @@ cp newguide-chunked/
 The pdfs are here (on ix):
 cd /cs/www/hosts/www/Research/tau
 
-The html here (on ix): 
+The html here (on ix):
 /cs/www/hosts/www/Research/tau/docs/newguide
 

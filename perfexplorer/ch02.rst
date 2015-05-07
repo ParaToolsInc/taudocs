@@ -1,0 +1,50 @@
+Installation and Configuration
+==============================
+
+PerfExplorer uses TAUdb and PerfDMF databases so if you have not already
+you will need to install TAUdb, see ?. To configure PerfExplorer move to
+the ``tools/src/PerfExplorer/`` directory in you TAU distribution. Type:
+
+::
+
+     %>./configure
+
+If you haven't already done so for other TAU tools, add
+``[path to tau]/tau2/apple/bin`` to your path.
+
+The following command-line options are available to configure:
+
+Available configuration options
+===============================
+
+-  ``-engine=<analysis engine>``
+
+   Specifies the data-mining engine to use. The supported options
+   include weka and R.
+
+-  ``-rroot=<directory>``
+
+   Specifies the directory where R is installed. Specifically, it should
+   be the directory where the ``bin``, ``include``, ``lib``, ``library``
+   and ``share`` directories are located.
+
+-  ``-objectport=<available network
+               port>``
+
+   Specifies the port that the PerfExplorer server should use, when
+   running PerfExplorer in client-server mode. Select an available
+   network port, and make sure that other appropriate network
+   configurations are made (firewalls, etc.). The default port is 9999.
+
+-  ``-registryport=<available network
+               port>``
+
+   Specifies the port that the rmiregistry should use, when ruining
+   PerfExplorer in client-server mode. Select an available network port,
+   and make sure that other appropriate network configurations are made
+   (firewalls, etc.). The default port is 1099.
+
+-  ``-server=<server name>``
+
+   Specifies the fully qualified domain name of the server where
+   PerfExplorer is run, when running PerfExplorer in client-server mode.

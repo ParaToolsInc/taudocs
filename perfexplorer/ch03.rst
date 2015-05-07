@@ -1,0 +1,30 @@
+Running PerfExplorer
+====================
+
+To run PerfExplorer type:
+
+::
+
+    %>perfexplorer
+
+When PerfExplorer loads you will see on the left window all the
+experiments that where loaded into PerfDMF. You can select which
+performance data you are interested by navigating the tree structure.
+PerfExplorer will allow you to run analysis operations on these
+experiments. Also the cluster analysis results are visible on the right
+side of the window. Various types of comparative analysis are available
+from the drop down menu selected.
+
+To run an analysis operation, first select the metric of interest form
+the experiments on the left. Then perform the operation by selecting it
+from the ``Analysis`` menu. If you would like you can set the
+`` clustering method, dimension reduction, normalization method
+        `` and the `` number of clusters ``\ from the same menu.
+
+The options under the Charts menu provide analysis over one or more
+applications, experiments, views or trials. To view these charts first
+choose a metric of interest by selecting a trial form the tree on the
+left. Then optionally choose the ``Set Metric of
+        Interest`` or ``Set Event of Interest`` form the ``Charts`` menu
+(if you don't, and you need to, you will be prompted). Now you can view
+a chart by selecting it from the ``Charts`` menu.

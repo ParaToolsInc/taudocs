@@ -1,0 +1,107 @@
+Using TAUdb
+===========
+
+The easiest way to interact with TAUdb is to use ParaProf which provides
+a GUI interface to all of the database information. In addition, the
+following commandline utilities are provided.
+
+perfdmf\_createapp (deprecated - only supported for older PerfDMF databases)
+============================================================================
+
+This utility creates applications with a given name
+
+::
+
+    $ perfdmf_createapp -n "New Application"
+    Created Application, ID: 24
+
+perfdmf\_createexp (deprecated - only supported for older PerfDMF databases)
+============================================================================
+
+This utility creates experiments with a given name, under a specified
+application
+
+::
+
+    $ perfdmf_createexp -a 24 -n "New Experiment"
+    Created Experiment, ID: 38
+
+taudb\_loadtrial
+================
+
+This utility uploads a trial to the database with a given name, under a
+specified experiment
+
+::
+
+    $ taudb_loadtrial -h
+    Usage: perfdmf_loadtrial -a <appName> -x <expName> -n <name> 
+    [options] <files>
+
+    Required Arguments:
+
+      -n, --name <text>              Specify the name of the trial
+      -a, --applicationname <string> Specify associated application name
+                                     for this trial
+      -x, --experimentname <string>  Specify associated experiment name
+                                     for this trial
+                   ...or...
+
+      -n, --name <text>              Specify the name of the trial
+      -e, --experimentid <number>    Specify associated experiment ID
+                                     for this trial
+
+    Optional Arguments:
+
+      -c, --config <name>       Specify the name of the configuration to use
+      -g, --configFile <file>   Specify the configuration file to use
+                                (overrides -c)
+      -f, --filetype <filetype> Specify type of performance data, options 
+                                are: profiles (default), pprof, dynaprof, 
+                                mpip, gprof, psrun, hpm, packed, cube, 
+                                hpc, ompp, snap, perixml, gptl, paraver, 
+                                ipm, google
+      -t, --trialid <number>    Specify trial ID
+      -i, --fixnames            Use the fixnames option for gprof
+      -z, --usenull             Include NULL values as 0 for mean 
+                                calculation
+      -r, --reduce <percentage> Aggregate all timers less than percentage 
+                                as "other"
+      -m, --metadata <filename> XML metadata for the trial
+
+    Notes:
+      For the TAU profiles type, you can specify either a specific set 
+    of profile files on the commandline, or you can specify a directory 
+    (by default the current directory).  The specified directory will be 
+    searched for profile.*.*.* files, or, in the case of multiple counters, 
+    directories named MULTI_* containing profile data.
+
+    Examples:
+
+      perfdmf_loadtrial -e 12 -n "Batch 001"
+        This will load profile.* (or multiple counters directories 
+        MULTI_*) into experiment 12 and give the trial the name 
+        "Batch 001"
+
+      perfdmf_loadtrial -e 12 -n "HPM data 01" -f hpm perfhpm*
+        This will load perfhpm* files of type HPMToolkit into experiment 
+        12 and give the trial the name "HPM data 01"
+
+      perfdmf_loadtrial -a "NPB2.3" -x "parametric" -n "64" par64.ppk
+        This will load packed profile par64.ppk into the experiment named
+        "parametric" under the application named "NPB2.3" and give the 
+        trial the name "64".  The application and experiment will be 
+        created if not found.
+      
+
+TAUdb supports a large number of parallel profile formats:
+
+TAUdb Views
+===========
+
+In order to provide flexible data management, the application /
+experiment / trial hierarchy was removed in the conversion from PerfDMF
+to TAUdb. In addition, trial metadata was promoted from an XML blob in
+PerfDMF to queryable tables. Users can now organize their data in
+arbitrary hierarchies using Views and SubViews. Creating and using Views
+is outlined in the ParaProf User Manual, in Chapter 2.

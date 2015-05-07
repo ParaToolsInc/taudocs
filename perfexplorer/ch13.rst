@@ -1,0 +1,37 @@
+Derived Metrics
+===============
+
+Sometimes metrics in a profile need to be combined to create a derived
+metric. PerfExplorer allows the user to create these using the derived
+metric expression tab.
+
+CreatingExpressions
+===================
+
+The text box at the top of the tab allows the user to enter an
+expression. Double clicking on a metric in the "Performance Data" tree
+will copy that metrics name into the box. If a metric contains any
+operands, the whole metric must be surrounded by quotes. If the you
+would like of the metric to be renamed, then you should start the
+expression with the new name and and equals sign.
+
+If this is the only metric you wish to derive, then select the trial,
+expression or application where the metric should be derived and then
+click apply. If you wish to derive many metrics, then click Add to List
+and create more expressions.
+
+Selecting Expressions
+=====================
+
+If you have added multiple expressions, you can select one or many of
+them to apply. They will be derived from top to bottom. After you have
+select some, you can select the trial, experiment or application to
+apply the expression to and then click apply.
+
+Expression Files
+================
+
+You can also derive metrics using an expression file. An expression file
+has a single expression per line. To parse the file, select the trial,
+experiment or application to apply the expressions to; then select File
+> Parse Expression File and chose the file.

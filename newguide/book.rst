@@ -1,0 +1,36 @@
+Second
+0-00000-000-0
+2012-03-26
+2021
+University of Oregon
+|image0|
+
+Version 2.22.1
+
+Copyright © 1997-2012 Department of Computer and Information Science,
+University of Oregon Advanced Computing Laboratory, LANL, NM Research
+Centre Julich, ZAM, Germany
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of University of Oregon (UO)
+Research Centre Julich, (ZAM) and Los Alamos National Laboratory (LANL)
+not be used in advertising or publicity pertaining to distribution of
+the software without specific, written prior permission. The University
+of Oregon, ZAM and LANL make no representations about the suitability of
+this software for any purpose. It is provided "as is" without express or
+implied warranty.
+
+UO, ZAM AND LANL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+EVENT SHALL THE UNIVERSITY OF OREGON, ZAM OR LANL BE LIABLE FOR ANY
+SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+TAU can be found on the web at: http://www.cs.uoregon.edu/research/tau
+
+.. |image0| image:: NewTauLogo.png

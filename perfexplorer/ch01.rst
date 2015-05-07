@@ -1,0 +1,35 @@
+Introduction
+============
+
+PerfExplorer is a framework for parallel performance data mining and
+knowledge discovery. The framework architecture enables the development
+and integration of data mining operations that will be applied to
+large-scale parallel performance profiles.
+
+The overall goal of the PerfExplorer project is to create a software to
+integrate sophisticated data mining techniques in the analysis of
+large-scale parallel performance data.
+
+PerfExplorer supports clustering, summarization, association,
+regression, and correlation. Cluster analysis is the process of
+organizing data points into logically similar groupings, called
+clusters. Summarization is the process of describing the similarities
+within, and dissimilarities between, the discovered clusters.
+Association is the process of finding relationships in the data. One
+such method of association is regression analysis, the process of
+finding independent and dependent correlated variables in the data. In
+addition, comparative analysis extends these operations to compare
+results from different experiments, for instance, as part of a
+parametric study.
+
+In addition to the data mining operations available, the user may
+optionally choose to perform comparative analysis. The types of charts
+available include time-steps per second, relative efficiency and speedup
+of the entire application, relative efficiency and speedup of one event,
+relative efficiency and speedup for all events, relative efficiency and
+speedup for all phases and runtime breakdown of the application by event
+or by phase. In addition, when the events are grouped together, such as
+in the case of communication routines, yet another chart shows the
+percentage of total runtime spent in that group of events. These
+analyses can be conducted across different combinations of parallel
+profiles and across phases within an execution.

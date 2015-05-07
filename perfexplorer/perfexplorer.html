@@ -1,0 +1,641 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Part&nbsp;I.&nbsp;PerfExplorer - User's Manual</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+       <?php include("../../header.php") ?>
+       <div id="content">
+    <div class="part" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="PerfExplorerDoc"></a>Part&nbsp;I.&nbsp;PerfExplorer - User's Manual</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#Introduction">1. Introduction</a></span></dt><dt><span class="chapter"><a href="#InstallPerfExplorer">2. Installation and Configuration</a></span></dt><dd><dl><dt><span class="sect1"><a href="#ConfigurationOptions">2.1. Available configuration options</a></span></dt></dl></dd><dt><span class="chapter"><a href="#RunningPerfExplorer">3. Running PerfExplorer</a></span></dt><dt><span class="chapter"><a href="#ClusterAnalysis">4. Cluster Analysis</a></span></dt><dd><dl><dt><span class="sect1"><a href="#DimensionReduction">4.1. Dimension Reduction</a></span></dt><dt><span class="sect1"><a href="#MaxClusters">4.2. Max Number of Clusters</a></span></dt><dt><span class="sect1"><a href="#PerformingClusterAnalysis">4.3. Performing Cluster Analysis</a></span></dt></dl></dd><dt><span class="chapter"><a href="#CorrelationAnalysis">5. Correlation Analysis</a></span></dt><dd><dl><dt><span class="sect1"><a href="#DimensionReduction2">5.1. Dimension Reduction</a></span></dt><dt><span class="sect1"><a href="#PerformingCorrelationAnalysis">5.2. Performing Correlation Analysis</a></span></dt></dl></dd><dt><span class="chapter"><a href="#Charts">6. Charts</a></span></dt><dd><dl><dt><span class="sect1"><a href="#SettingChartParameters">6.1. Setting Parameters</a></span></dt><dd><dl><dt><span class="sect2"><a href="#GroupOfInterest">6.1.1. Group of Interest</a></span></dt><dt><span class="sect2"><a href="#MetricOfInterest">6.1.2. Metric of Interest</a></span></dt><dt><span class="sect2"><a href="#EventOfInterest">6.1.3. Event of Interest</a></span></dt><dt><span class="sect2"><a href="#TotalNumberOfTimesteps">6.1.4. Total Number of
+		Timesteps</a></span></dt></dl></dd><dt><span class="sect1"><a href="#ChartTypes">6.2. Standard Chart Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="#TimestepsPerSecond">6.2.1. Timesteps Per
+		Second</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiency">6.2.2. Relative
+		Efficiency</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiencyByEvent">6.2.3. Relative Efficiency by
+		Event</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiencyOneEvent">6.2.4. Relative Efficiency for
+		One Event</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedup">6.2.5. Relative
+		Speedup</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupByEvent">6.2.6. Relative Speedup by
+		Event</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupOneEvent">6.2.7. Relative Speedup for One
+		Event</a></span></dt><dt><span class="sect2"><a href="#PercentOfTotal">6.2.8. Group % of Total
+		Runtime</a></span></dt><dt><span class="sect2"><a href="#RuntimeBreakdown">6.2.9. Runtime
+		Breakdown</a></span></dt></dl></dd><dt><span class="sect1"><a href="#PhaseChartTypes">6.3. Phase Chart Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="#RelativeEfficiencyPhase">6.3.1. Relative Efficiency per Phase</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupPhase">6.3.2. Relative Speedup per Phase</a></span></dt><dt><span class="sect2"><a href="#PhaseBreakdown">6.3.3. Phase Fraction of Total
+		Runtime</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#CustomCharts">7. Custom Charts</a></span></dt><dt><span class="chapter"><a href="#Visualization">8. Visualization</a></span></dt><dd><dl><dt><span class="sect1"><a href="#ThreeDVisualization">8.1. 3D Visualization</a></span></dt><dt><span class="sect1"><a href="#DataSummary">8.2. Data Summary</a></span></dt><dt><span class="sect1"><a href="#CreateBoxchart">8.3. Creating a Boxchart</a></span></dt><dt><span class="sect1"><a href="#CreateHistogram">8.4. Creating a Histogram</a></span></dt><dt><span class="sect1"><a href="#CreateNormalProbability">8.5. Creating a Normal Probability Chart</a></span></dt></dl></dd><dt><span class="chapter"><a href="#Views">9. Views</a></span></dt><dd><dl><dt><span class="sect1"><a href="#CreatingViews">9.1. Creating Views</a></span></dt><dt><span class="sect1"><a href="#CreatingSubviews">9.2. Creating Subviews</a></span></dt></dl></dd><dt><span class="chapter"><a href="#Scripting">10. Running PerfExplorer Scripts</a></span></dt><dd><dl><dt><span class="sect1"><a href="#AnalysisComponents">10.1. Analysis Components</a></span></dt><dt><span class="sect1"><a href="#Scripting_Interface">10.2. Scripting Interface</a></span></dt><dt><span class="sect1"><a href="#ExampleScript">10.3. Example Script</a></span></dt></dl></dd><dt><span class="chapter"><a href="#Derived Metrics">11. Derived Metrics</a></span></dt><dd><dl><dt><span class="sect1"><a href="#CreatingExpression">11.1. CreatingExpressions</a></span></dt><dt><span class="sect1"><a href="#Applying">11.2. Selecting Expressions</a></span></dt><dt><span class="sect1"><a href="#Files">11.3. Expression Files</a></span></dt></dl></dd></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h2></div></div></div><p>PerfExplorer is a framework for parallel performance data
+        mining and knowledge discovery. The framework architecture
+        enables the development and integration of data mining
+        operations that will be applied to large-scale parallel
+        performance profiles.</p><p>The overall goal of the PerfExplorer project is to create
+        a software to integrate sophisticated data mining techniques in
+        the analysis of large-scale parallel performance data.</p><p>PerfExplorer supports clustering, summarization,
+        association, regression, and correlation.  Cluster analysis is
+        the process of organizing data points into logically similar
+        groupings, called clusters.  Summarization is the process of
+        describing the similarities within, and dissimilarities between,
+        the  discovered clusters.  Association is the process of finding
+        relationships in the data.  One such method of association is
+        regression analysis, the process of finding independent and
+        dependent correlated variables in the data.  In addition,
+        comparative analysis extends these operations to   compare
+        results from different experiments, for instance, as part of a
+        parametric study.</p><p>In addition to the data mining operations available, the
+        user may optionally choose to perform comparative analysis.  The
+        types of charts available include time-steps per second,
+        relative efficiency and speedup of the entire application,
+        relative efficiency and speedup of one event, relative
+        efficiency and speedup for all events, relative efficiency and
+        speedup for all phases and runtime breakdown of the application
+        by event or by phase.  In addition, when the events are grouped
+        together, such as in the case of communication routines, yet
+        another chart shows the percentage of total runtime spent in
+        that group of events.  These analyses can be conducted across
+        different combinations of parallel profiles and across phases
+        within an execution.</p></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="InstallPerfExplorer"></a>Chapter&nbsp;2.&nbsp;Installation and Configuration</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#ConfigurationOptions">2.1. Available configuration options</a></span></dt></dl></div><p>PerfExplorer uses TAUdb and PerfDMF databases so if you have not already you
+        will need to install TAUdb, see ???.
+
+        To configure PerfExplorer move to the
+        <code class="literal">tools/src/PerfExplorer/</code> directory in you TAU
+        distribution. Type:</p><pre class="screen"> %&gt;./configure</pre><p>
+
+        If you haven't already done so for other TAU tools, add
+        <code class="literal">[path to tau]/tau2/apple/bin</code> to your
+        path.</p><p>The following command-line options are available to
+        configure:</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ConfigurationOptions"></a>2.1.&nbsp;Available configuration options</h2></div></div></div><div class="itemizedlist"><ul type="disc"><li><p><code class="literal">-engine=&lt;analysis engine&gt;</code></p><p>Specifies the data-mining engine to use.  The
+            supported options include weka and R.</p></li><li><p><code class="literal">-rroot=&lt;directory&gt;</code></p><p>Specifies the directory where R is installed.
+            Specifically, it should be the directory where the
+            <code class="literal">bin</code>, <code class="literal">include</code>,
+            <code class="literal">lib</code>, <code class="literal">library</code> and 
+            <code class="literal">share</code> directories are located.</p></li><li><p><code class="literal">-objectport=&lt;available network
+            port&gt;</code></p><p>Specifies the port that the PerfExplorer server should
+            use, when running PerfExplorer in client-server mode.
+            Select an available network port, and make sure that other
+            appropriate network configurations are made (firewalls,
+            etc.).  The default port is 9999.</p></li><li><p><code class="literal">-registryport=&lt;available network
+            port&gt;</code></p><p>Specifies the port that the rmiregistry should
+            use, when ruining PerfExplorer in client-server mode.
+            Select an available network port, and make sure that other
+            appropriate network configurations are made (firewalls,
+            etc.).  The default port is 1099.</p></li><li><p><code class="literal">-server=&lt;server name&gt;</code></p><p>Specifies the fully qualified domain name of the
+            server where PerfExplorer is run, when running PerfExplorer
+            in client-server mode.</p></li></ul></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="RunningPerfExplorer"></a>Chapter&nbsp;3.&nbsp;Running PerfExplorer</h2></div></div></div><p>To run PerfExplorer type: </p><pre class="screen">
+%&gt;perfexplorer
+</pre><p>
+
+        When PerfExplorer loads you will see on the left window all the 
+        experiments that where loaded into PerfDMF. You can select which 
+        performance data you are interested by navigating the tree structure. 
+        PerfExplorer will allow you to 
+        run analysis operations on these experiments. Also the cluster analysis
+        results are visible on the right side of the window.  Various types of
+        comparative analysis are available from the drop down menu
+        selected.</p><p>To run an analysis operation, first select the metric of interest
+        form the experiments on the left. Then perform the operation by selecting it
+        from the <code class="literal">Analysis</code> menu. If you would like you can set 
+        the <code class="literal"> clustering method, dimension reduction, normalization method
+		</code> and the <code class="literal"> number of clusters </code>from the same
+		menu.</p><p>The options under the Charts menu provide analysis over one or
+		more applications, experiments, views or trials. To view these charts
+		first choose a metric of interest by selecting a trial form the tree on
+		the left. Then optionally choose the <code class="literal">Set Metric of
+        Interest</code> or <code class="literal">Set Event of Interest</code> form the 
+        <code class="literal">Charts</code> menu (if you don't, and you need to, you will
+		be prompted). Now you can view a chart by selecting it
+        from the <code class="literal">Charts</code> menu.</p></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="ClusterAnalysis"></a>Chapter&nbsp;4.&nbsp;Cluster Analysis</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#DimensionReduction">4.1. Dimension Reduction</a></span></dt><dt><span class="sect1"><a href="#MaxClusters">4.2. Max Number of Clusters</a></span></dt><dt><span class="sect1"><a href="#PerformingClusterAnalysis">4.3. Performing Cluster Analysis</a></span></dt></dl></div><p>Cluster analysis is a valuable tool for reducing large
+	parallel profiles down to representative groups for investigation.
+	Currently, there are two types of clustering analysis implemented in
+	PerfExplorer.  Both <span class="emphasis"><em>hierarchical</em></span> and
+	<span class="emphasis"><em>k-means</em></span> analysis are used to group parallel
+	profiles into common clusters, and then the clusters are summarized.
+	Initially, we used similarity measures computed on a single parallel
+	profile as input to the clustering algorithms, although other forms
+	of input are possible.  Here, the performance data is organized into
+	multi-dimensional vectors for analysis.  Each vector represents one
+	parallel thread (or process) of execution in the profile.  Each
+	dimension in the vector represents an event that was profiled in the
+	application.  Events can be any sub-region of code, including
+	libraries, functions, loops, basic blocks or even individual lines
+	of code.  In simple clustering examples, each vector represents only
+	one metric of measurement.  For our purposes, some dissimilarity
+	value, such as <span class="emphasis"><em>Euclidean</em></span> or
+	<span class="emphasis"><em>Manhattan</em></span> distance, is computed on the vectors.
+	As discussed later, we have tested hierarchical and $k$-means
+	cluster analysis in PerfExplorer on profiles with over 32K threads
+	of execution with few difficulties.  </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DimensionReduction"></a>4.1.&nbsp;Dimension Reduction</h2></div></div></div><p>Often, many hundreds of events are instrumented when
+            profile data is collected.  Clustering works best with
+            dimensions less than 10, so dimension reduction is often
+            necessary to get meaningful results.  Currently, there is
+            only one type of dimension reduction available in
+            PerfExplorer.  To reduce dimensions, the user specifies a
+            minimum exclusive percentage for an event to be considered
+            "significant".
+			</p><p>To reduce dimensions, select the "Select Dimension
+            Reduction" item under the "Analysis" main menu bar item.
+			The following dialog will appear:  
+            </p><div class="figure"><a name="perfexplorer.mainwindow.dimensionreduction1"></a><p class="title"><b>Figure&nbsp;4.1.&nbsp;Selecting a dimension reduction method</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/dimensionreduction1.gif" align="middle" alt="Selecting a dimension reduction method"></td></tr></table></div></div><p>
+			Select "Over X Percent".  The following dialog will appear:  
+            </p><div class="figure"><a name="perfexplorer.mainwindow.dimensionreduction2"></a><p class="title"><b>Figure&nbsp;4.2.&nbsp;Entering a minimum threshold for exclusive percentage</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/dimensionreduction2.gif" align="middle" alt="Entering a minimum threshold for exclusive percentage"></td></tr></table></div></div><p>
+			Enter a value, for example "1".
+            </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="MaxClusters"></a>4.2.&nbsp;Max Number of Clusters</h2></div></div></div><p>By default, PerfExplorer will attempt k-means
+			clustering with values of k from 2 to 10.  To change the
+			maximum number of clusters, select the "Set Maximum Number
+			of Clusters" item under the "Analysis" main menu item.
+			The following dialog will appear:  
+			</p><div class="figure"><a name="perfexplorer.mainwindow.maxclusters"></a><p class="title"><b>Figure&nbsp;4.3.&nbsp;Entering a maximum number of clusters</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/maxclusters.gif" align="middle" alt="Entering a maximum number of clusters"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PerformingClusterAnalysis"></a>4.3.&nbsp;Performing Cluster Analysis</h2></div></div></div><p>To perform cluster analysis, you first need to select a
+		metric.  To select a metric, navigate through the tree of
+		applications, experiments and trials, and expand the trial of
+		interest, showing the available metrics, as shown in the figure
+		below:
+		</p><div class="figure"><a name="perfexplorer.mainwindow.clustering"></a><p class="title"><b>Figure&nbsp;4.4.&nbsp;Selecting a
+	Metric to Cluster</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/clusteringselection.gif" align="middle" alt="Selecting a Metric to Cluster"></td></tr></table></div></div><p>After selecting the metric of interest, select the "Do
+		Clustering" item under the "Analysis" main menu bar item.
+		The following dialog will appear:  </p><div class="figure"><a name="perfexplorer.confirm.clustering"></a><p class="title"><b>Figure&nbsp;4.5.&nbsp;Confirm
+	Clustering Options</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/confirmclustering.gif" align="middle" alt="Confirm Clustering Options"></td></tr></table></div></div><p>After confirming the clustering, the clustering will
+		begin.  When the clustering results are available, you can view
+		them in the "Cluster Results" tab.
+		</p><div class="figure"><a name="perfexplorer.cluster.results"></a><p class="title"><b>Figure&nbsp;4.6.&nbsp;Cluster
+	Results</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/clusterresults.gif" align="middle" alt="Cluster Results"></td></tr></table></div></div><p>There are a number of images in the "Cluster Results"
+		window.  From left to right, the windows indicate the cluster
+		membership histogram, a PCA scatterplot showing the cluster
+		memberships, a virtual topology of the parallel machine, the
+		minimum values for each event in each cluster, the average
+		values for each event in each cluster, and the maximum values
+		for each event in each cluster.  Clicking on a thumbnail image
+		in the main window will bring up the images, as shown below:
+		</p><div class="figure"><a name="perfexplorer.cluster.histogram"></a><p class="title"><b>Figure&nbsp;4.7.&nbsp;Cluster
+	Membership Histogram</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/histogram.gif" align="middle" alt="Cluster Membership Histogram"></td></tr></table></div></div><div class="figure"><a name="perfexplorer.cluster.scatterplot"></a><p class="title"><b>Figure&nbsp;4.8.&nbsp;Cluster
+	Membership Scatterplot</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/scatterplot.gif" align="middle" alt="Cluster Membership Scatterplot"></td></tr></table></div></div><div class="figure"><a name="perfexplorer.cluster.topology"></a><p class="title"><b>Figure&nbsp;4.9.&nbsp;Cluster
+	Virtual Topology</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/topology.gif" align="middle" alt="Cluster Virtual Topology"></td></tr></table></div></div><div class="figure"><a name="perfexplorer.cluster.averages"></a><p class="title"><b>Figure&nbsp;4.10.&nbsp;Cluster
+	Average Behavior</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/averages.gif" align="middle" alt="Cluster Average Behavior"></td></tr></table></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="CorrelationAnalysis"></a>Chapter&nbsp;5.&nbsp;Correlation Analysis</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#DimensionReduction2">5.1. Dimension Reduction</a></span></dt><dt><span class="sect1"><a href="#PerformingCorrelationAnalysis">5.2. Performing Correlation Analysis</a></span></dt></dl></div><p>Correlation analysis in PerfExplorer is used to explore relationships
+	between events in a profile.  Each event is pairwise plotted with the other
+	events, and a correlation coefficient is calcuated for the relationship.
+	When the events are highly positively correlated (coefficient of close to
+	1.0) or highly negatively correlated (coefficient close to -1.0), then the
+	relationships will show up as linear groupings in the results.  Clusters
+	may also be apparent.
+	</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DimensionReduction2"></a>5.1.&nbsp;Dimension Reduction</h2></div></div></div><p>Often, many hundreds of events are instrumented when
+        profile data is collected.  Clustering works best with
+        dimensions less than 10, so dimension reduction is often
+        necessary to get meaningful results.  Currently, there is
+        only one type of dimension reduction available in
+        PerfExplorer.  To reduce dimensions, the user specifies a
+        minimum exclusive percentage for an event to be considered
+        "significant".
+		</p><p>To reduce dimensions, select the "Select Dimension
+        Reduction" item under the "Analysis" main menu bar item.
+		The following dialog will appear:  
+        </p><div class="figure"><a name="perfexplorer.mainwindow.dimensionreduction1b"></a><p class="title"><b>Figure&nbsp;5.1.&nbsp;Selecting a dimension reduction method</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/dimensionreduction1.gif" align="middle" alt="Selecting a dimension reduction method"></td></tr></table></div></div><p>
+			Select "Over X Percent".  The following dialog will appear:  
+            </p><div class="figure"><a name="perfexplorer.mainwindow.dimensionreduction2b"></a><p class="title"><b>Figure&nbsp;5.2.&nbsp;Entering a minimum threshold for exclusive percentage</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/dimensionreduction2.gif" align="middle" alt="Entering a minimum threshold for exclusive percentage"></td></tr></table></div></div><p>
+			Enter a value, for example "1".
+            </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PerformingCorrelationAnalysis"></a>5.2.&nbsp;Performing Correlation Analysis</h2></div></div></div><p>To perform correlation analysis, you first need to select a
+		metric.  To select a metric, navigate through the tree of
+		applications, experiments and trials, and expand the trial of
+		interest, showing the available metrics, as shown in the figure
+		below:
+		</p><div class="figure"><a name="perfexplorer.mainwindow.correlation"></a><p class="title"><b>Figure&nbsp;5.3.&nbsp;Selecting a
+	Metric to Cluster</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/clusteringselection.gif" align="middle" alt="Selecting a Metric to Cluster"></td></tr></table></div></div><p>After selecting the metric of interest, select the "Do
+		Correlation Analysis" item under the "Analysis" main menu bar item.
+		A confirmation dialog will appear, and you can either confirm
+		the correlation request or cancel it.  After confirming the
+		correlation, the analysis will begin.  When the analysis results
+		are available, you can view them in the "Correlation Results" tab.
+		</p><div class="figure"><a name="perfexplorer.correlation.results"></a><p class="title"><b>Figure&nbsp;5.4.&nbsp;Correlation
+	Results</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/correlationresults.gif" align="middle" alt="Correlation Results"></td></tr></table></div></div><p>There are a number of images in the "Correlation Results"
+		window.  Each thumbnail represents a pairwise correlation plot
+		of two events.  Clicking on a thumbnail image
+		in the main window will bring up the images, as shown below:
+		</p><div class="figure"><a name="perfexplorer.correlation.example"></a><p class="title"><b>Figure&nbsp;5.5.&nbsp;Correlation
+	Example</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/correlationexample.gif" align="middle" alt="Correlation Example"></td></tr></table></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Charts"></a>Chapter&nbsp;6.&nbsp;Charts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#SettingChartParameters">6.1. Setting Parameters</a></span></dt><dd><dl><dt><span class="sect2"><a href="#GroupOfInterest">6.1.1. Group of Interest</a></span></dt><dt><span class="sect2"><a href="#MetricOfInterest">6.1.2. Metric of Interest</a></span></dt><dt><span class="sect2"><a href="#EventOfInterest">6.1.3. Event of Interest</a></span></dt><dt><span class="sect2"><a href="#TotalNumberOfTimesteps">6.1.4. Total Number of
+		Timesteps</a></span></dt></dl></dd><dt><span class="sect1"><a href="#ChartTypes">6.2. Standard Chart Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="#TimestepsPerSecond">6.2.1. Timesteps Per
+		Second</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiency">6.2.2. Relative
+		Efficiency</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiencyByEvent">6.2.3. Relative Efficiency by
+		Event</a></span></dt><dt><span class="sect2"><a href="#RelativeEfficiencyOneEvent">6.2.4. Relative Efficiency for
+		One Event</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedup">6.2.5. Relative
+		Speedup</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupByEvent">6.2.6. Relative Speedup by
+		Event</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupOneEvent">6.2.7. Relative Speedup for One
+		Event</a></span></dt><dt><span class="sect2"><a href="#PercentOfTotal">6.2.8. Group % of Total
+		Runtime</a></span></dt><dt><span class="sect2"><a href="#RuntimeBreakdown">6.2.9. Runtime
+		Breakdown</a></span></dt></dl></dd><dt><span class="sect1"><a href="#PhaseChartTypes">6.3. Phase Chart Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="#RelativeEfficiencyPhase">6.3.1. Relative Efficiency per Phase</a></span></dt><dt><span class="sect2"><a href="#RelativeSpeedupPhase">6.3.2. Relative Speedup per Phase</a></span></dt><dt><span class="sect2"><a href="#PhaseBreakdown">6.3.3. Phase Fraction of Total
+		Runtime</a></span></dt></dl></dd></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="SettingChartParameters"></a>6.1.&nbsp;Setting Parameters</h2></div></div></div><p>There are a few parameters which need to be set when
+		doing comparisons between trials in the database.  If any
+		necessary setting is not configured before requesting a
+		chart, you will be prompted to set the value.  The following
+		settings may be necessary for the various charts available:
+		</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="GroupOfInterest"></a>6.1.1.&nbsp;Group of Interest</h3></div></div></div><p>TAU events are often associated with common groups,
+		such as "MPI", "TRANSPOSE", etc.  This value is used for
+		showing what fraction of runtime that this group of
+		events contributed to the total runtime.</p><div class="figure"><a name="perfexplorer.charts.groupofinterest"></a><p class="title"><b>Figure&nbsp;6.1.&nbsp;Setting Group of Interest</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/groupofinterest.gif" align="middle" alt="Setting Group of Interest"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="MetricOfInterest"></a>6.1.2.&nbsp;Metric of Interest</h3></div></div></div><p>Profiles may contain many metrics gathered for a
+		single trial.  This selects which of the available metrics
+		the user is interested in.</p><div class="figure"><a name="perfexplorer.charts.metricofinterest"></a><p class="title"><b>Figure&nbsp;6.2.&nbsp;Setting Metric of Interest</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/metricofinterest.gif" align="middle" alt="Setting Metric of Interest"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="EventOfInterest"></a>6.1.3.&nbsp;Event of Interest</h3></div></div></div><p>Some charts examine events in isolation.  This setting
+		configures which event to examine.</p><div class="figure"><a name="perfexplorer.charts.eventofinterest"></a><p class="title"><b>Figure&nbsp;6.3.&nbsp;Setting Event of Interest</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/eventofinterest.gif" align="middle" alt="Setting Event of Interest"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TotalNumberOfTimesteps"></a>6.1.4.&nbsp;Total Number of
+		Timesteps</h3></div></div></div><p>One chart, the "Timesteps per second" chart, will
+		calculate the number of timesteps completed per second.
+		This setting configures that value.</p><div class="figure"><a name="perfexplorer.charts.timesteps"></a><p class="title"><b>Figure&nbsp;6.4.&nbsp;Setting Timesteps</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/timesteps.gif" align="middle" alt="Setting Timesteps"></td></tr></table></div></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ChartTypes"></a>6.2.&nbsp;Standard Chart Types</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TimestepsPerSecond"></a>6.2.1.&nbsp;Timesteps Per
+		Second</h3></div></div></div><p>The Timesteps Per Second chart shows how an application
+		scales as it relates to time-to-solution.  If the timesteps are
+		not already set, you will be prompted to enter the total number
+		of timesteps in the trial (see <a href="#TotalNumberOfTimesteps" title="6.1.4.&nbsp;Total Number of&#xA;Timesteps">Section&nbsp;6.1.4, &#8220;Total Number of
+		Timesteps&#8221;</a> ).  If there is more than
+		one metric to choose from, you may be prompted to select the
+		metric of interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.timestepspersecond"></a><p class="title"><b>Figure&nbsp;6.5.&nbsp;Timesteps per Second</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/timestepspersecond.gif" align="middle" alt="Timesteps per Second"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeEfficiency"></a>6.2.2.&nbsp;Relative
+		Efficiency</h3></div></div></div><p>The Relative Efficiency chart shows how an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativeefficiency"></a><p class="title"><b>Figure&nbsp;6.6.&nbsp;Relative Efficiency</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativeefficiency.gif" align="middle" alt="Relative Efficiency"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeEfficiencyByEvent"></a>6.2.3.&nbsp;Relative Efficiency by
+		Event</h3></div></div></div><p>The Relative Efficiency By Event chart shows how each
+		event in an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativeefficiencybyevent"></a><p class="title"><b>Figure&nbsp;6.7.&nbsp;Relative Efficiency by Event</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativeefficiencybyevent.gif" align="middle" alt="Relative Efficiency by Event"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeEfficiencyOneEvent"></a>6.2.4.&nbsp;Relative Efficiency for
+		One Event</h3></div></div></div><p>The Relative Efficiency for One Event chart shows how one
+		event from an application
+		scales with respect to relative efficiency.  That is, as the
+		number of processors increases by a factor, the time to solution
+		is expected to decrease by the same factor (with ideal scaling).
+		The fraction between the expected scaling and the actual scaling
+		is the relative efficiency.  
+		If there is more than one event to choose from, and you have not
+		yet selected an event of interest, you may be prompted to select
+		the event of interest (see <a href="#EventOfInterest" title="6.1.3.&nbsp;Event of Interest">Section&nbsp;6.1.3, &#8220;Event of Interest&#8221;</a>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativeefficiencyoneevent"></a><p class="title"><b>Figure&nbsp;6.8.&nbsp;Relative Efficiency one Event</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativeefficiencyoneevent.gif" align="middle" alt="Relative Efficiency one Event"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeSpeedup"></a>6.2.5.&nbsp;Relative
+		Speedup</h3></div></div></div><p>The Relative Speedup chart shows how an application
+		scales with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativespeedup"></a><p class="title"><b>Figure&nbsp;6.9.&nbsp;Relative Speedup</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativespeedup.gif" align="middle" alt="Relative Speedup"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeSpeedupByEvent"></a>6.2.6.&nbsp;Relative Speedup by
+		Event</h3></div></div></div><p>The Relative Speedup By Event chart shows how the events
+		in an application
+		scale with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativespeedupbyevent"></a><p class="title"><b>Figure&nbsp;6.10.&nbsp;Relative Speedup by Event</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativespeedupbyevent.gif" align="middle" alt="Relative Speedup by Event"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeSpeedupOneEvent"></a>6.2.7.&nbsp;Relative Speedup for One
+		Event</h3></div></div></div><p>The Relative Speedup for One Event chart shows how one
+		event in an application
+		scales with respect to relative speedup.  That is, as the
+		number of processors increases by a factor, the speedup
+		is expected to increase by the same factor (with ideal scaling).
+		The ideal speedup is charted, along with the actual speedup for
+		the application.  
+		If there is more than one event to choose from, and you have not
+		yet selected an event of interest, you may be prompted to select
+		the event of interest (see <a href="#EventOfInterest" title="6.1.3.&nbsp;Event of Interest">Section&nbsp;6.1.3, &#8220;Event of Interest&#8221;</a>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativespeeduponeevent"></a><p class="title"><b>Figure&nbsp;6.11.&nbsp;Relative Speedup one Event</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativespeeduponeevent.gif" align="middle" alt="Relative Speedup one Event"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="PercentOfTotal"></a>6.2.8.&nbsp;Group % of Total
+		Runtime</h3></div></div></div><p>
+		The Group % of Total Runtime chart shows how the fraction of the
+		total runtime for one group of events changes as the number of
+		processors increases.  
+		If there is more than one group
+		to choose from, and you have not yet selected a group of
+		interest, you may be prompted to select the group of
+		interest (see <a href="#GroupOfInterest" title="6.1.1.&nbsp;Group of Interest">Section&nbsp;6.1.1, &#8220;Group of Interest&#8221;</a>).
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one or more experiments or one view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.percentoftotal"></a><p class="title"><b>Figure&nbsp;6.12.&nbsp;Group % of Total Runtime</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/percentoftotal.gif" align="middle" alt="Group % of Total Runtime"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RuntimeBreakdown"></a>6.2.9.&nbsp;Runtime
+		Breakdown</h3></div></div></div><p>
+		The Runtime Breakdown chart shows the fraction of the total
+		runtime for all events in the application, and how the fraction
+		changes as the number of processors increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.runtimebreakdown"></a><p class="title"><b>Figure&nbsp;6.13.&nbsp;Runtime Breakdown</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/runtimebreakdown.gif" align="middle" alt="Runtime Breakdown"></td></tr></table></div></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PhaseChartTypes"></a>6.3.&nbsp;Phase Chart Types</h2></div></div></div><p>TAU now provides the ability to break down profiles with
+		respect to phases of execution.  One such application would be
+		to collect separate statistics for each timestep, or group of
+		timesteps.  In order to visualize the variance between the
+		phases of execution, a number of phase-based charts are
+		available.
+		</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeEfficiencyPhase"></a>6.3.1.&nbsp;Relative Efficiency per Phase</h3></div></div></div><p>
+		The Relative Efficiency Per Phase chart shows the relative
+		efficiency for each phase, as the number of processors
+		increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativeefficiencybyphase"></a><p class="title"><b>Figure&nbsp;6.14.&nbsp;Relative Efficiency per Phase</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativeefficiencybyphase.gif" align="middle" alt="Relative Efficiency per Phase"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="RelativeSpeedupPhase"></a>6.3.2.&nbsp;Relative Speedup per Phase</h3></div></div></div><p>
+		The Relative Speedup Per Phase chart shows the relative
+		speedup for each phase, as the number of processors
+		increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.relativespeedupbyphase"></a><p class="title"><b>Figure&nbsp;6.15.&nbsp;Relative Speedup per Phase</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/relativespeedupbyphase.gif" align="middle" alt="Relative Speedup per Phase"></td></tr></table></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="PhaseBreakdown"></a>6.3.3.&nbsp;Phase Fraction of Total
+		Runtime</h3></div></div></div><p>
+		The Phase Fraction of Total Runtime chart shows the breakdown of
+		the execution by phases, and shows how that breakdown changes as
+		the number of processors increases.
+		If there is more than one metric
+		to choose from, you may be prompted to select the metric of
+		interest (see <a href="#MetricOfInterest" title="6.1.2.&nbsp;Metric of Interest">Section&nbsp;6.1.2, &#8220;Metric of Interest&#8221;</a>).
+		To request this chart, select one experiment or view,
+		and select this chart item under the "Charts" main menu item.
+		</p><div class="figure"><a name="perfexplorer.charts.phasebreakdown"></a><p class="title"><b>Figure&nbsp;6.16.&nbsp;Phase Fraction of Total Runtime</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/phasebreakdown.gif" align="middle" alt="Phase Fraction of Total Runtime"></td></tr></table></div></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="CustomCharts"></a>Chapter&nbsp;7.&nbsp;Custom Charts</h2></div></div></div><p>In addition to the default charts available in the charts menu, there
+	are is a custom chart interface.  To access the interface, select the "Custom
+	Charts" tab on in the results pane of the main window, as shown:</p><div class="figure"><a name="perfexplorer.customcharts.interface"></a><p class="title"><b>Figure&nbsp;7.1.&nbsp;The Custom Charts
+	Interface</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/customcharts.gif" align="middle" alt="The Custom Charts Interface"></td></tr></table></div></div><p>There are a number of controls for the cusotom charts.  They are:</p><div class="itemizedlist"><ul type="disc"><li><p>Main Only - When selected, only the main event (the event with
+	the highest inclusive value) will be selected.  When deselected, the
+	"Events" control (see below) is activated, and one or all events can be
+	selected.</p></li><li><p>Call Paths - When selected, callpath events will be available in
+	the "Events" control (see below).</p></li><li><p>Log Y - When selected, the Y axis will be the log of the true
+	value.</p></li><li><p>Scalability - When selected, the chart will be interpreted as a
+	speedup chart.  The trial with the fewest number of threads of execution
+	will be considered the baseline trial.</p></li><li><p>Efficiency - When selected, the chart will be interpreted as a
+	relative efficiency chart.  The trial with the fewest number of threads of
+	execution will be considered the baseline trial.</p></li><li><p>Strong Scaling - When deselected, the speedup or efficiency chart
+	will be interpreted as a strong scaling study (the workload is the same for
+	all trials).  When selected, the button will change to "Weak Scaling", and
+	the chart will be interpreted as a weak scaling study (the workload is
+	proportional to the total number of threads in each trial).</p></li><li><p>Horizontal - when selected, the chart X and Y axes will be
+	swapped.</p></li><li><p>Show Y-Axis Zero - when selected, the chart will include the
+	value 0.  When deselected, the chart will only show the relevant values for
+	all data points.</p></li><li><p>Chart Title - value to use for the chart title</p></li><li><p>Series Name/Value - the field to be used to group the data points
+	as a series.</p></li><li><p>X Axis Value - the field to use as the X axis value.</p></li><li><p>X Axis Name - the name to put in the chart for the value along
+	the X axis.</p></li><li><p>Y Axis Value - the field to use as the Y axis value</p></li><li><p>Y Axis Name - the name to put in the chart for the value along
+	the X axis.</p></li><li><p>Dimension Reduction - whether or not to use dimension reduction.
+	This is only applicable when "Main Only" is disabled.</p></li><li><p>Cutoff - when the "Dimension Reduction" is enabled, the cutoff
+	value for selecting "All Events".</p></li><li><p>Metric - The metric of interest for the Y axis.</p></li><li><p>Units - The unit to be selected for the Y axis.</p></li><li><p>Event - The event of interest, or "All Events".</p></li><li><p>XML Field - When the X or Y axis is selected to be an XML field,
+	this is the field of interest.</p></li><li><p>Apply - build the chart.</p></li><li><p>Reset - restore the options back to the default
+	values.</p></li></ul></div><p>When the chart is generated, it can be saved as a vector image by
+	selecting "File -&gt; Save As Vector Image".  The chart can also be saved
+	as a PNG by right clicking on the chart, and selecting "Save As...".</p></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Visualization"></a>Chapter&nbsp;8.&nbsp;Visualization</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#ThreeDVisualization">8.1. 3D Visualization</a></span></dt><dt><span class="sect1"><a href="#DataSummary">8.2. Data Summary</a></span></dt><dt><span class="sect1"><a href="#CreateBoxchart">8.3. Creating a Boxchart</a></span></dt><dt><span class="sect1"><a href="#CreateHistogram">8.4. Creating a Histogram</a></span></dt><dt><span class="sect1"><a href="#CreateNormalProbability">8.5. Creating a Normal Probability Chart</a></span></dt></dl></div><p>Under the "Visualization" main menu item, there are five types
+	of raw data visualization. The five items are "3D Visualization",
+	"Data Summary", "Create Boxchart", "Create Histogram" and 
+	"Create Normal Probability Chart".  For the Boxchart, Histogram
+	and Normal Probability Charts, you can either select one metric
+	in the trial (which selects all events by default), or expand the metric
+	and select events of interest.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ThreeDVisualization"></a>8.1.&nbsp;3D Visualization</h2></div></div></div><p>When the "3D Visualization" is requested, PerfExplorer
+		examines the data to try to determine the most interesting
+		events in the trial.  That is, for the selected metric in the
+		selected trial, the database will calculate the weighted
+		relative variance for each event across all threads of
+		execution, in order to find the top four "significant" events.
+		These events are selected by calculating: stddev(exclusive) /
+		(max(exclusive) - min(exclusive)) * exclusive_percentage.  After
+		selecting the top four events, they are graphed in an OpenGL
+		window.</p><div class="figure"><a name="perfexplorer.visualization.threed"></a><p class="title"><b>Figure&nbsp;8.1.&nbsp;3D
+		Visualization of multivariate data</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/3dvisualization.gif" align="middle" alt="3D Visualization of multivariate data"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="DataSummary"></a>8.2.&nbsp;Data Summary</h2></div></div></div><p>In order to see a summary of the performance data in the
+		database, select the "Show Data Summary" item under the
+		"Visualization" main menu item.</p><div class="figure"><a name="perfexplorer.visualization.datasummary"></a><p class="title"><b>Figure&nbsp;8.2.&nbsp;Data
+		Summary Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/datasummary.gif" align="middle" alt="Data Summary Window"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreateBoxchart"></a>8.3.&nbsp;Creating a Boxchart</h2></div></div></div><p>In order to see a boxchart summary of the performance data in the
+		database, select the "Create Boxchart" item under the "Visualization"
+		main menu item.</p><div class="figure"><a name="perfexplorer.visualization.boxchart"></a><p class="title"><b>Figure&nbsp;8.3.&nbsp;Boxchart</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/boxchart.gif" align="middle" alt="Boxchart"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreateHistogram"></a>8.4.&nbsp;Creating a Histogram</h2></div></div></div><p>In order to see a histogram summary of the performance data in the
+		database, select the "Create Histogram" item under the "Visualization"
+		main menu item.</p><div class="figure"><a name="perfexplorer.visualization.histogram"></a><p class="title"><b>Figure&nbsp;8.4.&nbsp;Histogram</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/histogram2.gif" align="middle" alt="Histogram"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreateNormalProbability"></a>8.5.&nbsp;Creating a Normal Probability Chart</h2></div></div></div><p>In order to see a normal probability summary of the performance data in the
+		database, select the "Create NormalProbability" item under the "Visualization"
+		main menu item.</p><div class="figure"><a name="perfexplorer.visualization.normalprobability"></a><p class="title"><b>Figure&nbsp;8.5.&nbsp;Normal
+		Probability</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/normalprobability.gif" align="middle" alt="Normal Probability"></td></tr></table></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Views"></a>Chapter&nbsp;9.&nbsp;Views</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#CreatingViews">9.1. Creating Views</a></span></dt><dt><span class="sect1"><a href="#CreatingSubviews">9.2. Creating Subviews</a></span></dt></dl></div><p>Often times, data is loaded into the database with multiple
+	parametric cross-sections.  For example, the charts available in
+	PerfExplorer are primarily designed for scalability analysis,
+	however data might be loaded as a parametric study.  For example, in
+	the following example, the data has been loaded with three problem
+	sizes, MIN, HALF and FULL.</p><div class="figure"><a name="perfexplorer.views.parametricexample"></a><p class="title"><b>Figure&nbsp;9.1.&nbsp;Potential
+	scalability data organized as a parametric study</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/parametricdata.gif" align="middle" alt="Potential scalability data organized as a parametric study"></td></tr></table></div></div><p>In order to examine this data in a scalability study, it is
+	necessary to reorganize the data.  However, it is not necessary to
+	re-load the data.  Using views in PerfExplorer, you can re-organize
+	the data based on values in the database.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreatingViews"></a>9.1.&nbsp;Creating Views</h2></div></div></div><p>To create a view, select the "Create New View" item under
+		the "Views" main menu item.  The first step is to select the
+		table which will form the basis of the view.  The three possible
+		values are Application, Experiment and Trial:</p><div class="figure"><a name="perfexplorer.views.viewslevel"></a><p class="title"><b>Figure&nbsp;9.2.&nbsp;Selecting a table</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/viewslevel.gif" align="middle" alt="Selecting a table"></td></tr></table></div></div><p>
+		After selecting the table, you need to select the column on
+		which to filter:
+		</p><div class="figure"><a name="perfexplorer.views.viewscolumn"></a><p class="title"><b>Figure&nbsp;9.3.&nbsp;Selecting a
+	column</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/viewscolumn.gif" align="middle" alt="Selecting a column"></td></tr></table></div></div><p>
+		After selecting the column, you need to select the operator for
+		comparing to that column:
+		</p><div class="figure"><a name="perfexplorer.views.viewsoperator"></a><p class="title"><b>Figure&nbsp;9.4.&nbsp;Selecting an
+	operator</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/viewsoperator.gif" align="middle" alt="Selecting an operator"></td></tr></table></div></div><p>
+		After selecting the operator, you need to select the value for
+		comparing to the column:
+		</p><div class="figure"><a name="perfexplorer.views.viewsvalue"></a><p class="title"><b>Figure&nbsp;9.5.&nbsp;Selecting a value</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/viewsvalue.gif" align="middle" alt="Selecting a value"></td></tr></table></div></div><p>
+		After selecting the value, you need to select a name for the
+		view:
+		</p><div class="figure"><a name="perfexplorer.views.viewsname"></a><p class="title"><b>Figure&nbsp;9.6.&nbsp;Entering a name
+	for the view</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/viewsname.gif" align="middle" alt="Entering a name for the view"></td></tr></table></div></div><p>
+		After creating the view, you will need to exit PerfExplorer and
+		re-start it to see the view.  This is a known problem with the
+		application, and will be fixed in a future release.
+		</p><div class="figure"><a name="perfexplorer.views.completedview"></a><p class="title"><b>Figure&nbsp;9.7.&nbsp;The completed
+	view</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/completedview.gif" align="middle" alt="The completed view"></td></tr></table></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreatingSubviews"></a>9.2.&nbsp;Creating Subviews</h2></div></div></div><p>In order to create sub-views, you first need to select
+		the "Create New Sub-View" item from the "Views" main menu item.
+		The first dialog box will prompt you to select the view (or
+		sub-view) to base the new sub-view on:</p><div class="figure"><a name="perfexplorer.views.subview"></a><p class="title"><b>Figure&nbsp;9.8.&nbsp;Selecting the base
+	view</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/subview.gif" align="middle" alt="Selecting the base view"></td></tr></table></div></div><p>After selecting the base view or sub-view, the options for
+		creating the new sub-view are the same as creating a new view.  
+		After creating the sub-view, you will need to exit PerfExplorer and
+		re-start it to see the sub-view.  This is a known problem with the
+		application, and will be fixed in a future release.
+		</p><div class="figure"><a name="perfexplorer.views.completedsubview"></a><p class="title"><b>Figure&nbsp;9.9.&nbsp;Completed
+	sub-views</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/completedsubview.gif" align="middle" alt="Completed sub-views"></td></tr></table></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Scripting"></a>Chapter&nbsp;10.&nbsp;Running PerfExplorer Scripts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#AnalysisComponents">10.1. Analysis Components</a></span></dt><dt><span class="sect1"><a href="#Scripting_Interface">10.2. Scripting Interface</a></span></dt><dt><span class="sect1"><a href="#ExampleScript">10.3. Example Script</a></span></dt></dl></div><p>As of version 2.0, PerfExplorer has officially supported a
+	scripting interface.  The scripting interface is useful for adding
+	automation to PerfExplorer.  For example, a user can load a trial,
+	perform data reduction, extract out key phases, derive metrics, 
+	and plot the result.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="AnalysisComponents"></a>10.1.&nbsp;Analysis Components</h2></div></div></div><p>There are many operations available, including:</p><div class="itemizedlist"><ul type="disc"><li><p>BasicStatisticsOperation</p></li><li><p>CopyOperation</p></li><li><p>CorrelateEventsWithMetadata</p></li><li><p>CorrelationOperation</p></li><li><p>DeriveMetricOperation</p></li><li><p>DifferenceMetadataOperation</p></li><li><p>DifferenceOperation</p></li><li><p>DrawBoxChartGraph</p></li><li><p>DrawGraph</p></li><li><p>DrawMMMGraph</p></li><li><p>ExtractCallpathEventOperation</p></li><li><p>ExtractEventOperation</p></li><li><p>ExtractMetricOperation</p></li><li><p>ExtractNonCallpathEventOperation</p></li><li><p>ExtractPhasesOperation</p></li><li><p>ExtractRankOperation</p></li><li><p>KMeansOperation</p></li><li><p>LinearRegressionOperation</p></li><li><p>LogarithmicOperation</p></li><li><p>MergeTrialsOperation</p></li><li><p>MetadataClusterOperation</p></li><li><p>PCAOperation</p></li><li><p>RatioOperation</p></li><li><p>ScalabilityOperation</p></li><li><p>TopXEvents</p></li><li><p>TopXPercentEvents</p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Scripting_Interface"></a>10.2.&nbsp;Scripting Interface</h2></div></div></div><p>
+	The scripting interface is in Python, and scripts can be used to build
+	analysis workflows.  The Python scripts control the Java classes in the
+	application through the Jython interpreter (http://www.jython.org/).  There
+	are two types of components which are useful in
+	building analysis scripts.  The first type is the PerformanceResult interface,
+	and the second is the PerformanceAnalysisComponent interface.  For
+	documentation on how to use the Java classes, see the javadoc in the
+	perfexplorer source distribution, and the example scripts below.
+	To build the perfexplorer javadoc, type </p><pre class="screen"> %&gt;./make javadoc</pre><p>
+	in the perfexplorer source directory.
+	
+      </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ExampleScript"></a>10.3.&nbsp;Example Script</h2></div></div></div><pre class="screen">
+from glue import PerformanceResult
+from glue import PerformanceAnalysisOperation
+from glue import ExtractEventOperation
+from glue import Utilities
+from glue import BasicStatisticsOperation
+from glue import DeriveMetricOperation
+from glue import MergeTrialsOperation
+from glue import TrialResult
+from glue import AbstractResult
+from glue import DrawMMMGraph
+from edu.uoregon.tau.perfdmf import Trial
+from java.util import HashSet
+from java.util import ArrayList
+
+True = 1
+False = 0
+
+def glue():
+	print "doing phase test for gtc on jaguar"
+	# load the trial
+	Utilities.setSession("perfdmf.demo")
+	trial1 = Utilities.getTrial("gtc_bench", "Jaguar Compiler Options", "fastsse")
+	result1 = TrialResult(trial1)
+
+	print "got the data"
+
+	# get the iteration inclusive totals
+
+	events = ArrayList()
+	for event in result1.getEvents():
+		#if event.find("Iteration") &gt;= 0 and result1.getEventGroupName(event).find("TAU_PHASE") &lt; 0:
+		if event.find("Iteration") &gt;= 0 and event.find("=&gt;") &lt; 0:
+			events.add(event)
+
+	extractor = ExtractEventOperation(result1, events)
+	extracted = extractor.processData().get(0)
+
+	print "extracted phases"
+
+	# derive metrics
+
+	derivor = DeriveMetricOperation(extracted, "PAPI_L1_TCA", "PAPI_L1_TCM", DeriveMetricOperation.SUBTRACT)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+	derivor = DeriveMetricOperation(extracted, "PAPI_L1_TCA-PAPI_L1_TCM", "PAPI_L1_TCA", DeriveMetricOperation.DIVIDE)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+	derivor = DeriveMetricOperation(extracted, "PAPI_L1_TCM", "PAPI_L2_TCM", DeriveMetricOperation.SUBTRACT)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+	derivor = DeriveMetricOperation(extracted, "PAPI_L1_TCM-PAPI_L2_TCM", "PAPI_L1_TCM", DeriveMetricOperation.DIVIDE)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+	derivor = DeriveMetricOperation(extracted, "PAPI_FP_INS", "P_WALL_CLOCK_TIME", DeriveMetricOperation.DIVIDE)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+	derivor = DeriveMetricOperation(extracted, "PAPI_FP_INS", "PAPI_TOT_INS", DeriveMetricOperation.DIVIDE)
+	derived = derivor.processData().get(0)
+	merger = MergeTrialsOperation(extracted)
+	merger.addInput(derived)
+	extracted = merger.processData().get(0)
+
+	print "derived metrics..."
+
+	# get the Statistics
+	dostats = BasicStatisticsOperation(extracted, False)
+	stats = dostats.processData()
+
+	print "got stats..."
+
+	return
+
+	for metric in stats.get(0).getMetrics():
+		grapher = DrawMMMGraph(stats)
+		metrics = HashSet()
+		metrics.add(metric)
+		grapher.set_metrics(metrics)
+		grapher.setTitle("GTC Phase Breakdown: " + metric)
+		grapher.setSeriesType(DrawMMMGraph.TRIALNAME);
+		grapher.setCategoryType(DrawMMMGraph.EVENTNAME)
+		grapher.setValueType(AbstractResult.INCLUSIVE)
+		grapher.setXAxisLabel("Iteration")
+		grapher.setYAxisLabel("Inclusive " + metric);
+		# grapher.setLogYAxis(True)
+		grapher.processData()
+
+	# graph the significant events in the iteration
+
+	subsetevents = ArrayList()
+	subsetevents.add("CHARGEI")
+	subsetevents.add("PUSHI")
+	subsetevents.add("SHIFTI")
+
+	print "got data..."
+
+	for subsetevent in subsetevents:
+		events = ArrayList()
+		for event in result1.getEvents():
+			if event.find("Iteration") &gt;= 0 and event.rfind(subsetevent) &gt;= 0:
+				events.add(event)
+
+		extractor = ExtractEventOperation(result1, events)
+		extracted = extractor.processData().get(0)
+
+		print "extracted phases..."
+
+		# get the Statistics
+		dostats = BasicStatisticsOperation(extracted, False)
+		stats = dostats.processData()
+
+		print "got stats..."
+
+		for metric in stats.get(0).getMetrics():
+			grapher = DrawMMMGraph(stats)
+			metrics = HashSet()
+			metrics.add(metric)
+			grapher.set_metrics(metrics)
+			grapher.setTitle(subsetevent + ", " + metric)
+			grapher.setSeriesType(DrawMMMGraph.TRIALNAME);
+			grapher.setCategoryType(DrawMMMGraph.EVENTNAME)
+			grapher.setValueType(AbstractResult.INCLUSIVE)
+			# grapher.setLogYAxis(True)
+			grapher.processData()
+	return
+
+print "--------------- JPython test script start ------------"
+glue()
+print "---------------- JPython test script end -------------"
+	</pre></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="Derived Metrics"></a>Chapter&nbsp;11.&nbsp;Derived Metrics</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#CreatingExpression">11.1. CreatingExpressions</a></span></dt><dt><span class="sect1"><a href="#Applying">11.2. Selecting Expressions</a></span></dt><dt><span class="sect1"><a href="#Files">11.3. Expression Files</a></span></dt></dl></div><p>Sometimes metrics in a profile need to be combined to create a derived
+	metric.  PerfExplorer allows the user to create these using the derived metric expression tab.
+	</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="CreatingExpression"></a>11.1.&nbsp;CreatingExpressions</h2></div></div></div><p>The text box at the top of the tab allows the user to enter an expression.  
+        Double clicking on a metric in the "Performance Data" tree will copy that metrics name into the
+        box.  If a metric contains any operands, the whole metric must be surrounded by quotes. If 
+        the you would like of the metric to be renamed, then you should start the expression with 
+        the new name and and equals sign.
+		</p><p> If this is the only metric you wish to derive, then select the trial, expression or 
+		application where the metric should be derived and then click apply.  If you wish to derive 
+		many metrics, then click Add to List and create more expressions.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Applying"></a>11.2.&nbsp;Selecting Expressions</h2></div></div></div><p>If you have added multiple expressions, you can select one or many of them to apply.
+		They will be derived from top to bottom.  After you have select some, you can select the trial, 
+		experiment or application to apply the expression to and then click apply.
+		</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Files"></a>11.3.&nbsp;Expression Files</h2></div></div></div><p>You can also derive metrics using an expression file.  An expression file has a single 
+		expression per line.  To parse the file, select the trial, experiment or application to apply
+		the expressions to; then select File &gt; Parse Expression File and chose the file.
+		</p></div></div></div>
+       </div>
+       <?php include("../../footer.php") ?>
+    </body></html>

@@ -1,0 +1,205 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>1.&nbsp;
+TAU Trace Format Reader Library
+</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+       <?php include("../../header.php") ?>
+       <div id="content">
+    <div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e22"></a>1.&nbsp;
+TAU Trace Format Reader Library
+</h2></div></div><hr></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TAU_tf_API"></a>1.1.&nbsp;
+Tau Reader Usage
+</h3></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e28"></a>1.1.1.&nbsp;
+SYNOPSIS
+</h4></div></div></div><p>
+An API for reading data from TAU tracefiles
+</p><p>
+See TAU_tf.h
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e35"></a>1.1.2.&nbsp;
+DESCRIPTION
+</h4></div></div></div><p>
+The TAU Trace Format Reader system, defined in TAU_tf.h, operates primarily via a series C/C++ of callback methods, each representing a data type contained in a TAU tracefile.  The TAU trace is opened with a call to the function:
+  
+Ttf_FileHandleT Ttf_OpenFileForInput( const char *name, const char *edf);
+
+    Where *name and *edf are the locations of the TAU trace and event definition files to be read respectively.  The TtfFileHandleT returned is then used to access the TAU trace.  e.g:
+   
+    fh = Ttf_OpenFileForInput( argv[1], argv[2]);
+</p><p>
+    The callback methods are stored in a callback table, a struct of the type Ttf_Callbacks.  The Ttf_Callbacks struct contains entities representing each of the 11 defined callbacks:
+   
+   Ttf_DefClkPeriodT  DefClkPeriod;
+   Ttf_DefThreadT     DefThread;
+   Ttf_DefStateGroupT DefStateGroup;
+   Ttf_DefStateT      DefState;
+   Ttf_EndTraceT      EndTrace;
+
+   Ttf_EnterStateT    EnterState;
+   Ttf_LeaveStateT    LeaveState;
+   Ttf_SendMessageT   SendMessage;
+   Ttf_RecvMessageT   RecvMessage;
+   Ttf_DefUserEvent   DefUserEvent;
+   Ttf_EventTrigger   EventTrigger;
+  
+       The struct also contains "void*  UserData;" which is used as an argument to each of the callback functions.
+</p><p>
+       The trace data relevant to a callback function's associated TAU event type are delivered to the function via its arguments.  Additionally the user data argument may be used to pass in data defined elsewhere in the trace reading process, before the callback functions are invoked.  The userData argument is often used to provide the file handler for functions to which the read trace events are being written.  The userData argument must be recast to its original type before use.  For example, the following callback function, compliant with the definition of Ttf_DefClkPeriodT, receives the clock period information from the TAU tracefile, in addition to the userData that specifies the the location of sprintf's target.
+   
+</p><pre class="screen">
+int ClockPeriod (void* userData, double clkPeriod ) {
+    sprintf((char*)userData,"Clock period %g\n", clkPeriod);
+    return 0;
+}
+</pre><p>
+</p><p>
+    The callback table should be initialized by associating each of its elements with a complementary callback function.  As the trace file is read the contents of each entry will be passed to the corresponding callback function.  Alternatively if an element of the callback table is set to 0 no action will be taken when its associated entry type is encountered.  Each element of the callback table must be initialized to a viable function or 0.  For example, to create a callback table, tb, and initialize the DefClkPeriod element with the function defined above one would use the following:
+
+</p><pre class="screen">Ttf_CallbacksT cb;
+cb.DefClkPeriod = ClockPeriod;</pre><p>
+</p><p>
+    Once the callback table is initialized the tracefile reading may commence.  This is done via the Ttf_ReadNumEvents function defined in TAU_tf.h.  Because Ttf_ReadNumEvents requires trace files to be read in chunks of events of the number specified when the function is called it is common practice to read a tracefile by enclosing TtfReadNumEvents in a loop which terminates when there are no records left to read (i.e. the return value of TtF_ReadNumEvents is 0).  The EndTrace callback function may also set a flag that breaks out of the loop.  For example, using the Ttf_FileHandleT fh and Ttf_CallbacksT cb the following would process the entire tracefile specified within fh:
+   
+</p><pre class="screen">do{
+    recs_read = Ttf_ReadNumEvents(fh,cb, 1024);
+}
+while (recs_read &gt;=0);</pre><p>
+</p><p>
+In some circumstances it may be convenient to parse the trace files more than once using different callback tables and methods.  For example, this technique is often useful when all of the the initialization records must be registered and processed before the event records.
+</p><p>
+When the processing of a tracefile is complete the tracefile should be closed with the Ttf_CloseFile( Ttf_FileHandleT fileHandle ); function.  eg:
+</p><pre class="screen">
+Ttf_CloseFile(fh);
+</pre><p>
+</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e64"></a>1.2.&nbsp;
+Callback API
+</h3></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e67"></a>1.2.1.&nbsp;
+int Ttf_DefClkPeriodT(userData, clkPeriod );
+</h4></div></div></div><p>
+<em class="parameter"><code>
+Arguments: void* userData, double clkPeriod
+</code></em>
+</p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters the definition of the clock period of the trace being read.  It is called with the user defined argument userData and the clock period, clkPeriod, defined in the TAU trace.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e80"></a>1.2.2.&nbsp;
+int Ttf_EndTraceT(userData,nodeToken,threadToken);
+</h4></div></div></div><p>
+<em class="parameter"><code>
+Arguments: void *userData, unsigned int nodeToken, unsigned int threadToken
+</code></em>
+</p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when an EOF is encountered in a tracefile.  It is called with the user defined argument userData and the numeric ID of the node and thread, nodeToken and threadToken respectively, where the trace has ended.  Note that the full trace has not concluded until the end of each node/thread combination has been reached.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e93"></a>1.2.3.&nbsp;
+int Ttf_DefStateGroupT(userData, stateGroupToken, stateGroupName );
+</h4></div></div></div><p>
+<em class="parameter"><code>
+Arguments: void *userData, unsigned int stateGroupToken, const char *stateGroupName
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a state group definition.  It is called with the user defined argument userData the numeric ID of the state group being defined, stateGroupToken, and the name of the group being defined, stateGroupName.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e105"></a>1.2.4.&nbsp;
+int Ttf_DefStateT(userData, stateToken, stateName, stateGroupToken );
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void *userData, unsigned int stateToken, const char *stateName, unsigned int stateGroupToken
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a state definition.  A state generally represents a programmatic function.  It is called with the user defined argument userData, the numeric ID of the state being defined, stateToken, the name of the state being defined, stateName, and the numeric group ID of the state being defined, stateGroupToken.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e116"></a>1.2.5.&nbsp;
+int Ttf_DefUserEvent(userData, userEventToken, userEventName, monotonicallyIncreasing);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void *userData, unsigned int userEventToken, const char *userEventName, int monotonicallyIncreasing
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a user defined event definition.   It is called with the user defined argument userData, the numeric ID of the user defined event, userEventToken, the name of the user defined event, userEventName, and monotonicallyIncreasing a numeric indicator of if the user defined event is monotonically Increasing.  If monotonicallyIncreasing is greater than 0 the user defined event's value will increase monotonically.  If it is 0 then it will not be.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e127"></a>1.2.6.&nbsp;
+int Ttf_EnterStateT(userData, time, nodeToken, threadToken, stateToken );
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void*  userData, double time, unsigned int nodeToken, unsigned int threadToken, unsigned int stateToken
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a state entry event.  It is called with the user defined argument userData, the time of the state entry, time, the numeric ID of the node and thread where the entry is taking place, nodeToken and threadToken respectively, and the numeric ID of the state that has been entered.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e138"></a>1.2.7.&nbsp;
+int Ttf_LeaveStateT(userData, time, nodeToken, threadToken );
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void*  userData, double time, unsigned int nodeToken, unsigned int threadToken
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a state exit event.  It is called with the user defined argument userData, the time of the state exit, time and the numeric IDs of the node and thread where the exit is taking place, nodeToken and threadToken respectively.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e149"></a>1.2.8.&nbsp;
+int Ttf_SendMessageT(userData, time, sourceNodeToken, sourceThreadToken,  destinationNodeToken, destinationThreadToken, messageSize, int messageTag);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void*  userData, double time, unsigned int sourceNodeToken, unsigned int sourceThreadToken, unsigned int destinationNodeToken, unsigned int destinationThreadToken, unsigned int messageSize, unsigned int messageTag
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a message send event.  It is called with the user defined argument userData, the time of the transmission, time, the numeric IDs of the node and thread from which the message was sent, sourceNodeToken and sourceThreadToken respectively, the numeric IDs of the node and thread to which the message was sent, destinationNodeToken and destinationThreadToken respectively, the size of the message, messageSize, and the numeric ID of the message, messageTag.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e160"></a>1.2.9.&nbsp;
+int Ttf_RecvMessageT(userData, time, sourceNodeToken, sourceThreadToken,  destinationNodeToken, destinationThreadToken, messageSize, int messageTag);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void*  userData, double time, unsigned int sourceNodeToken, unsigned int sourceThreadToken, unsigned int destinationNodeToken, unsigned int destinationThreadToken, unsigned int messageSize, unsigned int messageTag
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a message receive event.  It is called with the user defined argument userData, the time of the receipt, time, the numeric IDs of the node and thread from which the message was sent, sourceNodeToken and sourceThreadToken respectively, the numeric IDs of the node and thread to which the message was sent, destinationNodeToken and destinationThreadToken respectively, the size of the message, messageSize, and the numeric ID of the message, messageTag.  It should return 0 upon successful completion.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e171"></a>1.2.10.&nbsp;
+int Ttf_EventTrigger(userData, time, nodeToken, threadToken, userEventToken, userEventValue);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: void *userData, double time, unsigned int nodeToken, unsigned int threadToken, unsigned int userEventToken, long long userEventValue
+</code></em></p><p><em class="parameter"><code>
+Returns: int status
+</code></em></p><p>
+This method is called when the trace reader encounters a user defined event trigger.  It is called with the user defined argument data userData, the time of the event trigger, time, the numeric IDs of the node and thread where the event was triggered, nodeToken and threadToken respectively, the numeric ID of the user defined event triggered, userEventToken and the value recorded by the user defined event, userEventValue.  It should return 0 upon successful completion.
+</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e182"></a>1.3.&nbsp;
+TauReader API
+</h3></div></div></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e185"></a>1.3.1.&nbsp;
+Ttf_FileHandleT TtfOpenFileForInput(name, edf);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: const char *name, const char *edf
+</code></em></p><p><em class="parameter"><code>
+Returns: Ttf_FileHandleT fileHandle
+</code></em></p><p>
+Given the full name of the TAU trace file, name, and the corresponding event file, edf, and returns the virtual file handle that represents the trace in its entirety.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e196"></a>1.3.2.&nbsp;
+int Ttf_AbsSeek(handle, eventPosition);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: Ttf_FileHandleT handle, int eventPosition
+</code></em></p><p><em class="parameter"><code>
+Returns: int position
+</code></em></p><p>
+Given a Ttf_fileHandleT object, handle, this function will move to the nth event in the associated tracefile where n = the input int eventPosition.  A negative position indicates to start from the tail of the event stream.  The position will be returned if the operation is successful, otherwise it will return 0.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e207"></a>1.3.3.&nbsp;
+int Ttf_RelSeek(handle, plusMinusNumEvents);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: Ttf_FileHandleT handle, int plusMinusNumEvents
+</code></em></p><p><em class="parameter"><code>
+Returns: int position
+</code></em></p><p>
+Given a Ttf_fileHandleT object, handle, this function will shift the current position by a number of events equal to the input int plusMinusNumEvents.  The new position will be returned if the operation is successful, otherwise it will return 0.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e218"></a>1.3.4.&nbsp;
+int Ttf_ReadNumEvents(fileHandle,callbacks, numberOfEvents);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: Ttf_FileHandleT fileHandle, Ttf_CallbacksT callbacks, int numberOfEvents
+</code></em></p><p><em class="parameter"><code>
+Returns: int numEventsRead
+</code></em></p><p>
+Given a Ttf_FileHandleT, handle, a fully initialized Ttf_CallbacksT struct, callbacks, and an integer indicating the number of events to read, numberOfEvents, this function will read the number of events indicated starting at the current position of the file handle while advancing the current position of the handle by that number.  Each event read will be sent to the appropriate callback function specified in the callbacks.  When successful this function returns the number of events read.  This may be 0 or less than the number specified if there are fewer remaining events to be read than numberOfEvents requests.  If an error is encountered it will return -1.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e229"></a>1.3.5.&nbsp;
+Ttf_FileHandleT Ttf_CloseFile(fileHandle);
+</h4></div></div></div><p><em class="parameter"><code>
+Arguments: Ttf_FileHandleT fileHandle
+</code></em></p><p><em class="parameter"><code>
+Returns: Ttf_FileHandleT fileHandle
+</code></em></p><p>
+When the tracefile reading is complete the file should be closed with this function.
+</p></div></div></div>
+       </div>
+       <?php include("../../footer.php") ?>
+    </body></html>

@@ -1,0 +1,356 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Part&nbsp;I.&nbsp;ParaProf - User's Manual</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+       <?php include("../../header.php") ?>
+       <div id="content">
+    <div class="part" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="ParaProfDoc"></a>Part&nbsp;I.&nbsp;ParaProf - User's Manual</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#paraprof.intro">1. Introduction</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.usage">1.1. Using ParaProf from the command line</a></span></dt><dt><span class="sect1"><a href="#paraprof.formats">1.2. Supported Formats</a></span></dt><dt><span class="sect1"><a href="#paraprof.options">1.3. Command line options</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.views">2. Views and Sub-Views</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.createviews">2.1. To Create a (Sub-)Views</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.trialmanagement">3. Profile Data Management</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.mainwindow">3.1. ParaProf Manager Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.loading">3.2. Loading Profiles</a></span></dt><dt><span class="sect1"><a href="#paraprof.database">3.3. Database Interaction</a></span></dt><dt><span class="sect1"><a href="#paraprof.derivedmetrics">3.4. Creating Derived Metrics</a></span></dt><dt><span class="sect1"><a href="#paraprof.maindatawindow">3.5. Main Data Window</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.3d">4. 3-D Visualization</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.trianglemesh">4.1. Triangle Mesh Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.3dbarplot">4.2. 3-D Bar Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.scatterplot">4.3. 3-D Scatter Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.top)ology">4.4. 3-D Topology Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.commicationmatrix">4.5. 3-D Commication Matrix</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.threaddisplays">5. Thread Based Displays</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.threaddatawindow">5.1. Thread Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.threadstatwindow">5.2. Thread Statistics Text Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.treetablewindow">5.3. Thread Statistics Table</a></span></dt><dt><span class="sect1"><a href="#paraprof.callgraphwindow">5.4. Call Graph Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.callpaththreadrelations">5.5. Thread Call Path Relations Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.usereventstats">5.6. User Event Statistics Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.usereventthreadbar">5.7. User Event Thread Bar Chart</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.functiondisplays">6. Function Based Displays</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.function.bargraph">6.1. Function Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.function.histogram">6.2. Function Histogram</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.phasedisplays">7. Phase Based Displays</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.phase.mainwindow">7.1. Using Phase Based Displays</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.comparison">8. Comparative Analysis</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.comparison.using">8.1. Using Comparitive Analysis</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.otherdisplays">9. Miscellaneous Displays</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.userevent.bargraph">9.1. User Event Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.ledgers">9.2. Ledgers</a></span></dt><dd><dl><dt><span class="sect2"><a href="#paraprof.ledgers.function">9.2.1. Function Ledger</a></span></dt><dt><span class="sect2"><a href="#paraprof.ledgers.group">9.2.2. Group Ledger</a></span></dt><dt><span class="sect2"><a href="#paraprof.ledgers.userevent">9.2.3. User Event Ledger</a></span></dt></dl></dd><dt><span class="sect1"><a href="#paraprof.createselectivefile">9.3. Selective Instrumentation File Generator</a></span></dt></dl></dd><dt><span class="chapter"><a href="#paraprof.preferences">10. Preferences</a></span></dt><dd><dl><dt><span class="sect1"><a href="#paraprof.preferences.window">10.1. Preferences Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.preferences.defaultcolors">10.2. Default Colors</a></span></dt><dt><span class="sect1"><a href="#paraprof.preferences.colormap">10.3. Color Map</a></span></dt></dl></dd></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.intro"></a>Chapter&nbsp;1.&nbsp;Introduction</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.usage">1.1. Using ParaProf from the command line</a></span></dt><dt><span class="sect1"><a href="#paraprof.formats">1.2. Supported Formats</a></span></dt><dt><span class="sect1"><a href="#paraprof.options">1.3. Command line options</a></span></dt></dl></div><p>ParaProf is a portable, scalable performance analysis tool
+  included with the TAU distribution.
+  </p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><p>ParaProf requires <span class="emphasis"><em>Oracle / Sun's</em></span> Java 1.5
+	Runtime Environment for basic functionality.  Java JOGL (included) is
+    required for 3d visualization and image export.  Additionally, OpenGL is
+    required for 3d visualization.</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Most windows in ParaProf can export bitmap (png/jpg) and vector
+  (svg/eps) images to disk (png/jpg) or print directly to a printer.  This are
+  available through the <span class="emphasis"><em>File</em></span> menu.</p></td></tr></table></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.usage"></a>1.1.&nbsp;Using ParaProf from the command line</h2></div></div></div><p>ParaProf is a java program that is run from the supplied
+      <span><strong class="command">paraprof</strong></span> script (<span><strong class="command">paraprof.bat</strong></span> for
+      windows binary release).
+    </p><pre class="screen">% paraprof --help
+Usage: paraprof [options] &lt;files/directory&gt;
+
+Options:
+
+  -f, --filetype &lt;filetype&gt;       Specify type of performance data, options are:
+                                    profiles (default), pprof, dynaprof, mpip,
+                                    gprof, psrun, hpm, packed, cube, hpc, ompp
+                                    snap, perixml, gptl, ipm, google
+  --range a-b:c                   Load only profiles from the given range(s) of processes
+                                    Seperate individual ids or dash-defined ranges with colons
+  -h, --help                      Display this help message
+
+The following options will run only from the console (no GUI will launch):
+
+  --merge &lt;file.gz&gt;               Merges snapshot profiles
+  --pack &lt;file&gt;                   Pack the data into packed (.ppk) format
+  --dump                          Dump profile data to TAU profile format
+  --dumprank &lt;rank&gt;               Dump profile data for &lt;rank&gt; to TAU profile format
+  -v, --dumpsummary               Dump derived statistical data to TAU profile format
+  --overwrite                     Allow overwriting of profiles
+  -o, --oss                       Print profile data in OSS style text output
+  -q, --dumpmpisummary            Print high level time and communication summary
+  -d, --metadump                  Print profile metadata (works with --dumpmpisummary)
+  -x, --suppressmetrics           Exclude child calls and exclusive time from --dumpmpisummary
+  -s, --summary                   Print only summary statistics
+                                    (only applies to OSS output)
+
+Notes:
+  For the TAU profiles type, you can specify either a specific set of profile
+files on the commandline, or you can specify a directory (by default the current
+directory).  The specified directory will be searched for profile.*.*.* files,
+or, in the case of multiple counters, directories named MULTI_* containing
+profile data.
+
+</pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.formats"></a>1.2.&nbsp;Supported Formats</h2></div></div></div><p>ParaProf can load profile date from many sources.  The types
+      currently supported are:
+    </p><div class="itemizedlist"><ul type="disc"><li><p><span class="bold"><strong>TAU Profiles (profiles)</strong></span>
+	  - Output from the TAU measurement library, these files generally take the
+		form of <code class="filename">profile.X.X.X</code>, one for each
+		node/context/thread combination.  When multiple counters are used, each
+		metric is located in a directory prefixed with "MULTI__".  To launch
+		ParaProf with all the metrics, simply launch it from the root of the
+		MULTI__ directories.</p></li><li><p><span class="bold"><strong>ParaProf Packed Format
+	  (ppk)</strong></span> - Export format supported by PerfDMF/ParaProf.
+	  Typically .ppk.  </p></li><li><p><span class="bold"><strong>TAU Merged Profiles
+	  (snap)</strong></span> - Merged and snapshot profile format supported by
+	  TAU.  Typically tauprofile.xml.</p></li><li><p><span class="bold"><strong>TAU pprof (pprof)</strong></span> - Dump
+	  Output from TAU's <span><strong class="command">pprof -d</strong></span>.  Provided for backward
+	  compatibility only.</p></li><li><p><span class="bold"><strong>DynaProf (dynaprof)</strong></span> -
+	  Output From DynaProf's wallclock and papi probes.  </p></li><li><p><span class="bold"><strong>mpiP (mpip)</strong></span> - Output
+	  from mpiP.  </p></li><li><p><span class="bold"><strong>gprof (gprof)</strong></span> - Output
+	  from gprof, see also the --fixnames option.  </p></li><li><p><span class="bold"><strong>PerfSuite (psrun)</strong></span> -
+	  Output from PerfSuite psrun files.</p></li><li><p><span class="bold"><strong>HPM Toolkit (hpm)</strong></span> -
+	  Output from IBM's HPM Toolkit.  </p></li><li><p><span class="bold"><strong>Cube (cube)</strong></span> - Output
+	  from Kojak Expert tool for use with Cube.  </p></li><li><p><span class="bold"><strong>Cube3 (cube3)</strong></span> - Output
+	  from Kojak Expert tool for use with Cube3 and Cube4.  </p></li><li><p><span class="bold"><strong>HPCToolkit (hpc)</strong></span> - XML
+	  data from hpcquick.  Typically, the user runs hpcrun, then hpcquick on
+	  the resulting binary file.  </p></li><li><p><span class="bold"><strong>OpenMP Profiler (ompp)</strong></span> -
+	  CSV format from the ompP OpenMP Profiler (http://www.ompp-tool.com).  The
+	  user must use OMPP_OUTFORMAT=CVS.</p></li><li><p><span class="bold"><strong>PERI XML (perixml)</strong></span> -
+	  Output from the PERI data exchange format.</p></li><li><p><span class="bold"><strong>General Purpose Timing Library
+	  (gptl)</strong></span> - Output from the General Purpose Timing
+	  Library.</p></li><li><p><span class="bold"><strong>Paraver (paraver)</strong></span> -
+	  2D output from the Paraver trace analysis tool from
+	  BSC.</p></li><li><p><span class="bold"><strong>IPM (ipm)</strong></span> -
+	  Integrated Performance Monitoring format, from NERSC.</p></li><li><p><span class="bold"><strong>Google (google)</strong></span> -
+	  Google Profiles.</p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.options"></a>1.3.&nbsp;Command line options</h2></div></div></div><p>In addition to specifying the profile format, the user can also
+      specify the following options</p><div class="itemizedlist"><ul type="disc"><li><p><span class="bold"><strong>--fixnames</strong></span> - Use the fixnames option
+	  for gprof.  When C and Fortran code are mixed, the C routines have to be mapped
+	  to either .function or function_.  Strip the leading period or trailing underscore, if it is there.  
+	</p></li><li><p><span class="bold"><strong>--pack &lt;file&gt;</strong></span> - Rather
+	  than load the data and launch the GUI, pack the data into the specified file.
+	</p></li><li><p><span class="bold"><strong>--dump</strong></span> - Rather than
+	  load the data and launch the GUI, dump the data to TAU Profiles.
+	  This can be used to convert supported formats to TAU Profiles.
+	</p></li><li><p><span class="bold"><strong>--oss</strong></span> - Outputs profile
+	  data in OSS Style.  Example:
+
+	  </p><pre class="screen">
+-------------------------------------------------------------------------------
+Thread: n,c,t 0,0,0
+-------------------------------------------------------------------------------
+ excl.secs  excl.%   cum.%    PAPI_TOT_CYC     PAPI_FP_OPS     calls  function
+     0.005   56.0%   56.0%        13475345         4194518         1  foo
+     0.003   40.1%   96.1%         9682185         4205367         1  bar
+         0    3.6%   99.7%          223173           17445         1  baz
+   2.2E-05    0.3%  100.0%           14663             206         1  main
+</pre><p>
+
+	</p></li><li><p><span class="bold"><strong>--summary</strong></span> - Output only summary
+	  information for OSS style output.
+	</p></li></ul></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.views"></a>Chapter&nbsp;2.&nbsp;Views and Sub-Views</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.createviews">2.1. To Create a (Sub-)Views</a></span></dt></dl></div><p>
+ In the past, PerfDMF used a hierarchy of Applications and Experiments to organize Trials.  This approach was too rigid, so in TAUdb, trials are organized by dynamic Views.  Views are lists of Trials that share a given metadata value.  For example, a View could contain all the Trials where the total number of threads is less than 16.    Views can also have Sub-Views.  For example, it might be useful to have a View of all Trials from a certain machine and then Sub-Views for each executable ran on that machine.  Trials can belong to any number of VIews and Sub-Views and new Trials loaded to the database will be sorted into Views automatically.
+</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.createviews"></a>2.1.&nbsp;To Create a (Sub-)Views</h2></div></div></div><p>
+Launch ParaProf and Right click on a database or an existing View and select "Add View" or "Add Sub-View."  
+</p><div class="figure"><a name="d0e183"></a><p class="title"><b>Figure&nbsp;2.1.&nbsp;Add View</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/AddView.png" align="middle" alt="Add View"></td></tr></table><div class="caption"><p>
+ In ParaProf and PerfExplorer, Views are marked by the Folder Icon and Trials are now marked with a yellow ball.  (The "All Trials" View is created when a database is created.)  
+</p></div></div></div><p>
+This will launch the View Creator window.  
+</p><div class="figure"><a name="d0e194"></a><p class="title"><b>Figure&nbsp;2.2.&nbsp;View Creator Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/ViewCreator.png" align="middle" alt="View Creator Window"></td></tr></table></div></div><p>
+Here you can create the rule(s) for which Trials appear in this new View.  At the top you can choose to match all of the rules ("and") or to match any of the rules.  The "-" or "=" buttons will remove the current rule or add a new one.  The first drop down box  chooses which metadata field to use.  The second box chooses whether the field should be read as a string or a number.  Depending on whether it is read as a string or a number, the fourth box will give options on how to compare the metadata field.  So to create a View for all trials that have less than 16 threads, select total_threads, read as a string, is less than, 16.  Then click Save and give the View a name.  
+</p><p>
+The 'Edit' context menu option on an existing view will allow you to view and alter the view's criteria in the same interface. 
+</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.trialmanagement"></a>Chapter&nbsp;3.&nbsp;Profile Data Management</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.mainwindow">3.1. ParaProf Manager Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.loading">3.2. Loading Profiles</a></span></dt><dt><span class="sect1"><a href="#paraprof.database">3.3. Database Interaction</a></span></dt><dt><span class="sect1"><a href="#paraprof.derivedmetrics">3.4. Creating Derived Metrics</a></span></dt><dt><span class="sect1"><a href="#paraprof.maindatawindow">3.5. Main Data Window</a></span></dt></dl></div><p>ParaProf uses <em class="firstterm">PerfDMF</em> to manage profile
+  data.  This enables it to read the various profile formats as well as
+  store and retrieve them from a database.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.mainwindow"></a>3.1.&nbsp;ParaProf Manager Window</h2></div></div></div><p>Upon launching ParaProf, the user is greeted with the ParaProf Manager Window.</p><div class="figure"><a name="paraprof.mainwindow.figure"></a><p class="title"><b>Figure&nbsp;3.1.&nbsp;ParaProf Manager Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="432"><tr><td align="center"><img src="images/manager.gif" align="middle" alt="ParaProf Manager Window"></td></tr></table></div></div><p>This window is used to manage profile data.  The user can
+      upload/download profile data, edit meta-data, launch visual displays,
+      export data, derive new metrics, etc.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.loading"></a>3.2.&nbsp;Loading Profiles</h2></div></div></div><p>To load profile data, select File-&gt;Open, or right click on the
+    Application's tree and select "Add Trial".
+    </p><div class="figure"><a name="d0e231"></a><p class="title"><b>Figure&nbsp;3.2.&nbsp;Loading Profile Data</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="216"><tr><td align="center"><img src="images/loadtrial.gif" align="middle" alt="Loading Profile Data"></td></tr></table></div></div><p>Select the type of data from the "Trial Type" drop-down box.  For TAU
+    Profiles, select a directory, for other types, files.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.database"></a>3.3.&nbsp;Database Interaction</h2></div></div></div><p>
+      Database interaction is done through the tree view of the ParaProf
+      Manager Window.  Applications expand to Experiments, Experiments to
+      Trials, and Trials are loaded directly into ParaProf just as if they were
+      read off disk.  Additionally, the meta-data associated with each element
+      is show on the right, as in <a href="#paraprof.mainwindow.figure" title="Figure&nbsp;3.1.&nbsp;ParaProf Manager Window">Figure&nbsp;3.1, &#8220;ParaProf Manager Window&#8221;</a>.  A trial can be exported by right clicking on it and selecting
+      "Export as Packed Profile".
+    </p><p>
+      New trials can be uploaded to the database by either right-clicking on an
+      entity in the database and selecting "Add Trial", or by right-clicking
+      on an Application/Experiment/Trial hierarchy from the "Standard
+      Applications" and selecting "Upload Application/Experiment/Trial to DB".
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.derivedmetrics"></a>3.4.&nbsp;Creating Derived Metrics</h2></div></div></div><p>ParaProf can created derived metrics using the <span class="emphasis"><em>Derived
+	Metric Panel</em></span>, available from the <span class="emphasis"><em>Options</em></span>
+      menu of the ParaProf Manager Window.
+    </p><div class="figure"><a name="paraprof.derivedmetrics.figure"></a><p class="title"><b>Figure&nbsp;3.3.&nbsp;Creating Derived Metrics</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="432"><tr><td align="center"><img src="images/derivedmetric.gif" align="middle" alt="Creating Derived Metrics"></td></tr></table></div></div><p>In <a href="#paraprof.derivedmetrics.figure" title="Figure&nbsp;3.3.&nbsp;Creating Derived Metrics">Figure&nbsp;3.3, &#8220;Creating Derived Metrics&#8221;</a>, we have just
+      divided Floating Point Instructions by Wall-clock time, creating FLOPS
+      (Floating Point Operations per Second).  The 2nd argument is a user
+      editable text-box and can be filled in with scalar values by using the
+      keyword 'val' (e.g. "val 1.5").
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.maindatawindow"></a>3.5.&nbsp;Main Data Window</h2></div></div></div><p>Upon loading a profile, or double-clicking on a metric, the
+        <em class="firstterm">Main Data Window</em> will be displayed.</p><div class="figure"><a name="paraprof.maindatawindow.figure"></a><p class="title"><b>Figure&nbsp;3.4.&nbsp;Main Data Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="340"><tr><td align="center"><img src="images/maindatawindow.gif" align="middle" alt="Main Data Window"></td></tr></table></div></div><p>This window shows each thread as well as statistics as a combined bar
+      graph.  Each function is represented by a different color (though
+      possibly cycled).  From anywhere in ParaProf, you can right-click on
+      objects representing threads or functions to launch displays associated
+      with those objects.  For example, in <a href="#paraprof.maindatawindow.figure" title="Figure&nbsp;3.4.&nbsp;Main Data Window">Figure&nbsp;3.4, &#8220;Main Data Window&#8221;</a>, right click on the text
+      <span class="emphasis"><em>n,c,t, 8,0,0</em></span> to launch thread based displays for
+      node 8.
+    </p><div class="figure"><a name="d0e290"></a><p class="title"><b>Figure&nbsp;3.5.&nbsp;Unstacked Bars</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="432"><tr><td align="center"><img src="images/unstacked.gif" align="middle" alt="Unstacked Bars"></td></tr></table></div></div><p>
+      You may also turn off the stacking of bars so that individual functions
+      can be compared across threads in a global display.
+    </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.3d"></a>Chapter&nbsp;4.&nbsp;3-D Visualization</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.trianglemesh">4.1. Triangle Mesh Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.3dbarplot">4.2. 3-D Bar Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.scatterplot">4.3. 3-D Scatter Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.top)ology">4.4. 3-D Topology Plot</a></span></dt><dt><span class="sect1"><a href="#paraprof.commicationmatrix">4.5. 3-D Commication Matrix</a></span></dt></dl></div><p>ParaProf displays massive parallel profiles through the use of OpenGL
+    hardware acceleration through the <em class="firstterm">3D Visualization</em>
+    window.  Each window is fully configurable with rotation, translation, and
+    zooming capabilities.  Rotation is accomplished by holding the left mouse
+    button down and dragging the mouse.  Translation is done likewise with the
+    right mouse button.  Zooming is done with the mousewheel and the + and -
+    keyboard buttons.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.trianglemesh"></a>4.1.&nbsp;Triangle Mesh Plot</h2></div></div></div><div class="figure"><a name="d0e310"></a><p class="title"><b>Figure&nbsp;4.1.&nbsp;Triangle Mesh Plot</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/trianglemeshplot.gif" align="middle" alt="Triangle Mesh Plot"></td></tr></table></div></div><p>This visualization method shows two metrics for all functions, all
+      threads.  The height represents one chosen metric, and the color,
+      another.  These are selected from the drop-down boxes on the right.
+    </p><p>To pinpoint a specific value in the plot, move the
+      <span class="emphasis"><em>Function</em></span> and <span class="emphasis"><em>Thread</em></span> sliders to
+      cycle through the available functions/threads.  The values for the two
+      metrics, in this case for <code class="function">MPI_Recv()</code> on
+      <code class="literal">Node 351</code>, the value is <code class="literal">14.37</code>
+      seconds.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.3dbarplot"></a>4.2.&nbsp;3-D Bar Plot</h2></div></div></div><div class="figure"><a name="paraprof.3dbarplot.figure"></a><p class="title"><b>Figure&nbsp;4.2.&nbsp;3-D Mesh Plot</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/3dvew1.png" align="middle" alt="3-D Mesh Plot"></td></tr></table></div></div><p>This visualization method is similar to the triangle mesh plot.  It
+      simply displays the data using 3d bars instead of a mesh.  The controls
+      works the same.  Note that in <a href="#paraprof.3dbarplot.figure" title="Figure&nbsp;4.2.&nbsp;3-D Mesh Plot">Figure&nbsp;4.2, &#8220;3-D Mesh Plot&#8221;</a>
+      the transparency option is selected, which changes the way in which the
+      selection model operates. </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.scatterplot"></a>4.3.&nbsp;3-D Scatter Plot</h2></div></div></div><div class="figure"><a name="d0e351"></a><p class="title"><b>Figure&nbsp;4.3.&nbsp;3-D Scatter Plot</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/scatterplot2.gif" align="middle" alt="3-D Scatter Plot"></td></tr></table></div></div><p>This visualization method plots the value of each thread along up to
+      4 axes (each a different function/metric).  This view allows you to
+      discern clustering of values and relationships between functions across
+      threads.</p><p>Select functions using the button for each dimension, then select a
+    metric.  A single function across 4 metrics could be used, for
+    example.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.top)ology"></a>4.4.&nbsp;3-D Topology Plot</h2></div></div></div><div class="figure"><a name="d0e364"></a><p class="title"><b>Figure&nbsp;4.4.&nbsp;3-D Topology Plot</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="360"><tr><td align="center"><img src="images/topology2.gif" align="middle" alt="3-D Topology Plot"></td></tr></table></div></div><p> In this visualization, you can either define the layout with a MESP topology definition 
+         file or you can fill a rectangular prism of user-defined volume with rank-points in order of rank.
+         For more information, please see the etc/topology directory for additional details on MESP 
+         topology definitions.
+       </p><p> If the loaded profile is a cube file or a profile from a BGB, then this visualizations 
+        groups the threads in two or three dimensional space using topology
+        information supplied by the profile.</p><p>
+When topology metadata is available a trial-specific topological layout may be visualized by selecting Windows-&gt;gt;3D Visualization and selecting Topology Plot on the visualization pane.
+</p><p>
+The layout tab allows control of the layout and display of visualized cores/processes.
+
+</p><p>
+Minimum/Maximum Visible (restricts display of nodes with measured values above/below the selected levels).  Lock Range causes the sliders to move in unison.
+
+</p><p>
+The X/Y/Z Axis sliders allow selection of planes, lines and individual points in the topology for examination of specific values in the display, listed in the Avg. Color Value field.
+
+</p><p>
+The topology selection dropdown box allows selection of either trial-specific topologies contained in the metadata, mapped topologies stored in an external file or a custom topology defined by the size of the prism containing the visualized cores.  The ... button allows selection of a custom topology mapping file while the map button allows selection of a map file (see &lt;tau2&gt;/etc/topology/README.cray_map for more information on generating map files).
+
+</p><p>
+If a Custom is selected the dimensions of the rectangular prism containing the cores are defined by the X/Y/Z axis control widgets.
+
+</p><p>
+The Events tab controls which events are used to define the color values and positions of cores/processes in the display.  For trail-specific and Custom topologies only event3(Color) can be changed.  For topologies loaded in MESP definition files all four events may be used in calculation of the topology layout.  In either case, interval, atomic or metadata values may be used to color or position points in the display.
+    
+</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.commicationmatrix"></a>4.5.&nbsp;3-D Commication Matrix</h2></div></div></div><div class="figure"><a name="d0e391"></a><p class="title"><b>Figure&nbsp;4.5.&nbsp;3-D Commication Matrix</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="540"><tr><td align="center"><img src="images/3DCommMatrix.png" align="middle" alt="3-D Commication Matrix"></td></tr></table></div></div><p> 
+   If a Trial has commication information (set  TAU_COMM_MATRIX=1 at runtime of your application), then you can launch the 3D Commication window as shown.
+</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.threaddisplays"></a>Chapter&nbsp;5.&nbsp;Thread Based Displays</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.threaddatawindow">5.1. Thread Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.threadstatwindow">5.2. Thread Statistics Text Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.treetablewindow">5.3. Thread Statistics Table</a></span></dt><dt><span class="sect1"><a href="#paraprof.callgraphwindow">5.4. Call Graph Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.callpaththreadrelations">5.5. Thread Call Path Relations Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.usereventstats">5.6. User Event Statistics Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.usereventthreadbar">5.7. User Event Thread Bar Chart</a></span></dt></dl></div><p>ParaProf displays several windows that show data for one thread of
+      execution.  In addition to per thread values, the users may also select
+      <span class="emphasis"><em>mean</em></span> or <span class="emphasis"><em>standard deviation</em></span> as
+      the "thread" to display.  In this mode, the mean or standard deviation of
+      the values across the threads will be used as the value.
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.threaddatawindow"></a>5.1.&nbsp;Thread Bar Graph</h2></div></div></div><div class="figure"><a name="d0e414"></a><p class="title"><b>Figure&nbsp;5.1.&nbsp;Thread Bar Graph</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="304"><tr><td align="center"><img src="images/threaddatawindow.gif" align="middle" alt="Thread Bar Graph"></td></tr></table></div></div><p>This display graphs each function on a particular thread for
+      comparison.  The metric, units, and sort order can be changed from the
+      <span class="emphasis"><em>Options</em></span> menu.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.threadstatwindow"></a>5.2.&nbsp;Thread Statistics Text Window</h2></div></div></div><div class="figure"><a name="d0e428"></a><p class="title"><b>Figure&nbsp;5.2.&nbsp;Thread Statistics Text Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="477"><tr><td align="center"><img src="images/threadstatwindow.gif" align="middle" alt="Thread Statistics Text Window"></td></tr></table></div></div><p>This display shows a <span><strong class="command">pprof</strong></span> style text view of the
+      data.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.treetablewindow"></a>5.3.&nbsp;Thread Statistics Table</h2></div></div></div><div class="figure"><a name="paraprof.thread.treetable1"></a><p class="title"><b>Figure&nbsp;5.3.&nbsp;Thread Statistics Table, inclusive and exclusive</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="387"><tr><td align="center"><img src="images/treetable1.gif" align="middle" alt="Thread Statistics Table, inclusive and exclusive"></td></tr></table></div></div><p>
+      This display shows the callpath data in a table.  Each callpath can be traced
+      from root to leaf by opening each node in the tree view.  A colorscale
+      immediately draws attention to "hot spots", areas that contain highest values.
+    </p><div class="figure"><a name="paraprof.thread.treetable2"></a><p class="title"><b>Figure&nbsp;5.4.&nbsp;Thread Statistics Table</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="387"><tr><td align="center"><img src="images/treetable2.gif" align="middle" alt="Thread Statistics Table"></td></tr></table></div></div><div class="figure"><a name="paraprof.thread.treetable3"></a><p class="title"><b>Figure&nbsp;5.5.&nbsp;Thread Statistics Table</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="387"><tr><td align="center"><img src="images/treetable3.gif" align="middle" alt="Thread Statistics Table"></td></tr></table></div></div><p>
+      The display can be used in one of two ways, in "inclusive/exclusive"
+      mode, both the inclusive and exclusive values are shown for each path,
+      see <a href="#paraprof.thread.treetable1" title="Figure&nbsp;5.3.&nbsp;Thread Statistics Table, inclusive and exclusive">Figure&nbsp;5.3, &#8220;Thread Statistics Table, inclusive and exclusive&#8221;</a> for an example.
+    </p><p>
+      When this option is off, the inclusive value for a node is show when it
+      is closed, and the exclusive value is shown when it is open.  This allows
+      the user to more easily see where the time is spent since the total time
+      for the application will always be represented in one column.  See <a href="#paraprof.thread.treetable2" title="Figure&nbsp;5.4.&nbsp;Thread Statistics Table">Figure&nbsp;5.4, &#8220;Thread Statistics Table&#8221;</a> and <a href="#paraprof.thread.treetable3" title="Figure&nbsp;5.5.&nbsp;Thread Statistics Table">Figure&nbsp;5.5, &#8220;Thread Statistics Table&#8221;</a> for examples.
+      
+      This display also functions as a regular statistics table without
+      callpath data.  The data can be sorted by columns by clicking on the
+      column heading.  When multiple metrics are available, you can add and
+      remove columns for the display using the menu.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.callgraphwindow"></a>5.4.&nbsp;Call Graph Window</h2></div></div></div><div class="figure"><a name="d0e475"></a><p class="title"><b>Figure&nbsp;5.6.&nbsp;Call Graph Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="274"><tr><td align="center"><img src="images/callgraph.gif" align="middle" alt="Call Graph Window"></td></tr></table></div></div><p>This display shows callpath data in a graph using two metrics, one
+      determines the width, the other the color.  The full name of the function
+      as well as the two values (color and width) are displayed in a tooltip
+      when hovering over a box.  By clicking on a box, the actual ancestors and
+      descendants for that function and their paths (arrows) will be
+      highlighted with blue.  This allows you to see which functions are called
+      by which other functions since the interplay of multiple paths may
+      obscure it.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.callpaththreadrelations"></a>5.5.&nbsp;Thread Call Path Relations Window</h2></div></div></div><div class="figure"><a name="paraprof.thread.callpathrelations"></a><p class="title"><b>Figure&nbsp;5.7.&nbsp;Thread Call Path Relations Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="432"><tr><td align="center"><img src="images/callpaththreadrelations.gif" align="middle" alt="Thread Call Path Relations Window"></td></tr></table></div></div><p>This display shows callpath data in a <span><strong class="command">gprof</strong></span> style
+      view.  Each function is shown with its immediate parents.  For example,
+      <a href="#paraprof.thread.callpathrelations" title="Figure&nbsp;5.7.&nbsp;Thread Call Path Relations Window">Figure&nbsp;5.7, &#8220;Thread Call Path Relations Window&#8221;</a> shows that
+      <code class="function">MPI_Recv()</code> is call from two places for a total of
+      <code class="literal">9.052</code> seconds.  Most of that time comes from the 30
+      calls when <code class="function">MPI_Recv()</code> is called by
+      <code class="function">MPIScheduler::postMPIRecvs()</code>.  The other 60 calls do
+      not amount to much time.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.usereventstats"></a>5.6.&nbsp;User Event Statistics Window</h2></div></div></div><div class="figure"><a name="d0e515"></a><p class="title"><b>Figure&nbsp;5.8.&nbsp;User Event Statistics Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="504"><tr><td align="center"><img src="images/usereventstats.gif" align="middle" alt="User Event Statistics Window"></td></tr></table></div></div><p>This display shows a <span><strong class="command">pprof</strong></span> style text view of the
+      user event data.  Right clicking on a User Event will give you the option
+      to open a Bar Graph for that particular User Event across all threads.  See
+      <a href="#paraprof.userevent.bargraph" title="9.1.&nbsp;User Event Bar Graph">Section&nbsp;9.1, &#8220;User Event Bar Graph&#8221;</a></p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.usereventthreadbar"></a>5.7.&nbsp;User Event Thread Bar Chart</h2></div></div></div><div class="figure"><a name="d0e530"></a><p class="title"><b>Figure&nbsp;5.9.&nbsp;User Event Thread Bar Chart Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="504"><tr><td align="center"><img src="images/usereventthreadbargraph.gif" align="middle" alt="User Event Thread Bar Chart Window"></td></tr></table></div></div><p>This display shows a particular thread's user defined event
+    statistics as a bar chart.  This is the same data from the <a href="#paraprof.usereventstats" title="5.6.&nbsp;User Event Statistics Window">Section&nbsp;5.6, &#8220;User Event Statistics Window&#8221;</a>, in graphical form.</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.functiondisplays"></a>Chapter&nbsp;6.&nbsp;Function Based Displays</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.function.bargraph">6.1. Function Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.function.histogram">6.2. Function Histogram</a></span></dt></dl></div><p>ParaProf has two displays for showing a single function across all
+  threads of execution.  This chapter describes the Function Bar Graph
+  Window and the Function Histogram Window.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.function.bargraph"></a>6.1.&nbsp;Function Bar Graph</h2></div></div></div><div class="figure"><a name="d0e549"></a><p class="title"><b>Figure&nbsp;6.1.&nbsp;Function Bar Graph</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="277"><tr><td align="center"><img src="images/functionbargraph.gif" align="middle" alt="Function Bar Graph"></td></tr></table></div></div><p>This display graphs the values that the particular function had for
+      each thread along with the mean and standard deviation across the
+      threads.  You may also change the units and metric displayed from the
+      <span class="emphasis"><em>Options</em></span> menu.
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.function.histogram"></a>6.2.&nbsp;Function Histogram</h2></div></div></div><div class="figure"><a name="d0e563"></a><p class="title"><b>Figure&nbsp;6.2.&nbsp;Function Histogram</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="342"><tr><td align="center"><img src="images/functionhistogram.gif" align="middle" alt="Function Histogram"></td></tr></table></div></div><p>This display shows a histogram of each thread's value for the given
+      function.  Hover the mouse over a given bar to see the range minimum and
+      maximum and how many threads fell into that range.  You may also change
+      the units and metric displayed from the <span class="emphasis"><em>Options</em></span>
+      menu.
+    </p><p>
+      You may also dynamically change how many bins are used (1-100) in the
+      histogram.  This option is available from the
+      <span class="emphasis"><em>Options</em></span> menu.  Changing the number of bins can
+      dramatically change the shape of the histogram, play around with it to
+      get a feel for the true distribution of the data.
+    </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.phasedisplays"></a>Chapter&nbsp;7.&nbsp;Phase Based Displays</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.phase.mainwindow">7.1. Using Phase Based Displays</a></span></dt></dl></div><p>When a profile contains phase data, ParaProf will automatically run in
+  phase mode.  Most displays will show data for a particular phase.  This phase
+  will be displayed in teh top left corner in the meta data panel.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.phase.mainwindow"></a>7.1.&nbsp;Using Phase Based Displays</h2></div></div></div><p>The initial window will default to top level phase, usually <span class="emphasis"><em>main</em></span></p><div class="figure"><a name="d0e592"></a><p class="title"><b>Figure&nbsp;7.1.&nbsp;Initial Phase Display</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="401"><tr><td align="center"><img src="images/phase_main.gif" align="middle" alt="Initial Phase Display"></td></tr></table></div></div><p>To access other phases, either right click on the phase and select,
+    "Open Profile for this Phase", or go to the <span class="emphasis"><em>Phase
+    Ledger</em></span> and select it there.
+    </p><div class="figure"><a name="d0e603"></a><p class="title"><b>Figure&nbsp;7.2.&nbsp;Phase Ledger</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="189"><tr><td align="center"><img src="images/phase_ledger.gif" align="middle" alt="Phase Ledger"></td></tr></table></div></div><p>ParaProf can also display a particular function's value across all of
+    the phases.  To do so, right click on a function and select, "Show Function Data over Phases".
+    </p><div class="figure"><a name="d0e611"></a><p class="title"><b>Figure&nbsp;7.3.&nbsp;Function Data over Phases</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="325"><tr><td align="center"><img src="images/phase_function.gif" align="middle" alt="Function Data over Phases"></td></tr></table></div></div><p>Because Phase information is implemented as callpaths, many of the
+    callpath displays will show phase data as well.  For example, the Call Path
+    Text Window is useful for showing how functions behave across phases.
+    </p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.comparison"></a>Chapter&nbsp;8.&nbsp;Comparative Analysis</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.comparison.using">8.1. Using Comparitive Analysis</a></span></dt></dl></div><p>ParaProf can perform cross-thread and cross-trial anaylsis.  In this
+  way, you can compare two or more trials and/or threads in a single display.</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.comparison.using"></a>8.1.&nbsp;Using Comparitive Analysis</h2></div></div></div><p>Comparative analysis in ParaProf is based on individual threads of
+    execution.  There is a maximum of one Comparison window for a given
+    ParaProf session.  To add threads to the window, right click on them and
+    select "Add Thread to Comparison Window".  The Comparison Window will pop
+    up with the thread selected.  Note that "mean" and "std. dev." are
+    considered threads for this any most other purposes.
+    </p><div class="figure"><a name="d0e630"></a><p class="title"><b>Figure&nbsp;8.1.&nbsp;Comparison Window (initial)</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="352"><tr><td align="center"><img src="images/comparison1.gif" align="middle" alt="Comparison Window (initial)"></td></tr></table></div></div><p>Add additional threads, from any trial, by the same means.
+    </p><div class="figure"><a name="d0e638"></a><p class="title"><b>Figure&nbsp;8.2.&nbsp;Comparison Window (2 trials)</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="352"><tr><td align="center"><img src="images/comparison2.gif" align="middle" alt="Comparison Window (2 trials)"></td></tr></table></div></div><div class="figure"><a name="d0e644"></a><p class="title"><b>Figure&nbsp;8.3.&nbsp;Comparison Window (3 threads)</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="352"><tr><td align="center"><img src="images/comparison3.gif" align="middle" alt="Comparison Window (3 threads)"></td></tr></table></div></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.otherdisplays"></a>Chapter&nbsp;9.&nbsp;Miscellaneous Displays</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.userevent.bargraph">9.1. User Event Bar Graph</a></span></dt><dt><span class="sect1"><a href="#paraprof.ledgers">9.2. Ledgers</a></span></dt><dd><dl><dt><span class="sect2"><a href="#paraprof.ledgers.function">9.2.1. Function Ledger</a></span></dt><dt><span class="sect2"><a href="#paraprof.ledgers.group">9.2.2. Group Ledger</a></span></dt><dt><span class="sect2"><a href="#paraprof.ledgers.userevent">9.2.3. User Event Ledger</a></span></dt></dl></dd><dt><span class="sect1"><a href="#paraprof.createselectivefile">9.3. Selective Instrumentation File Generator</a></span></dt></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.userevent.bargraph"></a>9.1.&nbsp;User Event Bar Graph</h2></div></div></div><p>In addition to displaying the text statistics for User Defined
+      Events, ParaProf can also graph a particular User Event across all
+      threads.</p><div class="figure"><a name="d0e659"></a><p class="title"><b>Figure&nbsp;9.1.&nbsp;User Event Bar Graph</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="284"><tr><td align="center"><img src="images/usereventbargraph.gif" align="middle" alt="User Event Bar Graph"></td></tr></table></div></div><p>This display graphs the value that the particular user event had for each thread.</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.ledgers"></a>9.2.&nbsp;Ledgers</h2></div></div></div><p>ParaProf has three ledgers that show the functions, groups, and user events.</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="paraprof.ledgers.function"></a>9.2.1.&nbsp;Function Ledger</h3></div></div></div><div class="figure"><a name="d0e675"></a><p class="title"><b>Figure&nbsp;9.2.&nbsp;Function Ledger</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="248"><tr><td align="center"><img src="images/functionledger.gif" align="middle" alt="Function Ledger"></td></tr></table></div></div><p>The function ledger shows each function along with its current
+	color.  As with other displays showing functions, you may right-click on
+	a function to launch other function-specific displays.
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="paraprof.ledgers.group"></a>9.2.2.&nbsp;Group Ledger</h3></div></div></div><div class="figure"><a name="d0e686"></a><p class="title"><b>Figure&nbsp;9.3.&nbsp;Group Ledger</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="180"><tr><td align="center"><img src="images/groupledger.gif" align="middle" alt="Group Ledger"></td></tr></table></div></div><p>The group ledger shows each group along with its current color.
+	This ledger is especially important because it gives you the ability to
+	mask all of the other displays based on group membership.  For example,
+	you can right-click on the <code class="literal">MPI</code> group and select
+	"Show This Group Only" and all of the windows will now mask to only
+	those functions which are members of the <code class="literal">MPI</code> group.
+	You may also mask by the inverse by selecting "Show All Groups Except
+	This One" to mask out a particular group.
+      </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="paraprof.ledgers.userevent"></a>9.2.3.&nbsp;User Event Ledger</h3></div></div></div><div class="figure"><a name="d0e703"></a><p class="title"><b>Figure&nbsp;9.4.&nbsp;User Event Ledger</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="185"><tr><td align="center"><img src="images/usereventledger.gif" align="middle" alt="User Event Ledger"></td></tr></table></div></div><p>
+	The user event ledger shows each user event along with its current color.
+      </p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.createselectivefile"></a>9.3.&nbsp;Selective Instrumentation File Generator</h2></div></div></div><p>ParaProf can also help you refine your program performance by
+		excluding some functions from instrumentation. You can select rules to
+		determine which function get excluded; both rules must be true for a given
+		function to be excluded. Below each function that will be excluded based
+		on these rules are listed. 
+		</p><div class="figure"><a name="d0e716"></a><p class="title"><b>Figure&nbsp;9.5.&nbsp;Selective Instrumentation Dialog</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="284"><tr><td align="center"><img src="images/ParaProfSelectiveFile.gif" align="middle" alt="Selective Instrumentation Dialog"></td></tr></table></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Only the functions profilied in ParaProf can be excluded. If you
+		had previously setup selective instrumentation for this application the
+		functions that where previously excluded will not longer be excluded.</p></td></tr></table></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="paraprof.preferences"></a>Chapter&nbsp;10.&nbsp;Preferences</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#paraprof.preferences.window">10.1. Preferences Window</a></span></dt><dt><span class="sect1"><a href="#paraprof.preferences.defaultcolors">10.2. Default Colors</a></span></dt><dt><span class="sect1"><a href="#paraprof.preferences.colormap">10.3. Color Map</a></span></dt></dl></div><p>Preferences are modified from
+  the ParaProf Preferences Window, launched from the File menu. Preferences
+  are saved between sessions in the
+  <code class="filename">.ParaProf/ParaProf.prefs</code> 
+  </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.preferences.window"></a>10.1.&nbsp;Preferences Window</h2></div></div></div><p>In addition to displaying the text statistics for User Defined
+      Events, ParaProf can also graph a particular User Event across all
+      threads. </p><div class="figure"><a name="d0e739"></a><p class="title"><b>Figure&nbsp;10.1.&nbsp;ParaProf Preferences Window</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="298"><tr><td align="center"><img src="images/preferences.gif" align="middle" alt="ParaProf Preferences Window"></td></tr></table></div></div><p>The preferences window allows the user to modify the behavior and
+      display style of ParaProf's windows.  The font size affects bar height, a
+      sample display is shown in the upper-right.
+    </p><p>The Window defaults section will determine the initial settings for
+      new windows.  You may change the initial units selection and whether you
+      want values displayed as percentages or as raw values.
+    </p><p>The Settings section controls the following</p><div class="itemizedlist"><ul type="disc"><li><p>Show Path Title in Reverse - Path title will normally be
+	  shown in normal order (/home/amorris/data/etc).  They can be reverse
+	  using this option (etc/data/amorris/home).  This only affects loaded
+	  trials and the titlebars of new windows.</p></li><li><p>Reverse Call Paths - This option will immediately change
+	  the display of all callpath functions between <code class="literal">Root =&gt;
+	    Leaf</code> and <code class="literal">Leaf &lt;= Root</code>.</p></li><li><p>Statistics Computation - Turning this option on causes
+	  the mean computation to take the sum of value for a function across all
+	  threads and divide it by the total number of threads.  With this option
+	  off the sum will only be divided by the number of threads that actively
+	  participated in the sum.  This way the user can control whether or not
+	  threads which do not call a particular function are consider as a
+	  <code class="literal">0</code> in the computation of statistics.</p></li><li><p>
+	  Generate Reverse Calltree Data - This option will enable
+	  the generation of reverse callpath data necessary for the reverse callpath option of the statistics tree-table window.
+	</p></li><li><p>
+	  Show Source Locations - This option will enable the display of source code locations in event names.
+	</p></li></ul></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.preferences.defaultcolors"></a>10.2.&nbsp;Default Colors</h2></div></div></div><div class="figure"><a name="d0e779"></a><p class="title"><b>Figure&nbsp;10.2.&nbsp;Edit Default Colors</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="443"><tr><td align="center"><img src="images/defaultcolors.gif" align="middle" alt="Edit Default Colors"></td></tr></table></div></div><p>The default color editor changes how colors are distributed to
+      functions whose color has not been specifically assigned.  It is
+      accessible from the File menu of the Preferences Window. 
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="paraprof.preferences.colormap"></a>10.3.&nbsp;Color Map</h2></div></div></div><div class="figure"><a name="d0e790"></a><p class="title"><b>Figure&nbsp;10.3.&nbsp;Color Map</b></p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="229"><tr><td align="center"><img src="images/colormap.gif" align="middle" alt="Color Map"></td></tr></table></div></div><p>The color map shows specifically assigned colors.  These values are
+      used across all trials loaded so that the user can identify a particular
+      function across multiple trials.  In order to map an entire trial's
+      function set, Select "Assign Defaults from -&gt;" and select a loaded trial.
+    </p><p>Individual functions can be assigned a particular color by
+      clicking on them in any of the other ParaProf Windows.
+    </p></div></div></div>
+       </div>
+       <?php include("../../footer.php") ?>
+    </body></html>

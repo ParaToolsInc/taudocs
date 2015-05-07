@@ -1,0 +1,1436 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;1.&nbsp;Tools</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+       <?php include("../../header.php") ?>
+       <div id="content">
+    <div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>Chapter&nbsp;1.&nbsp;Tools</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="refentrytitle"><a href="#tau_compiler.sh">tau_compiler.sh</a></span><span class="refpurpose"> - Instrumenting source files.</span></dt><dt><span class="refentrytitle"><a href="#vtf2profile">vtf2profile</a></span><span class="refpurpose"> - Generate a TAU profile set from a vampir trace file</span></dt><dt><span class="refentrytitle"><a href="#tau2vtf">tau2vtf</a></span><span class="refpurpose"> - convert TAU tracefiles to vampir tracefiles</span></dt><dt><span class="refentrytitle"><a href="#trace2profile">trace2profile</a></span><span class="refpurpose"> - convert TAU tracefiles to TAU profile files</span></dt><dt><span class="refentrytitle"><a href="#tau2elg">tau2elg</a></span><span class="refpurpose"> - convert TAU tracefiles to Epilog tracefiles</span></dt><dt><span class="refentrytitle"><a href="#tau2slog2">tau2slog2</a></span><span class="refpurpose"> - convert TAU tracefiles to SLOG2 tracefiles</span></dt><dt><span class="refentrytitle"><a href="#tau2otf">tau2otf</a></span><span class="refpurpose"> - convert TAU tracefiles to OTF
+	 tracefiles for Vampir/VNG
+	 </span></dt><dt><span class="refentrytitle"><a href="#tau2otf2">tau2otf2</a></span><span class="refpurpose"> - convert TAU tracefiles to OTF2
+	 tracefiles for Vampir/VNG
+	 </span></dt><dt><span class="refentrytitle"><a href="#perf2tau">perf2tau</a></span><span class="refpurpose"> - converts PerfLib profiles to TAU profile files</span></dt><dt><span class="refentrytitle"><a href="#tau_merge">tau_merge</a></span><span class="refpurpose"> - combine multiple node and or thread TAU tracefiles into a
+    merged tracefile</span></dt><dt><span class="refentrytitle"><a href="#tau_treemerge.pl">tau_treemerge.pl</a></span><span class="refpurpose"> - combine multiple node and or thread TAU tracefiles into a
+    merged tracefile</span></dt><dt><span class="refentrytitle"><a href="#tau_convert">tau_convert</a></span><span class="refpurpose"> - convert TAU tracefiles into various alternative trace formats</span></dt><dt><span class="refentrytitle"><a href="#tau_reduce">tau_reduce</a></span><span class="refpurpose"> - generates selective
+    instrumentation rules based on profile data</span></dt><dt><span class="refentrytitle"><a href="#tau_ompcheck">tau_ompcheck</a></span><span class="refpurpose"> - Completes uncompleted do/for/parallel omp directives</span></dt><dt><span class="refentrytitle"><a href="#tau_poe">tau_poe</a></span><span class="refpurpose"> - Instruments a MPI application while it is being executed with poe.</span></dt><dt><span class="refentrytitle"><a href="#tau_validate">tau_validate</a></span><span class="refpurpose"> - Validates a TAU installation by performing
+    various tests on each TAU stub Makefile</span></dt><dt><span class="refentrytitle"><a href="#tauex">tauex</a></span><span class="refpurpose"> - Allows you to choose a tau configuration at runtime</span></dt><dt><span class="refentrytitle"><a href="#tau_exec">tau_exec</a></span><span class="refpurpose"> - TAU execution wrapping script</span></dt><dt><span class="refentrytitle"><a href="#tau_timecorrect">tau_timecorrect</a></span><span class="refpurpose"> - Corrects and reorders the records of tau trace files.</span></dt><dt><span class="refentrytitle"><a href="#tau_throttle.sh">tau_throttle.sh</a></span><span class="refpurpose"> - This tool generates a selective instrumentation file (called
+    throttle.tau) from a program output that has "Disabling"
+    messages.</span></dt><dt><span class="refentrytitle"><a href="#tau_portal.py">tau_portal.py</a></span><span class="refpurpose"> - 
+      This tool is design to interact with the TAU web portal (http://tau.nic.uoregon.edu). There are commands
+      for uploading or downloading packed profile files form the TAU portal.
+    </span></dt><dt><span class="refentrytitle"><a href="#taudb_configure">taudb_configure</a></span><span class="refpurpose"> - 
+     Configuration program for a PerfDMF database.
+    </span></dt><dt><span class="refentrytitle"><a href="#perfdmf_createapp">perfdmf_createapp</a></span><span class="refpurpose"> - Deprecated
+      Command line tool to create a application in the perfdmf database. (Deprecated)
+    </span></dt><dt><span class="refentrytitle"><a href="#perfdmf_createexp">perfdmf_createexp</a></span><span class="refpurpose"> - Deprecated
+      Command line tool to create a experiment in the perfdmf database. (Deprecated)
+    </span></dt><dt><span class="refentrytitle"><a href="#taudb_loadtrial">taudb_loadtrial</a></span><span class="refpurpose"> - 
+      Command line tool to load a trial into the TAUdb database.
+    </span></dt><dt><span class="refentrytitle"><a href="#perfexplorer">perfexplorer</a></span><span class="refpurpose"> - 
+      Launches TAU's Performance Data Mining Analyzer.
+    </span></dt><dt><span class="refentrytitle"><a href="#perfexplorer_configure">perfexplorer_configure</a></span><span class="refpurpose"> - 
+	Configures a TAUdb database for use with perfexplorer, and installs necessary JAR files.
+    </span></dt><dt><span class="refentrytitle"><a href="#taucc.man">taucc</a></span><span class="refpurpose"> - 
+      C compiler wrapper for TAU
+    </span></dt><dt><span class="refentrytitle"><a href="#tauupc.man">tauupc</a></span><span class="refpurpose"> - 
+      UPC wrapper for TAU
+    </span></dt><dt><span class="refentrytitle"><a href="#taucxx.man">taucxx</a></span><span class="refpurpose"> - 
+      C++ compiler wrapper for TAU
+    </span></dt><dt><span class="refentrytitle"><a href="#tauf90.man">tauf90</a></span><span class="refpurpose"> - 
+      Fortran compiler wrapper for TAU
+    </span></dt><dt><span class="refentrytitle"><a href="#paraprof.man">paraprof</a></span><span class="refpurpose"> - 
+      Launches TAU's Java-based performance data viewer.
+    </span></dt><dt><span class="refentrytitle"><a href="#pprof.man">pprof</a></span><span class="refpurpose"> - 
+      Quickly diplays profile data.
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_instrumentor">tau_instrumentor</a></span><span class="refpurpose"> - 
+      automaticly instruments a source basied on information provided by pdt.
+    </span></dt><dt><span class="refentrytitle"><a href="#vtfconverter">vtfconverter</a></span><span class="refpurpose"> - 
+      
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_setup">tau_setup</a></span><span class="refpurpose"> - 
+      Launches GUI interface to configure TAU.
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_wrap">tau_wrap</a></span><span class="refpurpose"> - 
+      Instruments an external library with TAU without needing to recompile
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_gen_wrapper">tau_gen_wrapper</a></span><span class="refpurpose"> - 
+     Generates a wrapper library that can intercept 
+ at link time or at runtime routines specified in a header file
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_pin">tau_pin</a></span><span class="refpurpose"> - 
+      Instruments application at run time using Intel's PIN library
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_java">tau_java</a></span><span class="refpurpose"> - 
+      Instruments java applications at runtime using JVMTI
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_cupti_avail">tau_cupti_avail</a></span><span class="refpurpose"> - 
+			Detects the available CUPTI counters on the a each GPU device.
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_run">tau_run</a></span><span class="refpurpose"> - 
+ Instruments and executes binaries to generate performance data. (DyninstAPI based instrumentor)
+    </span></dt><dt><span class="refentrytitle"><a href="#tau_rewrite">tau_rewrite</a></span><span class="refpurpose"> - 
+           Rewrites binaries using Maqao if Tau is configured using PDT 3.17+ at the routine level. 
+          If it doesn't find the Maqao package from PDT 3.17, it reverts to tau_run (DyninstAPI based instrumentor). 
+    </span></dt></dl></div><div class="refentry" lang="en"><a name="tau_compiler.sh"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_compiler.sh &#8212; Instrumenting source files.</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_compiler.sh</code>  [
+	<code class="option">-p</code>
+	<em class="replaceable"><code>profile</code></em>
+      ] [<code class="option">-optVerbose</code>
+        ] [<code class="option">-optQuiet</code>
+        ] [<code class="option">-optPdtDir=</code><em class="replaceable"><code>dir</code></em>
+        ] [<code class="option">-optPdtF95Opts=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtF95Reset=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtCOpts=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtCReset=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtCxxOpts=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtCReset=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optPdtF90Parser=</code><em class="replaceable"><code>parser</code></em>
+        ] [<code class="option">-optGnuFortranParser</code>
+        ] [<code class="option">-optGnuCleanscapeParser</code>
+        ] [<code class="option">-optPdtUser=</code><em class="replaceable"><code>opts</code></em>
+        ] [<code class="option">-optTauInstr=</code><em class="replaceable"><code>path</code></em>
+        ] [<code class="option">-optDetectMemoryLeaks</code>
+] [<code class="option">-optIncludeMemory</code>
+] [<code class="option">-optTrackUPCR</code>
+] [<code class="option">-optPreProcess</code>
+] [<code class="option">-optCPP=</code><em class="replaceable"><code>path</code></em>
+] [<code class="option">-optCPPOpts=</code><em class="replaceable"><code>options</code></em>
+] [<code class="option">-optCPPReset=</code><em class="replaceable"><code>options</code></em>
+] [<code class="option">-optTauSelectFile=</code><em class="replaceable"><code>file</code></em>
+        ] [
+                <code class="option">-optPDBFile=</code><em class="replaceable"><code>file</code></em>
+        ] [
+                <code class="option">-optTau=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optCompile=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optTauDefs=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optTauIncludes=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optReset=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optLinking=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optLinkReset=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optTauCC=</code><em class="replaceable"><code>cc</code></em>
+        ] [
+                <code class="option">-optOpariTool=</code><em class="replaceable"><code>path/opari</code></em>
+        ] [
+                <code class="option">-optOpariDir=</code><em class="replaceable"><code>path</code></em>
+        ] [
+                <code class="option">-optOpariOpts=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optOpariReset=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optOpari2Tool=</code><em class="replaceable"><code>path/opari2</code></em>
+        ] [
+                <code class="option">-optOpari2ConfigTool=</code><em class="replaceable"><code>path/opari2_config</code></em>
+        ] [
+                <code class="option">-optOpari2Dir=</code><em class="replaceable"><code>path</code></em>
+        ] [
+                <code class="option">-optOpari2Opts=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optOpari2Reset=</code><em class="replaceable"><code>opts</code></em>
+        ] [
+                <code class="option">-optNoMpi</code>
+        ] [
+                <code class="option">-optMpi</code>
+        ] [
+                <code class="option">-optNoRevert</code>
+        ] [
+                <code class="option">-optRevert</code>
+        ] [
+                <code class="option">-optKeepFiles</code>
+        ] [<code class="option">-optAppC</code>
+        ] [<code class="option">-optAppCXX</code>
+        ] [<code class="option">-optAppF90</code>
+        ] [<code class="option">-optShared</code>
+        ] [<code class="option">-optCompInst</code>
+        ] [<code class="option">-optPDTInst</code>
+        ] [<code class="option">-optDisableHeaderInst</code>
+        ] {
+	<em class="replaceable"><code>compiler</code></em>
+      } [
+	<em class="replaceable"><code>compiler_options</code></em>
+      ] [
+                <code class="option">-optTauWrapFile=</code><em class="replaceable"><code>filename</code></em>
+        ]</p></div></div><div class="refsect1" lang="en"><a name="d0e341"></a><h2>Description</h2><p>
+  The TAU Compiler provides a simple way to automatically instrument an entire project. The TAU Compiler can be used on C, C++, fixed form Fortran, and free form Fortran.
+  </p></div><div class="refsect1" lang="en"><a name="d0e346"></a><h2>Options</h2><p><code class="option">-optVerbose</code>
+       Turn on verbose debugging messages.
+   </p><p><code class="option">-optQuiet</code>
+       Suppresses excessive output.
+   </p><p><code class="option">-optDetectMemoryLeaks</code>
+ Instructs TAU to detect any memory leaks in C/C++
+programs.TAU then tracks the source location of the memory leak as
+wellas the place in the callstack where the memory allocation
+wasmade.
+</p><p><code class="option">-optPdtDir=&lt;dir&gt;</code>
+       The PDT architecture directory. Typically 
+           <code class="option">$(PDTDIR)/$(PDTARCHDIR)</code>.
+   </p><p><code class="option">-optPdtF95Opts=&lt;opts&gt;</code>
+       Options for Fortran parser in PDT (f95parse).
+   </p><p><code class="option">-optPdtF95Reset=&lt;opts&gt;</code>
+       Reset options to the Fortran parser to the given list.
+   </p><p><code class="option">-optPdtCOpts=&lt;opts&gt;</code>
+       Options for C parser in PDT (cparse). Typically 
+           <code class="option">$(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)</code>.
+       
+   </p><p><code class="option">-optPdtCReset=&lt;opts&gt;</code>
+       Reset options to the C parser to the given list
+   </p><p><code class="option">-optPdtCxxOpts=&lt;opts&gt;</code>
+Options for C++ parser in PDT (cxxparse).  Typically 
+           <code class="option">$(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)</code>.
+       
+   </p><p><code class="option">-optPdtCxxReset=&lt;opts&gt;</code>
+       Reset options to the C++ parser to the given list
+   </p><p><code class="option">-optPdtF90Parser=&lt;parser&gt;</code>
+       Specify a different Fortran parser. For e.g., 
+           <code class="option">f90parse</code> instead of 
+           <code class="option">f95parse</code>.
+   </p><p><code class="option">-optGnuFortranParser=&lt;parser&gt;</code>
+       Specify the GNU <code class="option">gfortran</code> Fortran parser
+<code class="option">gfparse</code>instead of
+<code class="option">f95parse</code>
+
+   </p><p><code class="option">-optGnuCleanscapeParser</code>
+       Uses the Cleanscape Fortran parser
+<code class="option">f95parse</code>instead of GNU's
+<code class="option">gfparse</code>
+
+   </p><p><code class="option">-optPdtUser=&lt;opts&gt;</code>
+       Optional arguments for parsing source code.
+   </p><p><code class="option">-optTauInstr=&lt;path&gt;</code>
+       Specify location of tau_instrumentor. Typically 
+           <code class="option">$(TAUROOT)/$(CONFIG_ARCH)/bin/tau_instrumentor</code>.
+   </p><p><code class="option">-optIncludeMemory</code>
+Forinteral use only
+</p><p><code class="option">-optTrackUPCR</code>
+Adds tracking of the UPC runtime library.
+</p><p><code class="option">-optPreProcess</code>
+       Preprocess the source code before parsing. Uses
+/usr/bin/cpp-P by default.
+   		
+</p><p><code class="option">-optCPP=&lt;path&gt;</code>
+       Specify an alternative preprocessor and pre-process the
+sources.
+   		
+</p><p><code class="option">-optCPPOpts=&lt;options&gt;</code>
+       
+   		Specify additional options to the C pre-processor.
+</p><p><code class="option">-optCPPReset=&lt;options&gt;</code>
+       
+ResetC preprocessor options to the specified list.
+
+</p><p><code class="option">-optTauSelectFile=&lt;file&gt;</code>
+       Specify selective instrumentation file for tau_instrumentor
+   </p><p>
+       
+           <code class="option">-optPDBFile=&lt;file&gt;</code>
+       
+       
+           Specify PDB file for tau_instrumentor. Skips parsing stage.
+       
+   </p><p>
+       
+           <code class="option">-optTau=&lt;opts&gt;</code>
+       
+       
+           Specify options for tau_instrumentor.
+       
+   </p><p>
+       
+           <code class="option">-optCompile=&lt;opts&gt;</code>
+       
+       
+           Options passed to the compiler. Typically 
+           <code class="option">
+               $(TAU_MPI_INCLUDE) $(TAU_INCLUDE) $(TAU_DEFS)
+           </code>.
+       
+   </p><p>
+       
+           <code class="option">-optTauDefs=&lt;opts&gt;</code>
+       
+       
+           Options passed to the compiler by TAU. Typically
+	<code class="option">
+           	$(TAU_DEFS)
+	</code>.
+       
+   </p><p>
+       
+           <code class="option">-optTauIncludes=&lt;opts&gt;</code>
+       
+       
+           Options passed to the compiler by TAU. Typically
+	<code class="option">
+	$(TAU_MPI_INCLUDE) $(TAU_INCLUDE)
+	</code>.
+       
+   </p><p>
+       
+           <code class="option">-optReset=&lt;opts&gt;</code>
+       
+       
+           Reset options to the compiler to the given list
+       
+   </p><p>
+       
+           <code class="option">-optLinking=&lt;opts&gt;</code>
+       
+       
+           Options passed to the linker. Typically 
+           <code class="option">$(TAU_MPI_FLIBS) $(TAU_LIBS) $(TAU_CXXLIBS)
+           </code>.
+       
+   </p><p>
+       
+           <code class="option">-optLinkReset=&lt;opts&gt;</code>
+       
+       
+           Reset options to the linker to the given list.
+       
+   </p><p>
+       
+           <code class="option">-optTauCC=&lt;cc&gt;</code>
+       
+       
+           Specifies the C compiler used by TAU.
+       
+   </p><p>
+       
+           <code class="option">-optOpariTool=&lt;path/opari&gt;</code>
+       
+       
+           Specifies the location of the Opari tool.
+       
+   </p><p>
+       
+           <code class="option">-optOpariDir=&lt;path&gt;</code>
+       
+       
+           Specifies the location of the Opari directory.
+       
+   </p><p>
+       
+           <code class="option">-optOpariOpts=&lt;opts&gt;</code>
+       
+       
+           Specifies optional arguments to the Opari tool.
+       
+   </p><p>
+       
+           <code class="option">-optOpariReset=&lt;opts&gt;</code>
+       
+       
+           Resets options passed to the Opari tool.
+       
+   </p><p>
+       
+           <code class="option">-optNoMpi</code>
+       
+       
+           Removes <code class="option">-l*mpi*</code> 
+           libraries during linking (default).
+       
+   </p><p>
+       
+           <code class="option">-optMpi</code>
+       
+       
+           Does not remove 
+           <code class="option">-l*mpi*</code> 
+           libraries during linking.
+       
+   </p><p>
+       
+           <code class="option">-optNoRevert</code>
+       
+       
+           Exit on error. Does not revert to the original compilation
+	rule on error.
+       
+   </p><p>
+       
+           <code class="option">-optRevert</code>
+       
+       
+       Revert to the original compilation rule on error (default).
+
+   </p><p>
+       
+           <code class="option">-optKeepFiles</code>
+       
+       
+           Does not remove intermediate 
+           <code class="option">.pdb</code> and 
+           <code class="option">.inst.*</code> files.
+       
+   </p><p><code class="option">-optAppCC</code>
+     
+       Sets the failsafe C compiler.
+     
+   </p><p><code class="option">-optAppCXX</code>
+     
+       Sets the failsafe C++ compiler.
+     
+   </p><p><code class="option">-optAppF90</code>
+     
+       Sets the failsafe F90 compiler
+     
+   </p><p><code class="option">-optShared</code>
+     
+       Use shared library version of TAU
+     
+   </p><p><code class="option">-optCompInst</code>
+     
+       Use compiler-based instrumentation
+     
+   </p><p><code class="option">-optNoCompInst</code>
+     
+        Do not revert to compiler instrumentation if source instrumentation fails.     
+   </p><p><code class="option">-optPDTInst</code>
+     
+       Use PDT-based instrumentation
+     
+   </p><p><code class="option">-optHeaderInst</code>
+     
+      Enable instrumentation of headers
+     
+   </p><p><code class="option">-optDisableHeaderInst</code>
+     
+       Disable instrumentation of headers
+     
+   </p><p><code class="option">-optTrackIO</code>
+        Specify wrapping of POSIX I/O calls at link time.
+     
+   </p><p><code class="option">-optWrappersDir=""</code>
+     
+      Specify the location of the link wrappers directory.     
+   </p><p><code class="option">-optTauUseCXXForC</code>
+     
+       Specifies the use of a C++ compiler for compiling C code
+     
+   </p><p><code class="option">-optTauWrapFile=&lt;filename&gt;</code>
+     
+       Specify path to the link_options.tau file generated by tau_wrap
+     
+   </p><p><code class="option">-optFixHashIf</code>
+    
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="vtf2profile"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>vtf2profile &#8212; Generate a TAU profile set from a vampir trace file</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">vtf2profile</code>  [
+	<code class="option">-p</code>
+	<em class="replaceable"><code>profile</code></em>
+      ] [
+	<code class="option">-i</code>
+	<em class="replaceable"><code>interval_start</code></em>
+	<em class="replaceable"><code>interval_end</code></em>
+      ] [
+	<code class="option">-c</code>
+      ] [
+	<code class="option">-h</code>
+      ] {
+	<code class="option">-f</code>
+	<em class="replaceable"><code>tracefile</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e693"></a><h2>Description</h2><p>
+    vtf2profile is created when TAU is configured with the -vtf=&lt;vtf_dir&gt;
+    option.  This tool converts a VTF trace file (*.vpt) to a tau profile set
+    (profile.A.B.C where A, B and C are the node, context and thread numbers
+    respectively).
+  </p><p>
+    The vtf file to be read is specified in the command line by the -f flag
+    followed by the file's location.  The VTF tracefile specified may be in gzipped
+    form, eg app.vpt.gz.  -p is similarly used to specify the relative path to the
+    directory where the profile files should be stored.  If no output directory is
+    specified the current directory will be used.  A contiguous interval within the
+    vtf file may be selected for conversion by using the -i flag followed by two
+    integers, representing the timestamp of the start and end of the desired
+    interval respectively.  The entire vtf file is converted if no interval is
+    given.
+  </p></div><div class="refsect1" lang="en"><a name="d0e700"></a><h2>Options</h2><p>
+    <code class="option">-f tracefile</code>
+    -Specify the Vampir tracefile to be converted.
+  </p><p>
+    <code class="option">-p profile</code>
+    -Specify the location where the profile file(s) should be written.
+  </p><p>
+    <code class="option">-i interval_start interval_end</code>
+    -Limit the profile produced to the specified interval within the vampir trace file.
+  </p><p>	
+    <code class="option">-c</code>	-Opens a command line interface for the program.
+  </p><p>	
+    <code class="option">-h</code>	-Displays a help message.
+  </p></div><div class="refsect1" lang="en"><a name="d0e728"></a><h2>Examples</h2><p>
+    To convert a vampir tracefile, trace.vpt, to an equivalent TAU profile, use the following:
+    </p><pre class="screen">
+vtf2profile -f trace.vpt
+    </pre><p>
+    To produce a TAU profile in the ./profiles directory representing only the
+    events from the start of the tracefile to timestamp 6000, use:
+    </p><pre class="screen">
+vtf2profile -f trace.vpt -p ./profiles -i 0 6000
+    </pre><p>
+  </p></div><div class="refsect1" lang="en"><a name="d0e739"></a><h2>See Also</h2><p>
+    <a href="#tau2vtf" title="tau2vtf"><span class="refentrytitle">tau2vtf</span></a>,
+    <a href="#trace2profile" title="trace2profile"><span class="refentrytitle">trace2profile</span></a>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau2vtf"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau2vtf &#8212; convert TAU tracefiles to vampir tracefiles</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2vtf</code>  [
+	<code class="option">-nomessage</code>
+      ] [
+	<code class="option">-v</code>
+      ] [[
+	  <code class="option">-a</code>
+	] |  [
+	  <code class="option">-fa</code>
+	]] {
+	<em class="replaceable"><code>tau_tracefile</code></em>
+      } {
+	<em class="replaceable"><code>tau_eventfile</code></em>
+      } {
+	<em class="replaceable"><code>vtf_tracefile</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e800"></a><h2>Description</h2><p>
+      This program is generated when TAU is configured with the -vtf=&lt;vtf_dir&gt;
+      option.
+    </p><p>
+      The tau2vtf trace converter takes a single tau_tracefile (*.trc) and
+      tau_eventfile (*.edf) and produces a corresponding vtf_tracefile
+      (*.vtf).  The input files and output file must be specified in that
+      order.  Multi-file TAU traces must be merged before conversion.
+    </p><p>
+      The default output file format is VTF3 binary.  If the output filename
+      is given as the .vpt.gz type, rather than .vpt, the output file will be
+      gzipped.  There are two additional output format options.  The command
+      line argument '-a' produces the vtf file output in ASCII VTF3 format.
+      The command line argument '-fa' produces the vtf file output in the FAST
+      ASCII VTF3 format.  Note that these arguments are mutually exclusive.
+    </p></div><div class="refsect1" lang="en"><a name="d0e809"></a><h2>Options</h2><p>
+      <code class="option">-nomessage</code> Suppresses printing of message information in the trace.
+    </p><p>
+      <code class="option">-v</code>    Verbose mode sends trace event
+      descriptions to the standard output as they are converted.
+    </p><p> 
+      <code class="option">-a</code>     Print the vtf file output in the
+      human-readable VTF3 ASCII format 
+    </p><p> 
+      <code class="option">-fa</code> Print the vtf file in the simplified human-readable
+      FAST ASCII VTF3 format
+    </p></div><div class="refsect1" lang="en"><a name="d0e832"></a><h2>Examples</h2><p>
+      The program must be run with the tau trace, tau event and vtf output
+      files specified in the command line in that order.  Any additional
+      arguments follow.  The following will produce a VTF, app.vpt, from the
+      TAU trace and event files merged.trc and tau.edf trace file:
+      </p><pre class="screen">
+tau2vtf merged.trc tau.edf app.vpt
+      </pre><p>
+      The following will convert merged.trc and tau.edf to a gzipped FAST
+      ASCII vampir tracefile app.vpt.gz, with message events omitted:
+      </p><pre class="screen">
+tau2vtf merged.trc tau.edf app.vpt.gz -nomessage -fa
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e843"></a><h2>See Also</h2><p>
+      <a href="#vtf2profile" title="vtf2profile"><span class="refentrytitle">vtf2profile</span></a>,
+      <a href="#trace2profile" title="trace2profile"><span class="refentrytitle">trace2profile</span></a>,
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>,
+      <a href="#tau_convert" title="tau_convert"><span class="refentrytitle">tau_convert</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="trace2profile"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>trace2profile &#8212; convert TAU tracefiles to TAU profile files</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2vprofile</code>  [
+	<code class="option">-d</code>
+	<em class="replaceable"><code>directory</code></em>
+      ] [
+	<code class="option">-s</code>
+	<em class="replaceable"><code>snapshot_interval</code></em>
+      ] {
+	<em class="replaceable"><code>tau_tracefile</code></em>
+      } {
+	<em class="replaceable"><code>tau_eventfile</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e898"></a><h2>Description</h2><p>
+      This program is generated when TAU is configured with the -TRACE
+      option.
+    </p><p>
+      The trace2profile converter takes a single tau_tracefile (*.trc) and
+      tau_eventfile (*.edf) and produces a corresponding series of profile files.  The input files must be specified in that order, with optinal parameters coming afterward.  Multi-file TAU traces must be merged before conversion.
+    </p></div><div class="refsect1" lang="en"><a name="d0e905"></a><h2>Options</h2><p>
+      <code class="option">-d</code> Output profile files to the specified 'directory' rather than the current directory.
+    </p><p>
+      <code class="option">-s</code> Output a profile snapshot showing the state of the profile data accumulated from the trace every 'snapshot_interval' time units.  The snapshot profiles are placed sequentially in directories labled 'snapshot_n' where 'n' is an integer ranging from 0 to to the total number of snapshots -1.
+    </p></div><div class="refsect1" lang="en"><a name="d0e918"></a><h2>Examples</h2><p>
+      The program must be run with the tau trace and tau event files specified in the command line in that order.  Any additional arguments follow.  The following will produce a profile file array, from the
+      TAU trace and event files merged.trc and tau.edf trace file:
+      </p><pre class="screen">
+trace2profile merged.trc tau.edf
+      </pre><p>
+      The following will convert merged.trc and tau.edf to a series of profiles one directory higher.  It will also produce a profile snapshot every 250,000 time units:
+      </p><pre class="screen">
+trace2profile merged.trc tau.edf -d ./.. -s 250000
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e929"></a><h2>See Also</h2><p>
+      <a href="#vtf2profile" title="vtf2profile"><span class="refentrytitle">vtf2profile</span></a>,
+      <a href="#tau2vtf" title="tau2vtf"><span class="refentrytitle">tau2vtf</span></a>,
+      <a href="#tau2otf" title="tau2otf"><span class="refentrytitle">tau2otf</span></a>,
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>,
+      <a href="#tau_convert" title="tau_convert"><span class="refentrytitle">tau_convert</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau2elg"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau2elg &#8212; convert TAU tracefiles to Epilog tracefiles</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2elg</code>  [
+	<code class="option">-nomessage</code>
+      ] [
+	<code class="option">-v</code>
+      ] {
+	<em class="replaceable"><code>tau_tracefile</code></em>
+      } {
+	<em class="replaceable"><code>tau_eventfile</code></em>
+      } {
+	<em class="replaceable"><code>elg_tracefile</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e985"></a><h2>Description</h2><p>
+      This program is generated when TAU is configured with the -epilog=&lt;epilog_dir&gt; option.
+    </p><p>
+      The tau2elg trace converter takes a tau trace file (*.trc) and event definition file (*.edf) and produces a corresponding epilog binary trace file (*.elg). Multi-file TAU traces must be merged before conversion.
+    </p></div><div class="refsect1" lang="en"><a name="d0e992"></a><h2>Options</h2><p>
+      <code class="option">-nomessage</code>
+      Suppresses printing of message information in the trace.
+    </p><p><code class="option">-v</code>	
+    Verbose mode sends trace event descriptions to the standard output as they are converted.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1004"></a><h2>Examples</h2><p>
+      The program must be run with the tau trace, tau event and elg output
+      files specified in the command line in that order.  Any additional
+      arguments follow.  The following would convert merged.trc and tau.edf to
+      the Epilog tracefile app.elg, with message events omitted:
+      </p><pre class="screen">
+./tau2vtf merged.trc tau.edf app.elg -nomessage
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1012"></a><h2>See Also</h2><p>
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau2slog2"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau2slog2 &#8212; convert TAU tracefiles to SLOG2 tracefiles</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2slog2</code>  [
+	<code class="option">options</code>
+      ] {
+	<em class="replaceable"><code>tau_tracefile</code></em>
+      } {
+	<em class="replaceable"><code>tau_eventfile</code></em>
+      } {
+	<code class="option">-o</code>
+	<em class="replaceable"><code>output.slog2</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e1058"></a><h2>Description</h2><p>
+      This program is generated when TAU is configured with the -slog2 or -slog2=&lt;slog2_dir&gt; option.
+    </p><p>
+      The tau2slog2 trace converter takes a single tau trace file (*.trc) and
+      event definition file (*.edf) and produces a corresponding slog2 binary
+      trace file (*.slog2).
+    </p><p>
+      The tau2slog2 converter is called from the command line with the
+      locations of the tau trace and event files.  These arguments must be
+      followed by the -o flag and the name of the slog2 file to be written.
+      tau2slog 2 accepts no other arguments.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1067"></a><h2>Options</h2><p>
+      <code class="option">[-h|--h|-help|--help]</code>
+      Display HELP message.
+    </p><p><code class="option"> [-tc]</code>	
+    Check increasing endtime order, exit when 1st violation occurs.
+    </p><p><code class="option"> [-tcc]</code>	
+    Check increasing endtime order,continue when violations occur.
+    </p><p><code class="option"> [-nc number]</code>	
+    Number of childern per node (default is 2)
+    </p><p><code class="option"> [-ls number]</code>	
+    Max byte size of leaf nodes (default is 65536)
+    </p><p><code class="option"> [-o output.slog2]</code>	
+    Output filename with slog2 suffix
+    </p></div><div class="refsect1" lang="en"><a name="d0e1095"></a><h2>Examples</h2><p>
+      A typical invocation of the converter, to create app.slog2, is as follows:
+      </p><pre class="screen">
+tau2slog2 app.trc tau.edf -o app.slog2
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1103"></a><h2>See Also</h2><p>
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>,
+      <a href="#tau_convert" title="tau_convert"><span class="refentrytitle">tau_convert</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau2otf"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau2otf &#8212; convert TAU tracefiles to OTF
+	 tracefiles for Vampir/VNG
+	 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2otf</code>  [
+	<code class="option">-n</code>
+	<em class="replaceable"><code>streams</code></em>
+      ] [
+	<code class="option">-nomessage</code>
+      ] [
+	<code class="option">-v</code>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1146"></a><h2>Description</h2><p>
+	 This program is generated when TAU is configured with the
+	        -otf=&lt;otf_dir&gt; option.
+The tau2otf trace converter takes a TAU formatted tracefile (*.trc) and a TAU event description file (*.edf) and produces an output trace file in the Open Trace Format (OTF). The user may specify the number of output streams for OTF. The input files and output file must be specified in that order. TAU traces should be merged using tau_merge prior to conversion.
+																	  
+    </p></div><div class="refsect1" lang="en"><a name="d0e1151"></a><h2>Options</h2><p>
+    <code class="option">-n</code> streams Specifies the number of output streams (default is 1).
+
+	 <code class="option">-nomessage</code> Suppresses printing of message information in the trace.
+
+	 <code class="option">-v</code> Verbose mode sends trace event descriptions to the standard output as they are converted.
+	 </p></div><div class="refsect1" lang="en"><a name="d0e1165"></a><h2>Examples</h2><p>The program must be run with the tau trace, tau event and otf output files specified in the command line in that order. Any additional arguments follow. The following will produced an OTF file, a pp.otf and other related event and definition files, from the TAU trace and event files merged.trc and tau.edf trace file:
+  	</p><pre class="screen">
+tau2otf merged.trc tau.edf app.otf
+</pre><p>
+
+    </p></div><div class="refsect1" lang="en"><a name="d0e1173"></a><h2>See Also</h2><p>
+ 				tau2vtf(1), trace2profile(1), vtf2profile(1), tau_merge(1), tau_convert(1)
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau2otf2"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau2otf2 &#8212; convert TAU tracefiles to OTF2
+	 tracefiles for Vampir/VNG
+	 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau2otf2</code>  [
+	<code class="option">-n</code>
+	<em class="replaceable"><code>streams</code></em>
+      ] [
+	<code class="option">-nomessage</code>
+      ] [
+	<code class="option">-v</code>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1211"></a><h2>Description</h2><p>
+	 This program is generated when TAU is configured with the
+	        -otf=&lt;otf_dir&gt; option.
+The tau2otf2 trace converter takes a TAU formatted tracefile (*.trc) and a TAU
+event description file (*.edf) and produces an output trace file in the Open
+Trace Format (OTF2). The user may specify the number of output streams for OTF2. The input files and output file must be specified in that order. TAU traces should be merged using tau_merge prior to conversion.
+																	  
+    </p></div><div class="refsect1" lang="en"><a name="d0e1216"></a><h2>Options</h2><p>
+    <code class="option">-n</code> streams Specifies the number of output streams (default is 1).
+
+	 <code class="option">-nomessage</code> Suppresses printing of message information in the trace.
+
+	 <code class="option">-v</code> Verbose mode sends trace event descriptions to the standard output as they are converted.
+	 </p></div><div class="refsect1" lang="en"><a name="d0e1230"></a><h2>Examples</h2><p>The program must be run with the tau trace, tau event and otf2 output
+		files specified in the command line in that order. Any additional arguments
+		follow. The following will produced an OTF2 file, a pp.otf2 and other related event and definition files, from the TAU trace and event files merged.trc and tau.edf trace file:
+  	</p><pre class="screen">
+tau2otf2 merged.trc tau.edf app.otf2
+</pre><p>
+
+    </p></div><div class="refsect1" lang="en"><a name="d0e1238"></a><h2>See Also</h2><p>
+ 				tau2vtf(1), trace2profile(1), vtf2profile(1), tau_merge(1), tau_convert(1)
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="perf2tau"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>perf2tau &#8212; converts PerfLib profiles to TAU profile files</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">perf2tau</code>  {
+	<em class="replaceable"><code>data_directory</code></em>
+      } [
+	<code class="option">-h</code>
+      ] [
+	<code class="option">-flat</code>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1274"></a><h2>Description</h2><p>
+    Converts perflib data to TAU format. 
+    </p><p>
+   If an argument is not specified, it checks the perf_data_directory
+   environment variable. Then opens perf_data.timing directory to read perflib
+   data If no args are specified, it tries to read
+   perf_data.&lt;current_date&gt; file.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1281"></a><h2>Options</h2><p>
+      <code class="option">-h</code>
+      Display the help information.
+    </p><p>
+      <code class="option">-flat</code>
+      Suppresses callpath profiles, each callpath profile will be flattened to
+      show only the function profile.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1294"></a><h2>Examples</h2><p>
+      </p><pre class="screen">
+%&gt; perf2tau timing
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1302"></a><h2>See Also</h2><p>
+      <a href="#vtf2profile" title="vtf2profile"><span class="refentrytitle">vtf2profile</span></a>,
+      <a href="#tau2vtf" title="tau2vtf"><span class="refentrytitle">tau2vtf</span></a>,
+      <a href="#tau2otf" title="tau2otf"><span class="refentrytitle">tau2otf</span></a>,
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>,
+      <a href="#tau_convert" title="tau_convert"><span class="refentrytitle">tau_convert</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_merge"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_merge &#8212; combine multiple node and or thread TAU tracefiles into a
+    merged tracefile</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_merge</code>  [
+	<code class="option">-a</code>
+      ] [
+	<code class="option">-r</code>
+      ] [
+	<code class="option">-n</code>
+      ] [
+	<code class="option">-e</code>
+	<em class="replaceable"><code>eventfile_list</code></em>
+      ] [
+	<code class="option">-m</code>
+	<em class="replaceable"><code>output_eventfile</code></em>
+      ] {
+	<em class="replaceable"><code>tracefile_list</code></em>
+      } [{
+	  <em class="replaceable"><code>output_tracefile</code></em>
+	} |  {
+	  <em class="replaceable"><code> - </code></em>
+	}]</p></div></div><div class="refsect1" lang="en"><a name="d0e1380"></a><h2>Description</h2><p>
+      tau_merge is generated when TAU is configured with the -TRACE option.  
+    </p><p>
+      This tool assembles a set of tau trace and event files from multiple
+      multiple nodes or threads across a program's execution into a single
+      unified trace file.  Many TAU trace file tools operate on merged trace
+      files.
+    </p><p>
+      Minimally, tau_merge must be invoked with a list of unmerged trace files
+      followed by the desired name of the merged trace file or the - flag to
+      send the output to the standard out.  Typically the list can be
+      designated by giving the shared name of the trace files to be merged
+      followed by desired range of thread or node designators in brackets or
+      the wild card character '*' to encompass variable thread and node
+      designations in the filename (trace.A.B.C.trc where A, B and C are the
+      node, context and thread numbers respectively).  For example
+      tautrace.*.trc would represent all tracefiles in a given directory while
+      tautrace.[0-5].0.0.trc would represent the tracefiles of nodes 0 through
+      5 with context 0 and thread 0.
+    </p><p>
+      tau_merge will generate the specified merged trace file and an event
+      definition file, tau.edf by default.
+    </p><p>
+      The event definition file can be given an alternative name by using the
+      '-m' flag followed by the desired filename.  A list of event definition
+      files to be merged can be designated explicitly by using the '-e' flag
+      followed by a list of unmerged .edf files, specified in the same manner
+      as the trace file list.
+    </p><p>
+      If computational resources are insufficient to merge all trace and event
+      files simultaneously the process may be undertaken
+      hierarchically. Corresponding subsets of the tracefiles and eventfiles
+      may be merged in sequence to produce a smaller set of files that can then
+      be to merged into a singular fully merged tracefile and eventfile.
+      E.g. for a 100 node trace, trace sets 1-10, 11-20, ..., 91-100 could be
+      merged into traces 1a, 2a, ..., 10a.  Then 1a-10a could be merged to
+      create a fully merged tracefile.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1395"></a><h2>Options</h2><p><code class="option">-e</code> eventfile_list explicitly define the eventfiles to be
+    merged</p><p><code class="option">-m</code> output_eventfile explicitly name the merged
+    eventfile to be created</p><p><code class="option">-</code>	send the merged tracefile to the standard out</p><p><code class="option">-a</code>	adjust earliest timestamp time to zero</p><p><code class="option">-r</code>	do not reassemble long events</p><p><code class="option">-n</code> do not block waiting for new events.  By default
+    tau_merge will block and wait for new events to be appended if a tracefile
+    is incomplete.  This command allows offline merging of (potentially)
+    incomplete tracefiles.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1422"></a><h2>Examples</h2><p>
+      To merge all TAU tracefiles into app.trc and produce a merged tau.edf eventfile:
+      </p><pre class="screen">
+tau_merge *.trc app.trc
+      </pre><p>
+      To merge all eventfiles 0-255 into ev0_255merged.edf and TAU tracefiles
+      for nodes 0-255 into the standard out:
+      </p><pre class="screen">
+tau_merge -e events.[0-255].edf -m ev0_255merged.edf \
+  tautrace.[0-255].*.trc -
+      </pre><p>
+      To merge eventfiles 0, 5 and seven info ev057.edf and tau tracefiles for
+      nodes 0, 5 and 7 with context and thread 0 into app.trc:
+      </p><pre class="screen">
+tau_merge -e events.0.edf events.5.edf events.7.edf -m ev057.edf \
+  tautrace.0.0.0.trc tautrace.5.0.0.trc tautrace.7.0.0.trc app.trc
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1436"></a><h2>See Also</h2><p><a href="#tau_convert" title="tau_convert">tau_convert</a></p><p><a href="#trace2profile" title="trace2profile">trace2profile</a></p><p><a href="#tau2vtf" title="tau2vtf">tau2vtf</a></p><p><a href="#tau2elg" title="tau2elg">tau2elg</a></p><p><a href="#tau2slog2" title="tau2slog2">tau2slog2</a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_treemerge.pl"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_treemerge.pl &#8212; combine multiple node and or thread TAU tracefiles into a
+    merged tracefile</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_treemerge.pl</code>  [
+	<code class="option">-n</code>
+	<em class="replaceable"><code>break_amount</code></em>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1479"></a><h2>Description</h2><p>
+      tau_treemerge.pl is generated when TAU is configured with the -TRACE option.  
+    </p><p>
+      This tool assembles a set of tau trace and event files from multiple
+      multiple nodes or threads across a program's execution into a single
+      unified trace file.  Many TAU trace file tools operate on merged trace
+      files.
+    </p><p>
+      tau_treemerge.pl will generate the specified merged trace file and an event
+      definition file, tau.edf by default.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1488"></a><h2>Options</h2><p><code class="option">-n</code> break_amount set the maximum number of trace files
+    to merge in each invocation of tau_merge. If we need to merge 2000 trace
+    files and if the maximum number of open files specified by unix is 250,
+    tau_treemerge.pl will incrementally merge the trace files so as not to
+    exceed the number of open file descriptors. 
+    </p></div><div class="refsect1" lang="en"><a name="d0e1495"></a><h2>See Also</h2><p><a href="#tau_merge" title="tau_merge">tau_merge</a></p><p><a href="#tau_convert" title="tau_convert">tau_convert</a></p><p><a href="#trace2profile" title="trace2profile">trace2profile</a></p><p><a href="#tau2vtf" title="tau2vtf">tau2vtf</a></p><p><a href="#tau2elg" title="tau2elg">tau2elg</a></p><p><a href="#tau2slog2" title="tau2slog2">tau2slog2</a></p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_convert"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_convert &#8212; convert TAU tracefiles into various alternative trace formats</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_convert</code>  [[
+	  <code class="option">-alog</code>
+	] |  [
+	  <code class="option">-SSDF</code>
+	] |  [
+	  <code class="option">-dump</code>
+	] |  [
+	  <code class="option">-paraver</code>
+	   [-t]
+	] |  [
+	  <code class="option">-pv</code>
+	] |  [
+	  <code class="option">-vampir</code>
+	  
+	   [
+	    <code class="option">-longsymbolbugfix</code>
+	  ]
+	   [
+	    <code class="option">-compact</code>
+	  ]
+	   [[
+	      <code class="option">-user</code>
+	    ] |  [
+	      <code class="option">-class</code>
+	    ] |  [
+	      <code class="option">-all</code>
+	    ]]
+	  
+	   [
+	    <code class="option">-nocomm</code>
+	  ]
+	  
+	]] [
+	<em class="replaceable"><code>outputtrc</code></em>
+      ] {
+	<em class="replaceable"><code>inputtrc</code></em>
+      } {
+	<em class="replaceable"><code>edffile</code></em>
+      }</p></div></div><div class="refsect1" lang="en"><a name="d0e1616"></a><h2>Description</h2><p>
+      tau_convert is generated when TAU is configured with the -TRACE option.
+    </p><p>
+      This program requires specification of a TAU tracefile and eventfile.  It
+      will convert the given TAU traces to the ASCII-based trace format
+      specified in the first argument.  The conversion type specification may
+      be followed by additional options specific to the conversion type.  It
+      defaults to the single threaded vampir format if no other format is
+      specified.  tau_convert also accepts specification of an output file as
+      the last argument.  If none is given it prints the converted data to the
+      standard out.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1623"></a><h2>Options</h2><p><code class="option">-alog</code> convert TAU tracefile into the alog format
+    (This format is deprecated.  The SLOG2 format is recommended.)</p><p><code class="option">-SDDF</code> convert TAU tracefile into the SDDF format</p><p><code class="option">-dump</code> convert TAU tracefile into multi-column human
+    readable text</p><p><code class="option">-paraver</code> convert TAU tracefile into paraver
+    format</p><p><code class="option">-t</code> indicate conversion of multi threaded TAU trace
+    into paraver format</p><p><code class="option">-pv</code> convert single threaded TAU tracefile into
+    vampir format (all -vampir options apply) (default)</p><p><code class="option">-vampir</code> convert multi threaded TAU tracefile into
+    vampir format</p><p><code class="option">-longsymbolbugfix</code> make the first characters of
+    long, similar identifier strings unique to avoid a bug in vampir</p><p><code class="option">-compact</code> abbreviate individual event entries</p><p><code class="option">-all</code>	compact all entries (default)</p><p><code class="option">-user</code> compact user entries only</p><p><code class="option">-class</code> compact class entries only</p><p><code class="option">-nocomm</code> disregard communication events</p><p><code class="option">[outputtrc]</code> specify the name of the output tracefile
+    to be produced
+    </p></div><div class="refsect1" lang="en"><a name="d0e1682"></a><h2>Examples</h2><p>
+      To print the contents of a TAU tracefile to the screen:
+      </p><pre class="screen">
+tau_convert -dump app.trc tau.edf
+      </pre><p>
+      To convert a merged, threaded TAU tracefile to paraver format:
+      </p><pre class="screen">	
+tau_convert -paraver -t app.trc tau.edf app.pv 
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1693"></a><h2>See Also</h2><p>
+      <a href="#tau_merge" title="tau_merge"><span class="refentrytitle">tau_merge</span></a>,
+      <a href="#tau2vtf" title="tau2vtf"><span class="refentrytitle">tau2vtf</span></a>,
+      <a href="#trace2profile" title="trace2profile"><span class="refentrytitle">trace2profile</span></a>,
+      <a href="#tau2slog2" title="tau2slog2"><span class="refentrytitle">tau2slog2</span></a>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_reduce"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_reduce &#8212; generates selective
+    instrumentation rules based on profile data</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_reduce</code>  {
+	<code class="option">-f</code>
+	<em class="replaceable"><code>filename</code></em>
+      } [
+	<code class="option">-n</code>
+      ] [
+	<code class="option">-r</code>
+	<em class="replaceable"><code>filename</code></em>
+      ] [
+	<code class="option">-o</code>
+	<em class="replaceable"><code>filename</code></em>
+      ] [
+	<code class="option">-v</code>
+      ] [
+	<code class="option">-p</code>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1761"></a><h2>Description</h2><p>
+      tau_reduce is an application that will apply a set of user-defined rules
+      to a pprof dump file (<span><strong class="command">pprof -d</strong></span>) in order to create a
+      select file that will include an exclude list for selective
+      implementation for TAU. The user must specify the name of the pprof dump
+      file that this application will use.  This is done with the -f filename
+      flag.  If no rule file is specified, then a single default rule will be
+      applied to the file.  This rule is: numcalls &gt; 1000000 &amp;
+      usecs/call &lt; 2, which will exclude all routines that are called at
+      least 1,000,000 times and average less then two microseconds per call. If
+      a rule file is specified, then this rule is not applied. If no output
+      file is specified, then the results will be printed out to the screen.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1769"></a><h2>Rules</h2><p>
+      Users can specify a set of rules for tau_reduce to apply.  The rules
+      should be specified in a separate file, one rule per line, and the file
+      name should be specifed with the appropriate option on the command line.
+      The grammar for a rule is: [GROUPNAME:]FIELD OPERATOR NUMBER.  The
+      GROUPNAME followed by the colon (:) is optional.  If included, the rule
+      will only be applied to routines that are a member of the group
+      specified.  Only one group name can be applied to each rule, and a rule
+      must follow a groupname.  If only a groupname is given, then an
+      unrecognized field error will be returned.  If the desired effect is to
+      exclude all routines that belong to a certain group, then a trivial rule,
+      such as GROUP:numcalls &gt; -1 may be applied.  If a groupnameis given,
+      but the data does not contain any groupname data, then then an error
+      message will be given, but the rule will still be applied to the date
+      ignoring the groupname specification. A FIELD is any of the routine
+      attributes listed in the following table:
+    </p><pre class="screen">
+ATTRIBUTE NAME     MEANING	
+numcalls           Number of times the routine is called	
+numsubrs           Number of subroutines that the routine contains	
+percent            Percent of total implementation time	
+usec               Exclusive routine running time, in microseconds	
+cumusec            Inclusive routine running time, in microseconds	
+count              Exclusive hardware count	
+totalcount         Inclusive hardware count	
+stddev             Standard deviation	
+usecs/call         Microseconds per call	
+counts/call        Hardware counts per call
+    </pre><div class="table"><a name="d0e1776"></a><p class="title"><b>Table&nbsp;1.1.&nbsp;Selection Attributes</b></p><table summary="Selection Attributes" border="1"><colgroup><col align="left" width="50%"><col align="left" width="50%"></colgroup><thead><tr><th align="left">ATTRIBUTE NAME</th><th align="left">MEANING</th></tr></thead><tbody><tr><td align="left">numcalls</td><td align="left">Number of times the routine is called</td></tr><tr><td align="left">numsubrs</td><td align="left">Number of subroutines that the routine contains</td></tr><tr><td align="left">percent</td><td align="left">Percent of total implementation time</td></tr><tr><td align="left">usec</td><td align="left">Exclusive routine running time, in microseconds</td></tr><tr><td align="left">cumusec</td><td align="left">Inclusive routine running time, in microseconds</td></tr><tr><td align="left">count</td><td align="left">Exclusive hardware count</td></tr><tr><td align="left">totalcount</td><td align="left">Inclusive hardware count</td></tr><tr><td align="left">stddev</td><td align="left">Standard deviation</td></tr><tr><td align="left">usecs/call</td><td align="left">Microseconds per call</td></tr><tr><td align="left">counts/call</td><td align="left">Hardware counts per call</td></tr></tbody></table></div><p>
+      Some FIELDS are only available for certain files.  If hardware counters
+      are used, then usec, cumusec, usecs/per call are not applicable and a
+      error is reported.  The opposite is true if timing data is used rather
+      than hardware counters.  Also, stddev is only available for certain files
+      that contain that data.
+    </p><p>
+      An OPERATOR is any of the following: &lt; (less than), &gt; (greater
+      than), or = (equals).
+    </p><p>
+      A NUMBER is any number.
+    </p><p>
+      A compound rule may be formed by using the &amp; (and) symbol in between
+      two simple rules.  There is no "OR" because there is an implied or
+      between two separate simple rules, each on a separate line.  (ie the
+      compound rule usec &lt; 1000 OR numcalls = 1 is the same as the two
+      simple rules "usec &lt; 1000" and "numcalls = 1").
+    </p></div><div class="refsect1" lang="en"><a name="d0e1847"></a><h2>Rule Examples</h2><pre class="screen">
+#exclude all routines that are members of TAU_USER and have less than
+#1000 microseconds
+TAU_USER:usec &lt; 1000
+
+#exclude all routines that have less than 1000 microseconds and are
+#called only once.
+usec &lt; 1000 &amp; numcalls = 1
+
+#exclude all routines that have less than 1000 usecs per call OR have a percent
+#less than 5
+usecs/call &lt; 1000
+percent &lt; 5
+    </pre><p>
+      NOTE: Any line in the rule file that begins with a # is a comment
+      line. For clarity, blank lines may be inserted in between rules and will
+      also be ignored.
+    </p></div><div class="refsect1" lang="en"><a name="d0e1854"></a><h2>Options</h2><p><code class="option">-f</code> filename specify filename of pprof dump
+    file</p><p><code class="option">-p</code> print out all functions with their
+    attributes</p><p><code class="option">-o</code> filename specify filename for select file output
+    (default: print to screen</p><p><code class="option">-r</code> filename specify filename for rule file</p><p><code class="option">-v</code> verbose mode (for each rule, print out rule and
+    all functions that it excludes)
+    </p></div><div class="refsect1" lang="en"><a name="d0e1877"></a><h2>Examples</h2><p>
+      To print to the screen the selective instrumentation list for the
+      paraprof dump file app.prf with default selection rules use:
+      </p><pre class="screen">
+tau_reduce -f app.prf
+      </pre><p>
+      To create a selection file, app.sel, from the paraprof dump file
+      app.prf using rules specified in foo.rlf use:
+      </p><pre class="screen">
+tau_reduce -f app.prf -r foo.rlf -o app.sel
+      </pre><p>
+    </p></div><div class="refsect1" lang="en"><a name="d0e1888"></a><h2>See Also</h2><p>
+      
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_ompcheck"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_ompcheck &#8212; Completes uncompleted do/for/parallel omp directives</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_ompcheck</code>  {
+	<em class="replaceable"><code>pdbfile</code></em>
+      } {
+	<em class="replaceable"><code>sourcefile</code></em>
+      } [
+	<code class="option">-o</code>
+	<em class="replaceable"><code>outfile</code></em>
+      ] [
+	<code class="option">-v</code>
+      ] [
+	<code class="option">-d</code>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e1936"></a><h2>Description</h2><p>
+  Finds uncompleted do/for omp directives and inserts closing
+	directives for each one uncompleted. do/for directives are
+	expected immediately before a do/for loop. Closing directives are
+	then placed immediately following the same do/for loop.
+	</p></div><div class="refsect1" lang="en"><a name="d0e1941"></a><h2>Options</h2><p>
+    <code class="option">pdbfile</code>
+  A pdbfile generated from the source file you wish to check.
+	This pdbfile must contain comments from which the omp
+	directives are gathered. See pdbcomment for information on
+	how to obtain comment from a pdbfile.
+	</p><p>
+    <code class="option">sourcefile</code>
+	A fortran, C or C++ source file to analyzed.	
+  </p><p>
+    <code class="option">-o</code>
+  write the output to the specified outfile.
+	</p><p>	
+    <code class="option">-v</code>verbose output, will say which directive where added.
+  </p><p>	
+    <code class="option">-d</code>
+  debuging information, we suggest you pipe this unrestrained output to a file.
+	</p></div><div class="refsect1" lang="en"><a name="d0e1969"></a><h2>Examples</h2><p>
+    To check file: source.f90 do: (you will need pdtoolkit/&lt;arch&gt;/bin and
+		tau/utils/ in your path).
+    </p><pre class="screen">
+%&gt;f95parse source.f90
+%&gt;pdbcomment source.pdb &gt; source.comment.pdb
+%&gt;tau_omp source.comment.pdb source.f90 -o source.chk.f90
+    </pre><p>
+  </p></div><div class="refsect1" lang="en"><a name="d0e1977"></a><h2>See Also</h2><p>
+    f95parse pdbcomment
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_poe"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_poe &#8212; Instruments a MPI application while it is being executed with poe.</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_poe</code>  [
+	<code class="option">-XrunTAUsh-</code>
+	<em class="replaceable"><code>tauOptions</code></em>
+      ] {
+	<em class="replaceable"><code>applcation</code></em>
+			} [
+	<em class="replaceable"><code>poe options</code></em>
+			]</p></div></div><div class="refsect1" lang="en"><a name="d0e2015"></a><h2>Description</h2><p>
+	This tool dynamically instruments a mpi application by loading a specific mpi
+	library file. 
+	</p></div><div class="refsect1" lang="en"><a name="d0e2020"></a><h2>Options</h2><p>
+    <code class="option">tauOptions</code>
+	To instrument a mpi application a specific TAU library file is loaded when the
+	application is executed.
+	To select which library is loaded use this option. The library files are build
+	according to the options set when TAU is configured. The library file that have
+	been build and thus available for use are in the [TAU_HOME]/[arch]/lib directory. The
+	file are listed as libTAUsh-*.so where * is the instrumentation options. For
+	example to use the libTAUsh-pdt-openmp-opari.so file let the comman line
+	option be -XrunTAUsh-pdt-openmp-opari.
+	</p></div><div class="refsect1" lang="en"><a name="d0e2028"></a><h2>Examples</h2><p>
+    Instrument a.out wit the currently configured options and then run it on
+		four nodes:
+		</p><pre class="screen">
+%&gt;tau_poe ./a.out -procs 4
+    </pre><p>
+  </p><p>
+		Select the libTAUsh-mpi.so library to instrument a.out with:
+		</p><pre class="screen">
+%&gt;tau_poe -XrunTAUsh-mpi ./a.out -procs 4
+		</pre><p>
+	</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_validate"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_validate &#8212; Validates a TAU installation by performing
+    various tests on each TAU stub Makefile</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_validate</code>  [
+	<code class="option">-v</code>
+      ] [
+	<code class="option">--html</code>
+      ] [
+	<code class="option">--build</code>
+      ] [
+	<code class="option">--run</code>
+      ] [
+	<code class="option">--tag</code>
+      ] {
+	<em class="replaceable"><code>arch directory</code></em>
+			}</p></div></div><div class="refsect1" lang="en"><a name="d0e2086"></a><h2>Description</h2><p>
+  tau_validate will attempt to validate a TAU installation by performing
+  various tests on each TAU stub Makefile.  Some degree of logic exists
+  to know where a given test applies to a given makefile, but it's not
+  perfect.
+	</p></div><div class="refsect1" lang="en"><a name="d0e2091"></a><h2>Options</h2><p>
+    <code class="option">v</code>
+	  Verbose output
+  </p><p>
+    <code class="option">html</code>
+    Output results in HTML
+  </p><p>
+    <code class="option">build</code>
+    Only build
+  </p><p>
+    <code class="option">run</code>
+    Only run
+  </p><p>
+    <code class="option">tag</code>
+    Only check configurations containing the tag. ie. <code class="literal">--tag
+		papi</code> checks only
+		libraries with the <code class="literal">-papi</code> in their name. 
+  </p><p>
+    <code class="option">arch directory</code>
+    Specify an arch directory (e.g. rs6000), or the lib
+    directory (rs6000/lib), or a specific makefile.
+    Relative or absolute paths are ok.                          
+  </p></div><div class="refsect1" lang="en"><a name="d0e2130"></a><h2>Example</h2><p>
+    There is a few examples:
+</p><pre class="screen">    
+bash : ./tau_validate --html x86_64 &amp;&gt; results.html
+tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
+</pre><p>     
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tauex"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tauex &#8212; Allows you to choose a tau configuration at runtime</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tauex</code>  [
+	<em class="replaceable"><code>OPTION</code></em>
+      ] [--] {
+  <em class="replaceable"><code>executable</code></em>
+      } [
+  <em class="replaceable"><code>executable options</code></em>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e2170"></a><h2>Description</h2><p>
+    Use this script to dynamically load a TAU profiling/tracing library or to
+      select which papi events/domain to use during execuation of the
+      application. At runtime tauex will set the LD_LIBRARY_PATH and pass any
+      other parameters (or papi events) to the program and execute it with the
+      specified TAU measurement options.
+  </p></div><div class="refsect1" lang="en"><a name="d0e2175"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term">-d</span></dt><dd><p>Enable debugging output, use repeatedly for more output.</p></dd><dt><span class="term">-h</span></dt><dd><p>Print help message.</p></dd><dt><span class="term">-i</span></dt><dd><p>Print information about the host machine.</p></dd><dt><span class="term">-s</span></dt><dd><p>Dump the shell environment variables and exit.</p></dd><dt><span class="term">-U</span></dt><dd><p>User mode counts</p></dd><dt><span class="term">-K</span></dt><dd><p>Kernel mode counts</p></dd><dt><span class="term">-S</span></dt><dd><p>Supervisor mode counts</p></dd><dt><span class="term">-I</span></dt><dd><p>Interrupt mode counts</p></dd><dt><span class="term">-l</span></dt><dd><p>List events</p></dd><dt><span class="term">-L &lt;event&gt;</span></dt><dd><p>Describe event</p></dd><dt><span class="term">-a</span></dt><dd><p>Count all native events (implies -m)</p></dd><dt><span class="term">-n</span></dt><dd><p>Multiple runs (enough runs of exe to gather all events)</p></dd><dt><span class="term">-e &lt;event&gt;</span></dt><dd><p>Specify PAPI preset or native event</p></dd><dt><span class="term">-T &lt;option&gt;</span></dt><dd><p>Specify TAU option</p></dd><dt><span class="term">-v</span></dt><dd><p>Debug/Verbose mode</p></dd><dt><span class="term">-XrunTAU-&lt;options&gt;</span></dt><dd><p>specify TAU library directly</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e2275"></a><h2>Notes</h2><p>Defaults if unspecified: -U -T MPI,PROFILE -e P_WALL_CLOCK_TIME
+        MPI is assumed unless SERIAL is specified
+        PROFILE is assumed unless one of TRACE, VAMPIRTRACE or EPILOG is specified
+        P_WALL_CLOCK_TIME means count real time using fastest available timer</p></div><div class="refsect1" lang="en"><a name="d0e2280"></a><h2>Example</h2><p><code class="literal">mpirun -np 2 tauex -e PAPI_TOT_CYC -e PAPI_FP_OPS -T MPI,PROFILE --
+     ./ring</code></p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_exec"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_exec &#8212; TAU execution wrapping script</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_exec</code>  [
+	<em class="replaceable"><code>options</code></em>
+      ] [--] {
+  <em class="replaceable"><code>exe</code></em>
+      } [
+  <em class="replaceable"><code>exe options</code></em>
+      ]</p></div></div><div class="refsect1" lang="en"><a name="d0e2318"></a><h2>Description</h2><p>
+    Use this script to perform memory or IO tracking on either an instrumented or
+      uninstrumented executable.
+  </p></div><div class="refsect1" lang="en"><a name="d0e2323"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term">-v</span></dt><dd><p>verbose mode</p></dd><dt><span class="term">-qsub</span></dt><dd><p>BG/P qsub mode</p></dd><dt><span class="term">-io</span></dt><dd><p>track io</p></dd><dt><span class="term">-memory</span></dt><dd><p>track memory</p></dd><dt><span class="term">-cuda</span></dt><dd><p>track GPU events via CUDA (Must be configured with -cuda=&lt;dir&gt;, Preferred of CUDA 4.0 or earlier)</p></dd><dt><span class="term">-cupti</span></dt><dd><p>track GPU events via Nvidia's CUPTI interface (Must be configured with -cupti=&lt;dir&gt;, Preferred for CUDA 4.1 or later).</p></dd><dt><span class="term">-um</span></dt><dd><p>in conjunction with -cupti adds support for the Unified Memory GPUs. Requires CUDA 6.5 or later.</p></dd><dt><span class="term">-opencl</span></dt><dd><p>track GPU events via OpenCL</p></dd><dt><span class="term">-openacc</span></dt><dd><p>track openacc events. Supports TAU configurations with -arch=craycnl or PGI compilers on x86_64 Linux</p></dd><dt><span class="term">-armci</span></dt><dd><p>track ARMCI events via PARMCI (Must be configured with -armci=&lt;dir&gt;)</p></dd><dt><span class="term">-ebs</span></dt><dd><p> enable Event-based sampling.  See README.sampling for more information</p></dd><dt><span class="term">-ebs_period=&lt;count &gt; </span></dt><dd><p>sampling period (default 1000)</p></dd><dt><span class="term">-ebs_source=&lt;counter&gt; </span></dt><dd><p>sets sampling metric (default "itimer")</p></dd><dt><span class="term">-T&lt;option&gt; </span></dt><dd><p>: specify TAU option</p></dd><dt><span class="term">-loadlib=&lt;file.so &gt; </span></dt><dd><p>: specify additional load library</p></dd><dt><span class="term">-XrunTAU-&lt;options&gt;</span></dt><dd><p>specify TAU library directly</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e2423"></a><h2>Notes</h2><p>Defaults if unspecified: -T MPI.
+        MPI is assumed unless SERIAL is specified
+      </p><p>CUDA kernel tracking is included, if A CUDA SYNC call is made after
+			each kernel launch and <code class="literal">cudaThreadExit()</code> is called before the exit of each thread that uses CUDA.
+			</p><p>OPENCL kernel tracking is included, if A OPENCL SYNC call is made after
+			each kernel launch and <code class="literal">clReleaseContext()</code> is called before the exit of each thread that uses CUDA.
+			</p></div><div class="refsect1" lang="en"><a name="d0e2438"></a><h2>Examples</h2><p><code class="literal">mpirun -np 2 tau_exec -io ./ring</code></p><p><code class="literal">mpirun -np 8 tau_exec -ebs -ebs_period=1000000 -ebs_source=PAPI_FP_INS ./ring</code></p><p><code class="literal">tau_exec -T serial,cupti -cupti ./matmult (Preferred for CUDA 4.1 or later)</code></p><p><code class="literal">tau_exec -T serial -cuda ./matmult (Preferred for CUDA 4.0 or earlier)</code></p><p><code class="literal">tau_exec -T serial -opencl (OPENCL)</code></p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_timecorrect"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_timecorrect &#8212; Corrects and reorders the records of tau trace files.</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_timecorrect</code>  {
+	<em class="replaceable"><code>trace input file</code></em>
+			} {
+	<em class="replaceable"><code>EDF input file</code></em>
+			} {
+	<em class="replaceable"><code>trace output file</code></em>
+			} {
+	<em class="replaceable"><code>EDF input file</code></em>
+			}</p></div></div><div class="refsect1" lang="en"><a name="d0e2491"></a><h2>Description</h2><p>
+    This program takes in tau trace files, reorders and corrects the times of
+    these records and then outputs the records to new trace files.  The time
+    correction algorithm uses a logical clock algorithm with amortization. 
+    This is done by adjusting the times of
+    events such that the product of an effect happens after the cause of that
+    effect.
+	</p></div><div class="refsect1" lang="en"><a name="d0e2496"></a><h2>Options</h2><p>
+    <code class="option">trace input file</code>
+  </p><p>
+    <code class="option">EDF input file</code>
+  </p><p>
+    <code class="option">trace output file</code>
+  </p><p>
+    <code class="option">EDF output file</code>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_throttle.sh"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_throttle.sh &#8212; This tool generates a selective instrumentation file (called
+    throttle.tau) from a program output that has "Disabling"
+    messages.</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_throttle.sh</code> </p></div></div><div class="refsect1" lang="en"><a name="d0e2534"></a><h2>Description</h2><p>
+	    This tools will auto-generates a selective instrumenation file basied on
+      output from a program that has the profiling of some its functions throttled. 
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_portal.py"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_portal.py &#8212; 
+      This tool is design to interact with the TAU web portal (http://tau.nic.uoregon.edu). There are commands
+      for uploading or downloading packed profile files form the TAU portal.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_portal.py</code>  [-help] [--help] {<em class="replaceable"><code>command</code></em>} {<em class="replaceable"><code>options</code></em>} [<em class="replaceable"><code>argument</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e2567"></a><h2>Description</h2><p>
+   Each command will initate a transfer to profile data btween the TAU portal and either the filesytem (to be stored as ppk file) or to a PerfDMF database. See <code class="literal">tau_portal --help</code>
+    for more information.
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="taudb_configure"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>taudb_configure &#8212; 
+     Configuration program for a PerfDMF database.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">taudb_configure</code>  [-h,--help] [--create-default] [-g, --configFile <em class="replaceable"><code>configFile</code></em>] [-c, --config <em class="replaceable"><code>configuration_name</code></em>] [-t, --tauroot <em class="replaceable"><code>path</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e2606"></a><h2>Description</h2><p>
+    This configuration script will create a new TAUdb database. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e2611"></a><h2>Options</h2><p>-h, --help    show help
+    </p><p>--create-default creates a H2 database with all the default values
+     </p><p>-g, --configFile <em class="parameter"><code>configFile </code></em>
+    specify the path to the file that defines the TAUdb
+    configuration.
+    </p><p>-c, --config <em class="parameter"><code>configuration_name </code></em>
+    specify the name of the TAUdb
+    configuration -c foo is equalivent to -g
+    <code class="literal">&lt;home&gt;/.ParaProf/perfdmf.cfg.foo</code>.
+    </p><p>-t, --tauroot <em class="parameter"><code>path </code></em> Path to the root directory of tau.
+        </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="perfdmf_createapp"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>perfdmf_createapp &#8212; <span class="emphasis"><em>Deprecated</em></span>
+      Command line tool to create a application in the perfdmf database. <span class="emphasis"><em>(Deprecated)</em></span>
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">perfdmf_createapp</code>  [-h, --help ] [-g, --configFile <em class="replaceable"><code>configFile</code></em>] [-c, --config <em class="replaceable"><code>configuration_name</code></em>] [-a, --applicationid <em class="replaceable"><code>applicationID</code></em>] {-n, --name <em class="replaceable"><code>name</code></em>}</p></div></div><div class="refsect1" lang="en"><a name="d0e2674"></a><h2>Description</h2><p>
+    This script will create a new application in the perfdmf database. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e2679"></a><h2>Options</h2><p>-g, --configFile <em class="parameter"><code>configFile </code></em>
+    specify the path to the file that defines the perfdmf
+    configuration.
+    </p><p>-c, --config <em class="parameter"><code>configuration_name </code></em>
+    specify the name of the perfdmf
+    configuration -c foo is equalivent to -g
+    <code class="literal">&lt;home&gt;/.ParaProf/perfdmf.cfg.foo</code>.
+    </p><p>-a, --applicationid <em class="parameter"><code>applicationID </code></em>
+    specify the id number of the newly added application (default uses 
+    auto-increment).
+    </p><p>-n, --name <em class="parameter"><code>name </code></em> the name of the
+    application.</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="perfdmf_createexp"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>perfdmf_createexp &#8212; <span class="emphasis"><em>Deprecated</em></span>
+      Command line tool to create a experiment in the perfdmf database. <span class="emphasis"><em>(Deprecated)</em></span>
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">perfdmf_createexp</code>  [-h, --help ] [-g, --configFile <em class="replaceable"><code>configFile</code></em>] [-c, --config <em class="replaceable"><code>configuration_name</code></em>] {-a, --applicationid <em class="replaceable"><code>applicationID</code></em>} {-n, --name <em class="replaceable"><code>name</code></em>}</p></div></div><div class="refsect1" lang="en"><a name="d0e2743"></a><h2>Description</h2><p>
+    This script will create a new experiment in the perfdmf database. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e2748"></a><h2>Options</h2><p>-g, --configFile <em class="parameter"><code>configFile </code></em>
+    specify the path to the file that defines the perfdmf
+    configuration.
+    </p><p>-c, --config <em class="parameter"><code>configuration_name </code></em>
+    specify the name of the perfdmf
+    configuration -c foo is equalivent to -g
+    &lt;home&gt;/.ParaProf/perfdmf.cfg.foo.
+    </p><p>-a, --applicationid <em class="parameter"><code>applicationID </code></em>
+    specify the id number of the application to associate with the new
+    experiment.
+    </p><p>-n, --name <em class="parameter"><code>name </code></em> the name of the
+    application.</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="taudb_loadtrial"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>taudb_loadtrial &#8212; 
+      Command line tool to load a trial into the TAUdb database.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">taudb_loadtrial</code>  {-a <em class="replaceable"><code>appName</code></em>} {-x <em class="replaceable"><code>experimentName</code></em>} {-n <em class="replaceable"><code>name</code></em>} [options]</p></div></div><div class="refsect1" lang="en"><a name="d0e2800"></a><h2>Description</h2><p>
+    This script will create a new trial in the TAUdb database. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e2805"></a><h2>Options</h2><p>-n, --name <em class="parameter"><code>name </code></em> the name of the
+    application.</p><p> -a, --applicationname <em class="parameter"><code> name </code></em>  
+    specify associated application name for this trial
+    </p><p>-x, --experimentname <em class="parameter"><code>experimentName </code></em>
+    specify the name of the experiment to associate with newly uploaded trial.
+    </p><p>-e, --experimentid <em class="parameter"><code>experimentID </code></em>
+    specify the id number of the experiment to associate with the new
+    trial.
+    </p><p>-g, --configFile <em class="parameter"><code>configFile </code></em>
+    specify the path to the file that defines the TAUdb
+    configuration.  (overrides -c)
+    </p><p>-c, --config <em class="parameter"><code>configuration_name </code></em>
+    specify the name of the TAUdb
+    configuration -c foo is equalivent to -g &lt;.
+    </p><p>-t, --trialid <em class="parameter"><code>experimentID </code></em>
+    specify the id number of the newly uploaded trial.
+    </p><p>-m, --metadata <em class="parameter"><code>filename </code></em>
+    specify the filename of the XML metadata for this trial.
+    </p><p>-f, --filetype <em class="parameter"><code>filetype</code></em> 
+         Specify type of performance data, options are:
+                                    profiles (default), pprof, dynaprof, mpip,
+                                    gprof, psrun, hpm, packed, cube, hpc, ompp,
+                                    snap, perixml, gptl, paraver, ipm, google
+   </p><p>
+  -i, --fixnames                  Use the fixnames option for gprof
+</p></div><div class="refsect1" lang="en"><a name="d0e2855"></a><h2>Notes</h2><p>  For the TAU profiles type, you can specify either a specific set of profile
+files on the commandline, or you can specify a directory (by default the current
+directory).  The specified directory will be searched for profile.*.*.* files,
+or, in the case of multiple counters, directories named MULTI_* containing
+profile data.
+</p></div><div class="refsect1" lang="en"><a name="d0e2860"></a><h2>Examples</h2><p>  taudb_loadtrial -e 12 -n "Batch 001"
+  </p><p>
+    This will load profile.* (or multiple counters directories MULTI_*) into
+    experiment 12 and give the trial the name "Batch 001"
+</p><p>
+  taudb_loadtrial -e 12 -n "HPM data 01" -f hpm perfhpm*
+  </p><p>
+    This will load perfhpm* files of type HPMToolkit into experiment 12 and give
+    the trial the name "HPM data 01"
+</p><p>
+  taudb_loadtrial -a "NPB2.3" -x "parametric" -n "64" par64.ppk
+  </p><p>
+    This will load packed profile par64.ppk into the experiment named
+    "parametric" under the application named "NPB2.3" and give the trial
+    the name "64".  The application and experiment will be created if not found.
+</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="perfexplorer"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>perfexplorer &#8212; 
+      Launches TAU's Performance Data Mining Analyzer.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">perfexplorer</code>  [-n, --nogui] [-i, --script <em class="replaceable"><code>script</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e2896"></a><h2>Documentation</h2><p>
+      Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+    </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="perfexplorer_configure"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>perfexplorer_configure &#8212; 
+	Configures a TAUdb database for use with perfexplorer, and installs necessary JAR files.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">perfexplorer_configure</code> </p></div></div><div class="refsect1" lang="en"><a name="d0e2919"></a><h2>Description</h2><p>
+    Configures a TAUdb database for use with perfexplorer, and installs necessary JAR files.
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="taucc.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>taucc &#8212; 
+      C compiler wrapper for TAU
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">taucc</code>  [options]  ... </p></div></div><div class="refsect1" lang="en"><a name="d0e2944"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-tau:help</code></span></dt><dd><p>Displays help</p></dd><dt><span class="term"><code class="option">-tau:verbose</code></span></dt><dd><p>Enable verbose mode</p></dd><dt><span class="term"><code class="option">-tau:keepfiles</code></span></dt><dd><p>Keep intermediate files</p></dd><dt><span class="term"><code class="option">-tau:show</code></span></dt><dd><p>Do not invoke, just show what would be done</p></dd><dt><span class="term"><code class="option">-tau:pdtinst</code></span></dt><dd><p>Use PDT instrumentation</p></dd><dt><span class="term"><code class="option">-tau:compinst</code></span></dt><dd><p>Use compiler instrumentation</p></dd><dt><span class="term"><code class="option">-tau:headerinst</code></span></dt><dd><p>Instrument headers</p></dd><dt><span class="term"><code class="option">-tau:&lt;options&gt;</code></span></dt><dd><p>Specify measurement/instrumentation options.  Sample options: mpi,pthread,openmp,profile,callpath,trace,vampirtrace,epilog</p></dd><dt><span class="term"><code class="option">-tau:makefile <em class="parameter"><code>tau_stub_makefile</code></em></code></span></dt><dd><p>Specify tau stub makefile</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3013"></a><h2>Notes</h2><p>
+    If the -tau:makefile option is not used, the TAU_MAKEFILE
+    environment variable will be checked, if it is not specified,
+    then the -tau:&lt;options&gt; will be used to identify a binding.
+  </p></div><div class="refsect1" lang="en"><a name="d0e3018"></a><h2>Examples</h2><p>taucc foo.c -o foo</p><p>taucc -tau:MPI,OPENMP,TRACE foo.c -o foo</p><p>taucc -tau:verbose -tau:PTHREAD foo.c -o foo</p></div><div class="refsect1" lang="en"><a name="d0e3027"></a><h2>Documentation</h2><p>
+    Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tauupc.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tauupc &#8212; 
+      UPC wrapper for TAU
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tauupc</code>  [options]  ... </p></div></div><div class="refsect1" lang="en"><a name="d0e3055"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-tau:help</code></span></dt><dd><p>Displays help</p></dd><dt><span class="term"><code class="option">-tau:verbose</code></span></dt><dd><p>Enable verbose mode</p></dd><dt><span class="term"><code class="option">-tau:keepfiles</code></span></dt><dd><p>Keep intermediate files</p></dd><dt><span class="term"><code class="option">-tau:show</code></span></dt><dd><p>Do not invoke, just show what would be done</p></dd><dt><span class="term"><code class="option">-tau:pdtinst</code></span></dt><dd><p>Use PDT instrumentation</p></dd><dt><span class="term"><code class="option">-tau:compinst</code></span></dt><dd><p>Use compiler instrumentation</p></dd><dt><span class="term"><code class="option">-tau:headerinst</code></span></dt><dd><p>Instrument headers</p></dd><dt><span class="term"><code class="option">-tau:&lt;options&gt;</code></span></dt><dd><p>Specify measurement/instrumentation options.  Sample options: mpi,pthread,openmp,profile,callpath,trace,vampirtrace,epilog</p></dd><dt><span class="term"><code class="option">-tau:makefile <em class="parameter"><code>tau_stub_makefile</code></em></code></span></dt><dd><p>Specify tau stub makefile</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3124"></a><h2>Notes</h2><p>
+    If the -tau:makefile option is not used, the TAU_MAKEFILE
+    environment variable will be checked, if it is not specified,
+    then the -tau:&lt;options&gt; will be used to identify a binding.
+  </p></div><div class="refsect1" lang="en"><a name="d0e3129"></a><h2>Documentation</h2><p>
+    Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="taucxx.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>taucxx &#8212; 
+      C++ compiler wrapper for TAU
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">taucxx</code>  [options]  ... </p></div></div><div class="refsect1" lang="en"><a name="d0e3158"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-tau:help</code></span></dt><dd><p>Displays help</p></dd><dt><span class="term"><code class="option">-tau:verbose</code></span></dt><dd><p>Enable verbose mode</p></dd><dt><span class="term"><code class="option">-tau:keepfiles</code></span></dt><dd><p>Keep intermediate files</p></dd><dt><span class="term"><code class="option">-tau:show</code></span></dt><dd><p>Do not invoke, just show what would be done</p></dd><dt><span class="term"><code class="option">-tau:pdtinst</code></span></dt><dd><p>Use PDT instrumentation</p></dd><dt><span class="term"><code class="option">-tau:compinst</code></span></dt><dd><p>Use compiler instrumentation</p></dd><dt><span class="term"><code class="option">-tau:headerinst</code></span></dt><dd><p>Instrument headers</p></dd><dt><span class="term"><code class="option">-tau:&lt;options&gt;</code></span></dt><dd><p>Specify measurement/instrumentation options.  Sample options: mpi,pthread,openmp,profile,callpath,trace,vampirtrace,epilog</p></dd><dt><span class="term"><code class="option">-tau:makefile <em class="parameter"><code>tau_stub_makefile</code></em></code></span></dt><dd><p>Specify tau stub makefile</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3227"></a><h2>Notes</h2><p>
+    If the -tau:makefile option is not used, the TAU_MAKEFILE
+    environment variable will be checked, if it is not specified,
+    then the -tau:&lt;options&gt; will be used to identify a binding.
+  </p></div><div class="refsect1" lang="en"><a name="d0e3232"></a><h2>Examples</h2><p>taucxx foo.cpp -o foo</p><p>taucxx -tau:MPI,OPENMP,TRACE foo.cpp -o foo</p><p>taucxx -tau:verbose -tau:PTHREAD foo.cpp -o foo</p></div><div class="refsect1" lang="en"><a name="d0e3241"></a><h2>Documentation</h2><p>
+    Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tauf90.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tauf90 &#8212; 
+      Fortran compiler wrapper for TAU
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tauf90</code>  [options]  ... </p></div></div><div class="refsect1" lang="en"><a name="d0e3270"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-tau:help</code></span></dt><dd><p>Displays help</p></dd><dt><span class="term"><code class="option">-tau:verbose</code></span></dt><dd><p>Enable verbose mode</p></dd><dt><span class="term"><code class="option">-tau:keepfiles</code></span></dt><dd><p>Keep intermediate files</p></dd><dt><span class="term"><code class="option">-tau:show</code></span></dt><dd><p>Do not invoke, just show what would be done</p></dd><dt><span class="term"><code class="option">-tau:pdtinst</code></span></dt><dd><p>Use PDT instrumentation</p></dd><dt><span class="term"><code class="option">-tau:compinst</code></span></dt><dd><p>Use compiler instrumentation</p></dd><dt><span class="term"><code class="option">-tau:headerinst</code></span></dt><dd><p>Instrument headers</p></dd><dt><span class="term"><code class="option">-tau:&lt;options&gt;</code></span></dt><dd><p>Specify measurement/instrumentation options.  Sample options: mpi,pthread,openmp,profile,callpath,trace,vampirtrace,epilog</p></dd><dt><span class="term"><code class="option">-tau:makefile <em class="parameter"><code>tau_stub_makefile</code></em></code></span></dt><dd><p>Specify tau stub makefile</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3339"></a><h2>Notes</h2><p>
+    If the -tau:makefile option is not used, the TAU_MAKEFILE
+    environment variable will be checked, if it is not specified,
+    then the -tau:&lt;options&gt; will be used to identify a binding.
+  </p></div><div class="refsect1" lang="en"><a name="d0e3344"></a><h2>Examples</h2><p>tauf90 foo.f90 -o foo</p><p>tauf90 -tau:MPI,OPENMP,TRACE foo.f90 -o foo</p><p>tauf90 -tau:verbose -tau:PTHREAD foo.f90 -o foo</p></div><div class="refsect1" lang="en"><a name="d0e3353"></a><h2>Documentation</h2><p>
+    Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="paraprof.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>paraprof &#8212; 
+      Launches TAU's Java-based performance data viewer.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">paraprof</code>  [-h, --help] [-f, --filetype <em class="replaceable"><code>filetype</code></em>] [--pack <em class="replaceable"><code>file</code></em>] [--dump] [-o, --oss] [-s, --summary]</p></div></div><div class="refsect1" lang="en"><a name="d0e3393"></a><h2>Notes</h2><p>
+ For the TAU profiles type, you can specify either a specific set of profile
+files on the commandline, or you can specify a directory (by default the current
+directory).  The specified directory will be searched for profile.*.*.* files,
+or, in the case of multiple counters, directories named MULTI_* containing
+profile data. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e3398"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-h</code></span></dt><dd><p>Display help</p></dd><dt><span class="term"><code class="option">-f, --filetype <em class="parameter"><code>filetype</code></em></code></span></dt><dd><p>Specify type of performance data.  Options are: profiles (default), pprof, dynaprof, mpip, gprof, psrun, hpm, packed, cube, hpc, ompp, snap, perixml, gptl</p></dd><dt><span class="term"><code class="option">--pack <em class="parameter"><code>file</code></em></code></span></dt><dd><p>Pack the data into packed (.ppk) format (does not launch ParaProf GUI)</p></dd><dt><span class="term"><code class="option">--dump</code></span></dt><dd><p>Dump profile data to TAU profile format (does not launch ParaProf GUI).</p></dd><dt><span class="term"><code class="option">-o, --oss</code></span></dt><dd><p>Print profile data in OSS style text output</p></dd><dt><span class="term"><code class="option">-s, --summary</code></span></dt><dd><p>Print only summary statistics (only applies to OSS output)</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3448"></a><h2>Documentation</h2><p>
+    Complete documentation can be found at <span class="emphasis"><em>http://www.cs.uoregon.edu/research/tau/tau-usersguide.pdf</em></span>
+  </p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="pprof.man"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>pprof &#8212; 
+      Quickly diplays profile data.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">pprof</code>  [-a] [-c] [-b] [-m] [-t] [-e] [-i] [-v] [-r] [-s] [-n <em class="replaceable"><code>num</code></em>] [-f <em class="replaceable"><code>filename</code></em>] [-p] [-l] [-d]</p></div></div><div class="refsect1" lang="en"><a name="d0e3505"></a><h2>Description</h2><p>
+  </p></div><div class="refsect1" lang="en"><a name="d0e3510"></a><h2>Options</h2><p>-a  Show all location information available</p><p>-c  Sort according to number of Calls </p><p>-b  Sort according to number of suBroutines called by a function
+  </p><p>-m  Sort according to Milliseconds (exclusive time total)</p><p>-t  Sort according to Total milliseconds (inclusive time total)
+  (default)</p><p>-e Sort according to Exclusive time per call (msec/call)</p><p>-i Sort according to Inclusive time per call (total msec/call)</p><p>-v Sort according to Standard Deviation (excl usec)</p><p>-r Reverse sorting order</p><p>-s print only Summary profile information </p><p>-n num  print only first num number of functions </p><p>-f filename  specify full path and Filename without node ids</p><p>-p suPpress conversion to hhmmssmmm format</p><p>-l List all functions and exit</p><p>-d Dump output format (for tau_reduce) [node numbers]  prints only
+  info about all contexts/threads of given node numbers</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_instrumentor"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_instrumentor &#8212; 
+      automaticly instruments a source basied on information provided by pdt.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_instrumentor</code>  [--help] {<em class="replaceable"><code>pdbfile</code></em>} {<em class="replaceable"><code>sourcefile</code></em>} [-c] [-b] [-m] [-t] [-e] [-i] [-v] [-r] [-s] [-n <em class="replaceable"><code>num</code></em>] [-f <em class="replaceable"><code>filename</code></em>] [-p] [-l] [-d]</p></div></div><div class="refsect1" lang="en"><a name="d0e3598"></a><h2>Description</h2><p>
+  </p></div><div class="refsect1" lang="en"><a name="d0e3603"></a><h2>Options</h2><p>-a  Show all location information available</p><p>-c  Sort according to number of Calls </p><p>-b  Sort according to number of suBroutines called by a function
+  </p><p>-m  Sort according to Milliseconds (exclusive time total)</p><p>-t  Sort according to Total milliseconds (inclusive time total)
+  (default)</p><p>-e Sort according to Exclusive time per call (msec/call)</p><p>-i Sort according to Inclusive time per call (total msec/call)</p><p>-v Sort according to Standard Deviation (excl usec)</p><p>-r Reverse sorting order</p><p>-s print only Summary profile information </p><p>-n num  print only first num number of functions </p><p>-f filename  specify full path and Filename without node ids</p><p>-p suPpress conversion to hhmmssmmm format</p><p>-l List all functions and exit</p><p>-d Dump output format (for tau_reduce) [node numbers]  prints only
+  info about all contexts/threads of given node numbers</p></div><div class="refsect1" lang="en"><a name="d0e3636"></a><h2>Example</h2><p><code class="literal">%&gt; tau_instrumentor foo.pdb foo.cpp -o foo.inst.cpp -f
+  select.tau</code></p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="vtfconverter"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>vtfconverter &#8212; 
+      
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">vtfconverter</code>  [-h] [-c] [-f <em class="replaceable"><code>file</code></em>] [-p <em class="replaceable"><code>path</code></em>] [-i <em class="replaceable"><code>from</code></em> <em class="replaceable"><code>to</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e3676"></a><h2>Description</h2><p>
+    Converts VTF profile to TAU profiles and launches an interactive VTF prompt. 
+  </p></div><div class="refsect1" lang="en"><a name="d0e3681"></a><h2>Options</h2><p>-c Opens command line interface.</p><p>-f Converts trace [file] to TAU profiles.</p><p>-p Places the resulting profiles in the directory [path].</p><p>-i States that the interval [from],[to] should be profiled.</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_setup"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_setup &#8212; 
+      Launches GUI interface to configure TAU.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_setup</code> </p></div></div><div class="refsect1" lang="en"><a name="d0e3707"></a><h2>Options</h2><p>-v Verbose output.</p><p>--html Output results in HTML.</p><p>--build Only build.</p><p>--run Only run.</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_wrap"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_wrap &#8212; 
+      Instruments an external library with TAU without needing to recompile
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_wrap</code>  {<em class="replaceable"><code>pdbfile</code></em>} {<em class="replaceable"><code>sourcefile</code></em>} [-o <em class="replaceable"><code>outputfile</code></em>] [-g <em class="replaceable"><code>groupname</code></em>] [-i <em class="replaceable"><code>headerfile</code></em>] [-f <em class="replaceable"><code>selectivefile</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e3757"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term">pdbfile</span></dt><dd><p>A pdb file generated by cparse, cxxparse, or f90parse;
+        these commands are found in the [PDT_HOME]/[arch]/bin directory.</p></dd><dt><span class="term">sourcefile</span></dt><dd><p>The source file corresponding to the pdbfile.
+        </p></dd><dt><span class="term">-o outputfile</span></dt><dd><p>The filename of the resulting instrumented source file.
+        </p></dd><dt><span class="term">-g groupname</span></dt><dd><p>This associates all the functions profiled as belonging
+        to the this group. Once profiled you will be able to analysis these
+        functions separately.
+        </p></dd><dt><span class="term">-i headerfile</span></dt><dd><p>By default <code class="literal">tau_wrap</code> will include
+        Profile/Profile.h; use this option to specify a different header file.
+        </p></dd><dt><span class="term">-f selectivefile</span></dt><dd><p>You can specify a selective instrumentation file that
+        defines how the source file is to be instrumented.
+        </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3800"></a><h2>Examples</h2><pre class="screen">
+%&gt; tau_wrap hdf5.h.pdb hdf5.h -o hdf5.inst.c -f select.tau -g hdf5
+</pre><p>
+    </p><p>
+      This specifies the instrumented wrapper library source (hdf5.inst.c), the instrumentation specification
+      file (select.tau) and the group (hdf5). It creates the wrapper/
+      directory.</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_gen_wrapper"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_gen_wrapper &#8212; 
+     Generates a wrapper library that can intercept 
+ at link time or at runtime routines specified in a header file
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_gen_wrapper</code>  {<em class="replaceable"><code>headerfile</code></em>} {<em class="replaceable"><code>library</code></em>} [-w | -d | -r <em class="replaceable"><code></code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e3833"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term">headerfile</span></dt><dd><p>Name of the headerfile to be wrapped</p></dd><dt><span class="term">library</span></dt><dd><p>Name of the library to wrap
+        </p></dd><dt><span class="term">-w </span></dt><dd><p>(default)  generates wrappers for re-linking the application
+        </p></dd><dt><span class="term">-d </span></dt><dd><p>generates wrappers by redefining routines during compilation in header files
+        </p></dd><dt><span class="term">-r </span></dt><dd><p>generates wrappers that may be pre-loaded using tau_exec at runtime
+        </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3867"></a><h2>Examples</h2><pre class="screen">
+%&gt;  tau_gen_wrapper hdf5.h /usr/lib/libhdf5.a 
+</pre><p>
+    </p><p>
+      This  generates a wrapper library that may be linked in using TAU_OPTIONS -optTauWrapFile=&lt;wrapperdir&gt;/link_options.tau
+</p></div><div class="refsect1" lang="en"><a name="d0e3876"></a><h2>Notes</h2><p>tau_gen_wrapper reads the TAU_MAKEFILE  environment variable to get PDT settings</p></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_pin"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_pin &#8212; 
+      Instruments application at run time using Intel's PIN library
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_pin</code>  [-n <em class="replaceable"><code>proc_num</code></em>] [-r <em class="replaceable"><code>rules</code></em>] {--} [<em class="replaceable"><code>myapp</code></em>] [<em class="replaceable"><code>myargs</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e3912"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-n</code> <em class="parameter"><code>proc_num</code></em></span></dt><dd><p> This argument enables multple instances of MPI applications launched with MPIEXEC.  proc_num is the parameter indicating number of MPI process instances to be launched.  This argument is optional and one can profile MPI application even with single process instance without this argument. </p></dd><dt><span class="term"><code class="option">-r</code> <em class="parameter"><code>rule</code></em></span></dt><dd><p>This argument is specification rule for profiling the application. It allows selective profiling by specifying the "rule". The rule is a wildcard expression token which will indicate the area of profiling. It can be only the routine specification like "*" which indicates it'll instrument all the routines in the EXE or MPI routines. One can further specify the routines on a particular dll by the rule "somedll.dll!*". The dll name can also be in regular expression. We treat the application exe and MPI routines as special cases and specifying only the routines is allowed.    </p></dd><dt><span class="term"><em class="parameter"><code>myapp</code></em></span></dt><dd><p>It's the application exe. This application can be Windows or console application. Profiling large Windows applications might suffer from degraded performance and interactability. Specifying a limited number of interesting routines can help. </p></dd><dt><span class="term"><em class="parameter"><code>myargs</code></em></span></dt><dd><p>It's the command line arguments of the application.
+        </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e3950"></a><h2>Examples</h2><p>To profile routines in mytest.exe with prefix "myf":
+</p><pre class="screen">
+tau_pin -r myf.*  -- mytest.exe
+</pre><p>
+    </p><p>To profile all routines in mpitest.exe ( no need to specify any rule
+		for all ):
+</p><pre class="screen">
+tau_pin  mpitest.exe
+</pre><p>
+    </p><p>to profile only MPI routines in mpitest.exe by launching two instances:
+</p><pre class="screen">
+tau_pin -n 2 -r _MPI_.* -- mpitest.exe
+</pre><p>
+    </p><div class="refsect2" lang="en"><a name="d0e3968"></a><h3>Wildcards</h3><div class="itemizedlist"><ul type="disc"><li><p><code class="literal">*</code> for anything, for example *MPI* means any string having MPI
+				in between any other characters.</p></li><li><p><code class="literal">?</code> It's a placeholder wild card ?MPI* means any
+			character followed by MPI and followed by any string, example:
+			<code class="literal">??Try</code> could be <code class="literal">__Try</code> or
+			<code class="literal">MyTry</code> or <code class="literal">MeTry</code> etc. </p></li></ul></div></div></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_java"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_java &#8212; 
+      Instruments java applications at runtime using JVMTI
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_java</code>  [<em class="replaceable"><code>options</code></em>javaprogram] [  <em class="replaceable"><code>args</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e4017"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-help</code></em></span></dt><dd><p> Displays help information. </p></dd><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-verbose</code></em></span></dt><dd><p>     Report the arguments of the script before it runs. </p></dd><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-tau:agentlib=&lt;agentlib&gt;</code></em></span></dt><dd><p>   By default tau_java uses the most recently configured jdk, you can specify a different one here.
+ </p></dd><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-tau:java=&lt;javapath&gt;</code></em></span></dt><dd><p>      Path to a java binary, by default uses the one corresponding to the most recently configured jdk.
+</p></dd><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-tau:bootclasspath= &lt;bootclasspath&gt;</code></em></span></dt><dd><p>         To modify the bootclasspath to point to a different jar, not usually necessary.
+
+</p></dd><dt><span class="term"><code class="option"></code> <em class="parameter"><code>-tau:include=&lt;item&gt;</code></em></span></dt><dd><p> Only instrument these methods or classes.  Separate multiple classes
+        and methods with semicolons</p></dd><dt><span class="term"><em class="parameter"><code>-tau:exclude=&lt;item&gt;</code></em></span></dt><dd><p> Exclude the listed classes and methods.  Separate multiple classes
+        and methods with semicolons</p></dd><dt><span class="term"><em class="parameter"><code>args</code></em></span></dt><dd><p>the command line arguments of the java application.
+        </p></dd></dl></div></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_cupti_avail"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_cupti_avail &#8212; 
+			Detects the available CUPTI counters on the a each GPU device.
+    </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tau_cupti_avail</code>  [-c <em class="replaceable"><code>counter names</code></em>]</p></div></div><div class="refsect1" lang="en"><a name="d0e4108"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-c</code> <em class="parameter"><code>counter names</code></em></span></dt><dd><p>Checks which of a colon seperated list of CUPTI counter
+				names can be recorded.</p></dd></dl></div></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_run"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_run &#8212; 
+ Instruments and executes binaries to generate performance data. (DyninstAPI based instrumentor)
+    </p></div><div class="refsect1" lang="en"><a name="d0e4133"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-v</code> <em class="parameter"><code></code></em></span></dt><dd><p>
+  		optional verbose option
+	</p></dd><dt><span class="term"><code class="option">-o</code> <em class="parameter"><code>outfile</code></em></span></dt><dd><p>
+		for binary rewriting
+	</p></dd><dt><span class="term">-T&lt;option&gt; </span></dt><dd><p>: specify TAU option</p></dd><dt><span class="term">-loadlib=&lt;file.so &gt; </span></dt><dd><p>: specify additional load library</p></dd><dt><span class="term">-XrunTAU-&lt;options&gt;</span></dt><dd><p>specify TAU library directly</p></dd></dl></div></div></div><div class="refentry" lang="en"><div class="refentry.separator"><hr></div><a name="tau_rewrite"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>tau_rewrite &#8212; 
+           Rewrites binaries using Maqao if Tau is configured using PDT 3.17+ at the routine level. 
+          If it doesn't find the Maqao package from PDT 3.17, it reverts to tau_run (DyninstAPI based instrumentor). 
+    </p></div><div class="refsect1" lang="en"><a name="d0e4185"></a><h2>Options</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-o</code> <em class="parameter"><code>outfile</code></em></span></dt><dd><p> specify instrumented output file
+				</p></dd><dt><span class="term"><code class="option">-T</code> <em class="parameter"><code></code></em></span></dt><dd><p>specify TAU option (CUPTI, DISABLE, MPI, OPENMP, PDT, PGI, PROFILE, SCOREP, SERIAL)
+				</p></dd><dt><span class="term"><code class="option">-loadlib=</code> <em class="parameter"><code>file.so</code></em></span></dt><dd><p>specify additional load library
+				</p></dd><dt><span class="term"><code class="option">-s</code> <em class="parameter"><code></code></em></span></dt><dd><p>dryrun without executing
+				</p></dd><dt><span class="term"><code class="option">-v</code> <em class="parameter"><code></code></em></span></dt><dd><p>long verbose mode
+				</p></dd><dt><span class="term"><code class="option">-v1</code> <em class="parameter"><code></code></em></span></dt><dd><p>short verbose mode
+				</p></dd><dt><span class="term"><code class="option">-XrunTAUsh-</code> <em class="parameter"><code>options</code></em></span></dt><dd><p>specify TAU library directly
+				</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="d0e4255"></a><h2>Notes</h2><p>	Defaults if unspecified: -T MPI</p><p>
+	MPI is assumed unless SERIAL is specified
+</p></div><div class="refsect1" lang="en"><a name="d0e4262"></a><h2>Example</h2><p> 
+</p><pre class="screen">	
+    tau_rewrite -T papi,pdt a.out -o a.inst
+</pre><p>
+</p><pre class="screen">
+    mpirun -np 4 ./a.inst
+</pre><p>
+</p></div></div></div>
+       </div>
+       <?php include("../../footer.php") ?>
+    </body></html>

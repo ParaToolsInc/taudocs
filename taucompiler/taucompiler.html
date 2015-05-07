@@ -1,0 +1,144 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;1.&nbsp;Tau Instrumentation</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+       <?php include("../../header.php") ?>
+       <div id="content">
+    <div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="tauInstrumentation"></a>Chapter&nbsp;1.&nbsp;Tau Instrumentation</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#TauLibraryInterposition">1.1. Dynamic instrumentation through library pre-loading</a></span></dt><dt><span class="sect1"><a href="#d0e107">1.2. TAU scripted compilation</a></span></dt><dd><dl><dt><span class="sect2"><a href="#d0e112">1.2.1. Compiler Based Instrumentation</a></span></dt><dt><span class="sect2"><a href="#d0e140">1.2.2. Source Based Instrumentation</a></span></dt><dt><span class="sect2"><a href="#TAUCompilerOptions">1.2.3. Options to TAU compiler scripts</a></span></dt></dl></dd><dt><span class="sect1"><a href="#SelectiveProfiling">1.3. Selectively Profiling an Application</a></span></dt><dd><dl><dt><span class="sect2"><a href="#ManualSelectiveProfiling">1.3.1. Custom Profiling</a></span></dt></dl></dd></dl></div><div class="simplesect" lang="en"><div class="titlepage"></div><p>
+          </p><p>TAU provides three methods to track the performance of your
+	application. Library interposition using tau_exec, 
+	compiler directives or source transformation using PDT. Here is a
+	table that lists the features/requirement for each method:</p><div class="table"><a name="d0e10"></a><p class="title"><b>Table&nbsp;1.1.&nbsp;Different methods of instrumenting applications</b></p><table summary="Different methods of instrumenting applications" border="1"><colgroup><col width="12%"><col width="13%"><col width="12%"><col width="13%"><col width="12%"><col width="13%"><col width="12%"><col width="13%"></colgroup><thead><tr><th><span class="emphasis"><em>Method</em></span></th><th>Requires
+					recompiling</th><th>Requires
+					PDT</th><th>Shows MPI events</th><th>Routine-level event</th><th>Low level
+					events (loops, phases, etc...)</th><th>Throttling to reduce
+					overhead</th><th>Ability to exclude file from
+					instrumentation</th><th>Ability to exclude
+			    other regions of code</th></tr></thead><tbody><tr><td>Interposition</td><td>&nbsp;</td><td>&nbsp;</td><td>Yes</td><td>&nbsp;</td><td>&nbsp;</td><td>Yes</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>Compiler</td><td>Yes</td><td>&nbsp;</td><td>Yes</td><td>Yes</td><td>&nbsp;</td><td>Yes</td><td>Yes</td><td>&nbsp;</td></tr><tr><td>Source</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr></tbody></table></div>
+
+
+		The requirements for each method increases as we move down the table: tau_exec
+		only requires a system with shared library support. Compiler based
+		instrumentation requires re-compiling that target application and Source
+		instrumentation aditionally requires PDT. For this reason we often recommend that users
+		start with Library interposition and move down the table if more features
+		are needed.
+		
+</div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="TauLibraryInterposition"></a>1.1.&nbsp;Dynamic instrumentation through library pre-loading</h2></div></div></div><p>Dynamic instrumentation is achieved through library pre-loading. The
+		libraries chosen for pre-loading determine the scope of instrumentation.
+		Some options include tracking MPI, io, memory, cuda, opencl library
+		calls. MPI instrumentation is included by default the others are enabled by command-line options to
+		<code class="literal">tau_exec</code>. More info at the <a href="#"><code class="literal">tau_exec</code> manual page</a>. Dynamic
+		instrumentation can be used on both uninstrumented binaries and binaries
+		instrumented via one of the methods below, in this way different layers of
+		instrumentation can be combined.</p><p>To use <code class="literal">tau_exec</code> place this command before the
+		application executable when running the application. In this example IO
+		instrumentation is requested.
+		</p><pre class="screen">
+%&gt; tau_exec -io ./a.out
+%&gt; mpirun -np 4 tau_exec -io ./a.out
+</pre><p>
+    </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e107"></a>1.2.&nbsp;TAU scripted compilation</h2></div></div></div><div class="simplesect" lang="en"><div class="titlepage"></div>For more detailed profiles, TAU provides two means to compile your
+	application with TAU: through your compiler or through source transformation
+	using PDT.</div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e112"></a>1.2.1.&nbsp;Compiler Based Instrumentation</h3></div></div></div><p>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
+    instrument and compile Fortran, C, and C++ programs respectively. You might
+    use tau_cc.sh to compile a C program by typing: 
+    </p><pre class="screen">
+%&gt; module load tau
+%&gt; tau_cc.sh -tau_options=-optCompInst samplecprogram.c
+    </pre><p>
+	    On machines where a TAU module is not available, you will need to set the
+			tau makefile and/or options. The makefile and options controls how will
+			TAU will compile you application. Use
+		</p><pre class="screen">
+%&gt;tau_cc.sh -tau_makefile=[path to makefile] \
+            -tau_options=[option] samplecprogram.c
+    </pre><p>
+    The Makefile can be found in the <code class="literal">/[arch]/lib</code>
+		directory of your TAU distribution, for example
+    <code class="literal">/x86_64/lib/Makefile.tau-mpi-pdt</code>.</p><p>You can also use a Makefile
+    specified in an environment variable. To run tau_cc.sh so it uses the
+    Makefile specified by environment variable <code class="literal">TAU_MAKEFILE</code>,
+    type:
+    
+    </p><pre class="screen">
+%&gt;export TAU_MAKEFILE=[path to tau]/[arch]/lib/[makefile]
+%&gt;export TAU_OPTIONS=-optCompInst
+%&gt;tau_cc.sh sampleCprogram.c
+    </pre><p>
+
+    Similarly, if you want to set compile time options like
+    selective instrumentation you can use the <code class="literal">TAU_OPTIONS</code>
+    environment variable.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e140"></a>1.2.2.&nbsp;Source Based Instrumentation</h3></div></div></div><p>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
+    instrument and compile Fortran, C, and C++ programs respectively. You might
+    use tau_cc.sh to compile a C program by typing: 
+    </p><pre class="screen">
+%&gt; module load tau
+%&gt; tau_cc.sh samplecprogram.c
+    </pre><p>
+    When setting the TAU_MAKEFILE make sure the Makefile name contains
+		<code class="literal">pdt</code> because you will need a version of TAU built with
+		PDT.</p><p>A list of options for the TAU compiler scripts can be found by typing
+		<code class="literal">man tau_compiler.sh</code> or in this chapter of the <a href="#">reference guide</a>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="TAUCompilerOptions"></a>1.2.3.&nbsp;Options to TAU compiler scripts</h3></div></div></div><p>These are some commonly used options available to the TAU compiler
+		scripts. Either set them via the <code class="literal">TAU_OPTIONS</code> environment
+		variable or the <code class="literal">-tau_options=</code> option to
+		<code class="literal">tau_f90.sh, tau_cc.sh, or tau_cxx.sh</code></p><div class="variablelist"><dl><dt><span class="term"><code class="literal">-optVerbose</code></span></dt><dd>Enable verbose output (default: on)</dd><dt><span class="term"><code class="literal">-optKeepFiles</code></span></dt><dd>Do not remove intermediate files</dd><dt><span class="term"><code class="literal">-optShared</code></span></dt><dd>Use shared library of TAU (consider when using
+				<code class="literal">tau_exec</code></dd></dl></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="SelectiveProfiling"></a>1.3.&nbsp;Selectively Profiling an Application</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ManualSelectiveProfiling"></a>1.3.1.&nbsp;Custom Profiling</h3></div></div></div><p>TAU allows you to customize the instrumentation of a program by using a
+		selective instrumentation file. This instrumentation file is used to
+      manually control which parts of the application are profiled and how they
+      are profiled. If you are using one of the TAU compiler wrapper scripts to instrument your
+			application you can use the <code class="literal">-tau_options=-optTauSelectFile=&lt;file&gt;</code>
+			option to enable selective instrumentation. 
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">Selective instrumentation is only available when using source-level
+		instrumentation (PDT).</td></tr></table></div>
+      To specify a selective instrumentation file, create a text file and use
+			the following guide to fill it in:
+			<div class="itemizedlist"><ul type="disc"><li>Wildcards for routine names are specified with the
+				<code class="literal">#</code> mark (because <code class="literal">*</code>
+				symbols show up in routine signatures.)  The <code class="literal">#</code> mark is unfortunately the comment character
+				as well, so to specify a leading wildcard, place the entry in quotes.
+				</li><li>
+					Wildcards for file names are specified with <code class="literal">*</code> symbols.  
+				</li></ul></div><pre class="screen"> 
+		<p>Here is a example file:</p>
+#Tell tau to not profile these functions
+BEGIN_EXCLUDE_LIST
+
+void quicksort(int *, int, int)
+# The next line excludes all functions beginning with "sort_" and having 
+# arguments "int *"
+void sort_#(int *)
+void interchange(int *, int *)
+
+END_EXCLUDE_LIST
+
+#Exclude these files from profiling
+BEGIN_FILE_EXCLUDE_LIST
+
+*.so
+
+END_FILE_EXCLUDE_LIST
+
+BEGIN_INSTRUMENT_SECTION
+
+# A dynamic phase will break up the profile into phase where
+# each events is recorded according to what phase of the application
+# in which it occured.
+dynamic phase name="foo1_bar" file="foo.c" line=26 to line=27
+
+# instrument all the outer loops in this routine
+loops file="loop_test.cpp" routine="multiply"
+
+# tracks memory allocations/deallocations as well as potential leaks
+memory file="foo.f90" routine="INIT"
+
+# tracks the size of read, write and print statements in this routine
+io file="foo.f90" routine="RINB"
+
+END_INSTRUMENT_SECTION
+</pre><p>Selective instrumentation files can be created automatically from
+<code class="literal"><a href="#">ParaProf</a></code>
+by right clicking on a trial and selecting the <code class="literal">Create Selective Instrumentation File</code> menu
+item.</p></div></div></div>
+       </div>
+       <?php include("../../footer.php") ?>
+    </body></html>

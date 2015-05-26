@@ -20,9 +20,9 @@
 			  <title>Here is how to generate a flat profile with MPI</title>
 
 				<screen>
-% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-<emphasis>pdt</emphasis>-pgi
+% setenv TAU_MAKEFILE /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-mpi-<emphasis>pdt</emphasis>-pgi
  
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 % qsub  run.job
@@ -50,14 +50,14 @@
 			  <title>Here is how to instrument loops in an application</title>
 
 				<screen>
-% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
+% setenv TAU_MAKEFILE /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-mpi-pdt
 <emphasis>% setenv TAU_OPTIONS ‘-optTauSelectFile=select.tau –optVerbose’</emphasis>
 % cat select.tau
   BEGIN_INSTRUMENT_SECTION
   <emphasis>loops routine=“#”</emphasis>
   END_INSTRUMENT_SECTION
 
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 % qsub  run.job
@@ -84,14 +84,14 @@
 			  <title>Here is how to generate a flat profile with FP operations</title>
 
 				<screen>
-% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-<emphasis>papi</emphasis>-mpi-pdt-pgi
+% setenv TAU_MAKEFILE /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-<emphasis>papi</emphasis>-mpi-pdt-pgi
 % setenv TAU_OPTIONS ‘-optTauSelectFile=select.tau –optVerbose’
 % cat select.tau
   BEGIN_INSTRUMENT_SECTION
   loops routine=“#”
   END_INSTRUMENT_SECTION
 
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 <emphasis>% setenv TAU_METRICS GET_TIME_OF_DAY\:PAPI_FP_INS</emphasis>
@@ -122,8 +122,8 @@
 
 			<screen>
 % setenv TAU_MAKEFILE
-% /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-mpi-pdt
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 <emphasis>% setenv TAU_CALLPATH 1</emphasis>
@@ -147,8 +147,8 @@
 			<title>Here to instrument python code</title>
 
 			<screen>
-% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-icpc-python-mpi-pdt
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% setenv TAU_MAKEFILE /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-icpc-python-mpi-pdt
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % setenv TAU_OPTIONS ‘<emphasis>-optShared</emphasis> -optVerbose'
 (Python needs shared object based TAU library)
 % make F90=tau_f90.sh CXX=tau_cxx.sh CC=tau_cc.sh  (build pyMPI w/TAU)
@@ -186,8 +186,8 @@ Instrumented:
 
 			<screen>
 % setenv TAU_MAKEFILE
-% /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt-pgi
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-mpi-pdt-pgi
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 <emphasis>% setenv TAU_TRACE 1</emphasis>
@@ -223,8 +223,8 @@ VAMPIR:
 		<title>How to examine a series of profiles in PerfExplorer</title>
 
 		<screen>
-% setenv TAU_MAKEFILE /opt/apps/tau/tau-2.17.1/x86_64/lib/Makefile.tau-mpi-pdt
-% set path=(/opt/apps/tau/tau-2.17.1/x86_64/bin $path)
+% setenv TAU_MAKEFILE /opt/apps/tau/tau2/x86_64/lib/Makefile.tau-mpi-pdt
+% set path=(/opt/apps/tau/tau2/x86_64/bin $path)
 % make F90=tau_f90.sh
 (Or edit Makefile and change F90=tau_f90.sh)
 % qsub  run1p.job
@@ -232,8 +232,8 @@ VAMPIR:
 % qsub run2p.job 
 % paraprof -–pack 2p.ppk ...and so on.
 On your client:
-% <emphasis>perfdmf_configure</emphasis>
-(Choose derby, blank user/password, yes to save password, defaults)
+% <emphasis>taudb_configure --create-default</emphasis>
+(taudb_configure run without any arguments will prompt for advanced options)
 % perfexplorer_configure
 (Yes to load schema, defaults)
 % paraprof 

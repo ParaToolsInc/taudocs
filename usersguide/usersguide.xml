@@ -3,7 +3,7 @@
 	  "../tools/docbook-xml-4.4/docbookx.dtd"> 
 
  <book id="TauUsersGuide">
-  <title>TAU User Guides</title>
+  <title>TAU User Guide</title>
   
   <bookinfo>
     <!-- <edition>Second</edition>

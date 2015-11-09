@@ -2329,6 +2329,9 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
     
  <varlistentry><term>-ebs</term>
     <listitem><para> enable Event-based sampling.  See README.sampling for more information</para></listitem></varlistentry>
+
+ <varlistentry><term>-numa</term>
+    <listitem><para>Activates hardware counters to measure remote DRAM accesses and total node accesses. These counters must be available from PAPI in the selected TAU configuration.</para></listitem></varlistentry>
     
      <varlistentry><term>-ebs_period=&lt;count &gt; </term>
     <listitem><para>sampling period (default 1000)</para></listitem></varlistentry>

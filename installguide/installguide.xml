@@ -1,30 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-	  "../tools/docbook-xml-4.4/docbookx.dtd"> 
+	  "../tools/docbook-xml-4.4/docbookx.dtd">
 
 <book id="TauInstallGuide">
   <title>TAU Install Guide</title>
-  
+
   <bookinfo>
     <!-- <edition>Second</edition>
     <isbn>0-00000-000-0</isbn> -->
     <!--     <authorgroup> -->
-    
+
     <!--       <author> -->
     <!-- 	<firstname>University of</firstname> -->
     <!-- 	<surname>Oregon</surname> -->
     <!--       </author> -->
-    
+
     <!--     </authorgroup> -->
-    
+
     <editor>
       <firstname>TAU</firstname>
       <surname>Team</surname>
     </editor>
-    
+
     <!--    <pagenums></pagenums> -->
     <!--     <pubdate>2005-08-15</pubdate> -->
-    
+
     <!-- <copyright> -->
     <!--       <year>2005</year> -->
     <!--       <holder>University of Oregon Performance Research Lab</holder> -->
@@ -35,17 +35,17 @@
 	<imagedata fileref="../usersguide/NewTauLogo.png" format="PNG"></imagedata>
       </imageobject>
     </mediaobject>
-    
+
 
 
     <legalnotice>
-      <para>Updated May 4th, 2015, for use with version 2.24.1 or greater.</para>
-      
+      <para>Updated Nov. 13, 2015, for use with version 2.25 or greater.</para>
+
       <para>Copyright &copy; 1997-2012
-      Department of Computer and Information Science, University of Oregon 
-      Advanced Computing Laboratory, LANL, NM 
+      Department of Computer and Information Science, University of Oregon
+      Advanced Computing Laboratory, LANL, NM
       Research Centre Julich, ZAM, Germany</para>
-      
+
       <para>Permission to use, copy, modify, and distribute this software and
 	its documentation for any purpose and without fee is hereby granted,
 	provided that the above copyright notice appear in all copies and that
@@ -77,5 +77,5 @@
 
   </bookinfo>
 
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../newguide/introduction.xml" /> 
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../newguide/introduction.xml" />
 </book>

@@ -10,8 +10,8 @@
 	<sect2>
 		<title>Usage</title>
 
-		<para>TAU provides these scripts: tau_f90.sh, tau_cc.sh, and tau_cxx.sh to
-		compile Fortan, C, and C++ programs respectively. These can the found in
+		<para>TAU provides these scripts: tau_cc.sh, tau_cxx.sh, tau_upc.sh, tau_f77.sh and tau_f90.sh to
+		compile programs. These can the found in
 		the tools/src/ directory so you may wish to add it to your path. You might
 		use tau_cc.sh to compile a C program by typing: <screen>
 %>tau_cc.sh -tau_makefile=[path to makefile] sampleCprogram.c

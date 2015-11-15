@@ -189,6 +189,7 @@ Enable instrumentation of headers
 <screen>-optDisableHeaderInst</screen>
 Disable instrumentation of headers
 <screen>-optFixHashIf</screen>
+Try to fix a "#IF" definition
 <screen>-optMICOffload</screen>
 Links code for Intel MIC offloading, requires both host and MIC TAU libraries
 

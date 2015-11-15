@@ -45,7 +45,7 @@
 								<entry>PROFILEDIR</entry>
 								<entry>Selectively measure groups of routines and
 								statements. Use with -profile command line option. See
-								<xref linkend="Profiling" />
+								<xref linkend="SelectiveProfiling" />
 								</entry>
 							</row>
 							<row>
@@ -82,7 +82,7 @@
 								linkend="GeneratingEventTraces" /></entry>
 							</row>
 							<row>
-								<entry>TAU_MUSE_PACKAGE</entry> 
+								<entry>TAU_MUSE_PACKAGE</entry>
 								<entry>Sets the MAGNET/MUSE package name. Use with the
 								-muse TAU configuration option. See <xref
 								linkend="MultipleHardwareCounters" /></entry>
@@ -101,7 +101,7 @@
 							<row>
 								<entry>TAU_THROTTLE_PERCALL</entry>
 								<entry>Set the minimum inclusive time (in milliseconds)
-								a function has to have to be instrumented when TAU_THROTTLE is enabled. 
+								a function has to have to be instrumented when TAU_THROTTLE is enabled.
 								See <xref linkend="SelectiveProfiling"/></entry>
 							</row>
 							<row>
@@ -126,26 +126,26 @@
 								<entry>When set to <literal>snapshot</literal> TAU will
                 generate condensed snapshot profiles (they merge together different
                 metrics so there is only one file per node.) Instead of the default
-                kind. When set to <literal>merged</literal>, TAU will pre-compute mean 
-                and std. dev. at the end of execution. 
+                kind. When set to <literal>merged</literal>, TAU will pre-compute mean
+                and std. dev. at the end of execution.
 								</entry>
 							</row>
-							
+
 							<row>
 								<entry>TAU_TRACK_MEMORY_FOOTPRINT</entry>
 								<entry>When set TAU will track resident set size (VmRSS) and peak memory usage (VmHWM) or the
     high water mark of resident set size, the same values provided by the 'top' command.
                 </entry>
-							</row>							
-							
+							</row>
+
 							<row>
 								<entry>TAU_TRACK_POWER</entry>
 								<entry>
 								Enables tracking of power consumption via periodic interrupt.
 								</entry>
 							</row>
-							
-							
+
+
 							<row>
 								<entry>TAU_SYNCHRONIZE_CLOCKS</entry>
 								<entry>When set TAU will correct for any time discrepancies
@@ -243,13 +243,13 @@ default scenario in light of missing BFD information.
              </row>
  				     <row>
                 <entry>TAU_SUMMARY</entry>
-                <entry>Set this variables to 1 to generate just min/max/stddev/mean 
-								statistics instead of per-node data.  Use paraprof -dumpsummary and 
-								then pprof -f profile.Max/Min to see the data. 
-           					
+                <entry>Set this variables to 1 to generate just min/max/stddev/mean
+								statistics instead of per-node data.  Use paraprof -dumpsummary and
+								then pprof -f profile.Max/Min to see the data.
+
                 </entry>
              </row>
- 				     
+
 						 <row>
                 <entry>TAU_IBM_BG_HWP_COUNTERS</entry>
                 <entry>Set this variables to 1 to include IBM's UPC
@@ -276,4 +276,4 @@ default scenario in light of missing BFD information.
 			</tgroup>
 		</table>
 </appendix>
-																										
+

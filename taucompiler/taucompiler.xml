@@ -517,8 +517,7 @@ CXX=$(TAU_COMPILER) g++
 		libraries chosen for pre-loading determine the scope of instrumentation.
 		Some options include tracking MPI, io, memory, cuda, opencl library
 		calls. MPI instrumentation is included by default the others are enabled by command-line options to
-		<literal>tau_exec</literal>. More info at the <link
-		linkend='tau_exec'><literal>tau_exec</literal> manual page</link>. Dynamic
+		<literal>tau_exec</literal>. More info at the <literal>tau_exec</literal> manual page. Dynamic
 		instrumentation can be used on both uninstrumented binaries and binaries
 		instrumented via one of the methods below, in this way different layers of
 		instrumentation can be combined.</para>
@@ -595,8 +594,7 @@ CXX=$(TAU_COMPILER) g++
 		PDT.</para>
 
 		<para>A list of options for the TAU compiler scripts can be found by typing
-		<literal>man tau_compiler.sh</literal> or in this chapter of the <link
-		linkend='tau_compiler.sh'>reference guide</link>.</para>
+		<literal>man tau_compiler.sh</literal> or in this chapter of the reference guide.</para>
 	</sect2>
 	<sect2 id="TAUCompilerOptions">
 		<title>Options to TAU compiler scripts</title>

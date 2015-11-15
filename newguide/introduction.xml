@@ -729,14 +729,14 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
     <figure><title>One sided communnication.</title>
       <mediaobject>
          <imageobject>
-            <imagedata fileref="figures/pythag.png"/>
+            <imagedata fileref="onesidedcomm.png"/>
          </imageobject>
          <textobject><phrase>An illustration of one sided communnication.</phrase></textobject>
          </mediaobject>
       <!---img src="onesidedcomm.png" alt="One sided communnication." width="6in"-->
-      <caption>
+      <!---caption>
       Context events using GPI as shown in ParaProf.
-      </caption>
+      </caption-->
     </figure>
 
      </listitem>
@@ -1024,8 +1024,8 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
       <para><literal>-mrnetlib=&lt;mrnet libraries&gt;</literal></para>
 
-      <para>Path to the MRnet libraries. <note>On some cluster systems the MRnet libraries need to
-			available to the runtime system (ie. on the lustre filesystem.)</note></para>
+      <para>Path to the MRnet libraries.On some cluster systems the MRnet libraries need to
+			available to the runtime system (ie. on the lustre filesystem.)</para>
 
     </listitem>
 

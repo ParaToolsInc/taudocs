@@ -438,9 +438,9 @@ CXX=$(TAU_COMPILER) g++
 </sect1>
 
 -->
-<simplesect>
+<sect1><title>Types of Instrumenation</title>
     <para>
-          </para>
+    </para>
 	  <para>TAU provides three methods to track the performance of your
 	application. Library interposition using tau_exec,
 	compiler directives or source transformation using PDT. Here is a
@@ -496,19 +496,19 @@ CXX=$(TAU_COMPILER) g++
 		</table>
 
 
-		The requirements for each method increases as we move down the table: tau_exec
+    <para>The requirements for each method increases as we move down the table: tau_exec
 		only requires a system with shared library support. Compiler based
 		instrumentation requires re-compiling that target application and Source
 		instrumentation aditionally requires PDT. For this reason we often recommend that users
 		start with Library interposition and move down the table if more features
-		are needed.
+    are needed.</para>
 
 <!--		<note>Runtime Interposition is only available on platforms that support
 		dynamic library loading, this method is not available on Cray or BlueGene
 		systems. We support these compilers for compiler based instrumentation:
 		  GNU, Intel, PGI, Pathscale, and IBM.
 		</note> -->
-</simplesect>
+</sect1>
 
 <sect1 id="TauLibraryInterposition">
 		<title>Dynamic instrumentation through library pre-loading</title>
@@ -526,44 +526,47 @@ CXX=$(TAU_COMPILER) g++
 		<para>To use <literal>tau_exec</literal> place this command before the
 		application executable when running the application. In this example IO
 		instrumentation is requested.
-		<screen>
-%> tau_exec -io ./a.out
-%> mpirun -np 4 tau_exec -io ./a.out
-</screen>
     </para>
+   <screen>
+    %> tau_exec -io ./a.out
+    %> mpirun -np 4 tau_exec -io ./a.out
+    </screen>
 </sect1>
 
 <sect1>
   <title>TAU scripted compilation</title>
 
-  <simplesect>For more detailed profiles, TAU provides two means to compile your
+  <sect2>
+    <title>Instrumenation</title>
+  <para>For more detailed profiles, TAU provides two means to compile your
 	application with TAU: through your compiler or through source transformation
-	using PDT.</simplesect>
+  using PDT.</para>
+  </sect2>
 
   <sect2>
     <title>Compiler Based Instrumentation</title>
 
     <para>TAU provides these scripts: tau_cc.sh, tau_cxx.sh, tau_upc.sh, tau_f77.sh
-     and tau_f90.sh to compile programs. You might use tau_cc.sh to compile a C program by typing:
+      and tau_f90.sh to compile programs. You might use tau_cc.sh to compile a C program by typing:</para>
     <screen>
 %> module load tau
 %> tau_cc.sh -tau_options=-optCompInst samplecprogram.c
     </screen>
-	    On machines where a TAU module is not available, you will need to set the
+    <para>On machines where a TAU module is not available, you will need to set the
 			tau makefile and/or options. The makefile and options controls how will
-			TAU will compile you application. Use
+      TAU will compile you application. Use</para>
 		<screen>
-%>tau_cc.sh -tau_makefile=[path to makefile] \
+    %>tau_cc.sh -tau_makefile=[path to makefile] \
             -tau_options=[option] samplecprogram.c
     </screen>
-    The Makefile can be found in the <literal>/[arch]/lib</literal>
+    <para>The Makefile can be found in the <literal>/[arch]/lib</literal>
 		directory of your TAU distribution, for example
     <literal>/x86_64/lib/Makefile.tau-mpi-pdt</literal>.</para>
 
     <para>You can also use a Makefile
     specified in an environment variable. To run tau_cc.sh so it uses the
     Makefile specified by environment variable <literal>TAU_MAKEFILE</literal>,
-    type:
+    type:</para>
 
     <screen>
 %>export TAU_MAKEFILE=[path to tau]/[arch]/lib/[makefile]
@@ -571,7 +574,7 @@ CXX=$(TAU_COMPILER) g++
 %>tau_cc.sh sampleCprogram.c
     </screen>
 
-    Similarly, if you want to set compile time options like
+    <para>Similarly, if you want to set compile time options like
     selective instrumentation you can use the <literal>TAU_OPTIONS</literal>
     environment variable.</para>
 
@@ -606,16 +609,16 @@ CXX=$(TAU_COMPILER) g++
 		  <?dbfo list-presentation="bocks"?>
 			<varlistentry>
 				<term><literal>-optVerbose</literal></term>
-				<listitem>Enable verbose output (default: on)</listitem>
+        <listitem><para>Enable verbose output (default: on)</para></listitem>
 			</varlistentry>
 			<varlistentry>
 				<term><literal>-optKeepFiles</literal></term>
-				<listitem>Do not remove intermediate files</listitem>
+        <listitem><para>Do not remove intermediate files</para></listitem>
 			</varlistentry>
 			<varlistentry>
 				<term><literal>-optShared</literal></term>
-				<listitem>Use shared library of TAU (consider when using
-				<literal>tau_exec</literal></listitem>
+        <listitem><para>Use shared library of TAU (consider when using
+              <literal>tau_exec</literal></para></listitem>
 			</varlistentry>
     </variablelist>
 	</sect2>
@@ -634,18 +637,18 @@ CXX=$(TAU_COMPILER) g++
 			application you can use the <literal>-tau_options=-optTauSelectFile=&lt;file&gt;</literal>
 			option to enable selective instrumentation.
     </para>
-		<note>Selective instrumentation is only available when using source-level
-		instrumentation (PDT).</note>
-      To specify a selective instrumentation file, create a text file and use
-			the following guide to fill it in:
+    <note><para>Selective instrumentation is only available when using source-level
+        instrumentation (PDT).</para></note>
+  <para>To specify a selective instrumentation file, create a text file and use
+    the following guide to fill it in:</para>
 			<itemizedlist>
-				<listitem>Wildcards for routine names are specified with the
+        <listitem><para>Wildcards for routine names are specified with the
 				<literal>#</literal> mark (because <literal>*</literal>
 				symbols show up in routine signatures.)  The <literal>#</literal> mark is unfortunately the comment character
-				as well, so to specify a leading wildcard, place the entry in quotes.
+        as well, so to specify a leading wildcard, place the entry in quotes.</para>
 				</listitem>
-				<listitem>
-					Wildcards for file names are specified with <literal>*</literal> symbols.
+        <listitem><para>
+            Wildcards for file names are specified with <literal>*</literal> symbols.</para>
 				</listitem>
 			</itemizedlist>
 <!--    <variablelist id="SelectiveProfilingOverview">
@@ -759,7 +762,7 @@ io file="foo.f90" routine="RINB"
 	foo? matches foo2, fooZ, but not foobar. You can use # as a wildcard for
 	routines, ie. b# matches bar, b2z etc. Example:</para>-->
     <screen>
-		<para>Here is a example file:</para>
+		Here is a example file:
 #Tell tau to not profile these functions
 BEGIN_EXCLUDE_LIST
 
@@ -798,7 +801,7 @@ END_INSTRUMENT_SECTION
 </screen>
 
 <para>Selective instrumentation files can be created automatically from
-<literal><link linkend="ParaProfDoc">ParaProf</link></literal>
+<literal>ParaProf</literal>
 by right clicking on a trial and selecting the <literal>Create Selective Instrumentation File</literal> menu
 item.</para>
 <!--

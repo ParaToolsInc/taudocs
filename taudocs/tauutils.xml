@@ -32,6 +32,9 @@
         <arg choice="opt"><option>-optVerbose</option>
         </arg>
 
+        <arg choice="opt"><option>-optMemDbg</option>
+        </arg>
+
         <arg choice="opt"><option>-optQuiet</option>
         </arg>
 
@@ -223,6 +226,10 @@
 
    <para><option>-optVerbose</option>
        Turn on verbose debugging messages.
+   </para>
+
+   <para><option>-optMemDbg</option>
+       Enable TAU's runtime memory debugger.
    </para>
 
    <para><option>-optQuiet</option>

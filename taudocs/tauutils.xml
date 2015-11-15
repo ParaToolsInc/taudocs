@@ -35,8 +35,6 @@
         <arg choice="opt"><option>-optMemDbg</option>
         </arg>
 
-        <arg choice="opt"><option>-optQuiet</option>
-        </arg>
 
         <arg choice="opt"><option>-optPdtDir=</option><replaceable class="parameter">dir</replaceable>
         </arg>
@@ -230,10 +228,6 @@
 
    <para><option>-optMemDbg</option>
        Enable TAU's runtime memory debugger.
-   </para>
-
-   <para><option>-optQuiet</option>
-       Suppresses excessive output.
    </para>
 
 <para><option>-optDetectMemoryLeaks</option>

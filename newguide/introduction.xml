@@ -726,11 +726,14 @@ TAU integration. <listitem>
 <para> It works well with PDT and compiler based instrumentation of the source code and there is  a wrapper interposition library that is linked in to track the communication of GPI.  It is important to specify all TAU runtime options in the tau.conf file that must reside in the current working directory where the executable is stored and launched from. This is important because the worker tasks are spawned by the GPI daemon on remote nodes and do not inherit the user's working directory or the environment.
 So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf file. </para>
 
-    <figure>
+    <figure><title>One sided communnication.</title>
       <mediaobject>
-        <imageobject><imagedata fileref="onesidecomm.png" scalefit="0"
-                       width="6in" align="center"/></imageobject>
-      </mediaobject>
+         <imageobject>
+            <imagedata fileref="figures/pythag.png"/>
+         </imageobject>
+         <textobject><phrase>An illustration of one sided communnication.</phrase></textobject>
+         </mediaobject>
+      <!---img src="onesidedcomm.png" alt="One sided communnication." width="6in"-->
       <caption>
       Context events using GPI as shown in ParaProf.
       </caption>

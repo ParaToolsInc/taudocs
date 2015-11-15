@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
 <chapter id="paraprof.3d">
 
   <title>3-D Visualization</title>
-  
+
     <para>ParaProf displays massive parallel profiles through the use of OpenGL
     hardware acceleration through the <firstterm>3D Visualization</firstterm>
     window.  Each window is fully configurable with rotation, translation, and
@@ -12,9 +12,9 @@
     button down and dragging the mouse.  Translation is done likewise with the
     right mouse button.  Zooming is done with the mousewheel and the + and -
     keyboard buttons.</para>
-  
+
   <sect1 id="paraprof.trianglemesh">
-    <title>Triangle Mesh Plot</title> 
+    <title>Triangle Mesh Plot</title>
 
     <figure> <title>Triangle Mesh Plot</title>
       <mediaobject>
@@ -22,12 +22,12 @@
 		       width="6in" align="center"/></imageobject>
       </mediaobject>
     </figure>
-    
+
     <para>This visualization method shows two metrics for all functions, all
       threads.  The height represents one chosen metric, and the color,
       another.  These are selected from the drop-down boxes on the right.
     </para>
-    
+
     <para>To pinpoint a specific value in the plot, move the
       <emphasis>Function</emphasis> and <emphasis>Thread</emphasis> sliders to
       cycle through the available functions/threads.  The values for the two
@@ -35,16 +35,16 @@
       <literal>Node 351</literal>, the value is <literal>14.37</literal>
       seconds.
     </para>
-    
+
   </sect1>
 
   <sect1 id="paraprof.3dbarplot">
 
-    <title>3-D Bar Plot</title> 
+    <title>3-D Bar Plot</title>
 
     <figure id="paraprof.3dbarplot.figure"> <title>3-D Mesh Plot</title>
      <mediaobject>
-      <imageobject><imagedata fileref="3dvew1.png" scalefit="0" width="6in" align="center"/></imageobject> 
+      <imageobject><imagedata fileref="3dvew1.png" scalefit="0" width="6in" align="center"/></imageobject>
      </mediaobject>
     </figure>
 
@@ -53,18 +53,18 @@
       works the same.  Note that in <xref linkend="paraprof.3dbarplot.figure" />
       the transparency option is selected, which changes the way in which the
       selection model operates. </para>
-    
+
   </sect1>
 
 
   <sect1 id="paraprof.scatterplot">
 
-    <title>3-D Scatter Plot</title> 
+    <title>3-D Scatter Plot</title>
 
 
     <figure> <title>3-D Scatter Plot</title>
      <mediaobject>
-      <imageobject><imagedata fileref="scatterplot2.gif" scalefit="0" width="6in" align="center"/></imageobject> 
+      <imageobject><imagedata fileref="scatterplot2.gif" scalefit="0" width="6in" align="center"/></imageobject>
      </mediaobject>
     </figure>
 
@@ -76,26 +76,26 @@
     <para>Select functions using the button for each dimension, then select a
     metric.  A single function across 4 metrics could be used, for
     example.</para>
-    
-  </sect1>
-  
-  <sect1 id="paraprof.top)ology">
 
-    <title>3-D Topology Plot</title> 
+  </sect1>
+
+  <sect1 id="paraprof.toplology">
+
+    <title>3-D Topology Plot</title>
 
 
     <figure> <title>3-D Topology Plot</title>
      <mediaobject>
-      <imageobject><imagedata fileref="topology2.gif" scalefit="0" width="4in" align="center"/></imageobject> 
+      <imageobject><imagedata fileref="topology2.gif" scalefit="0" width="4in" align="center"/></imageobject>
      </mediaobject>
     </figure>
-       <para> In this visualization, you can either define the layout with a MESP topology definition 
+       <para> In this visualization, you can either define the layout with a MESP topology definition
          file or you can fill a rectangular prism of user-defined volume with rank-points in order of rank.
-         For more information, please see the etc/topology directory for additional details on MESP 
+         For more information, please see the etc/topology directory for additional details on MESP
          topology definitions.
        </para>
 
-        <para> If the loaded profile is a cube file or a profile from a BGB, then this visualizations 
+        <para> If the loaded profile is a cube file or a profile from a BGB, then this visualizations
         groups the threads in two or three dimensional space using topology
         information supplied by the profile.</para>
 <para>
@@ -117,20 +117,20 @@ If a Custom is selected the dimensions of the rectangular prism containing the c
 
 </para><para>
 The Events tab controls which events are used to define the color values and positions of cores/processes in the display.  For trail-specific and Custom topologies only event3(Color) can be changed.  For topologies loaded in MESP definition files all four events may be used in calculation of the topology layout.  In either case, interval, atomic or metadata values may be used to color or position points in the display.
-    
+
 </para>
   </sect1>
 
   <sect1 id="paraprof.commicationmatrix">
 
-    <title>3-D Commication Matrix</title> 
+    <title>3-D Commication Matrix</title>
 
  <figure> <title>3-D Commication Matrix</title>
      <mediaobject>
       <imageobject><imagedata fileref="3DCommMatrix.png" scalefit="0" width="6in" align="center"/></imageobject>
      </mediaobject>
     </figure>
-<para> 
+<para>
    If a Trial has commication information (set  TAU_COMM_MATRIX=1 at runtime of your application), then you can launch the 3D Commication window as shown.
 </para>
    </sect1>

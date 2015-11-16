@@ -35,6 +35,8 @@
         <arg choice="opt"><option>-optMemDbg</option>
         </arg>
 
+        <arg choice="opt"><option>-optDetectMemoryLeaks</option>
+        </arg>
 
         <arg choice="opt"><option>-optPdtDir=</option><replaceable class="parameter">dir</replaceable>
         </arg>
@@ -61,6 +63,8 @@
         <arg choice="opt"><option>-optPdtF90Parser=</option><replaceable class="parameter">parser</replaceable>
         </arg>
 
+        <arg choice="opt"><option>-optPdtCxxParser=</option><replaceable class="parameter">parser</replaceable>
+        </arg>
         <arg choice="opt"><option>-optGnuFortranParser</option>
         </arg>
 
@@ -72,8 +76,8 @@
         <arg choice="opt"><option>-optTauInstr=</option><replaceable class="parameter">path</replaceable>
         </arg>
 
-<arg choice="opt"><option>-optDetectMemoryLeaks</option>
-</arg>
+        <arg choice="opt"><option>-optContinueBeforeOMP</option>
+        </arg>
 
 <arg choice="opt"><option>-optIncludeMemory</option>
 </arg>
@@ -81,7 +85,21 @@
 <arg choice="opt"><option>-optTrackUPCR</option>
 </arg>
 
-        <arg choice="opt"><option>-optPreProcess</option>
+<arg choice="opt"><option>-optTrackDMAPP</option>
+</arg>
+
+<arg choice="opt"><option>-optTrackPthread</option>
+</arg>
+
+
+<arg choice="opt"><option>-optNoTrackGOMP</option>
+</arg>
+
+
+<arg choice="opt"><option>-optTrackMPCThread</option>
+</arg>
+
+<arg choice="opt"><option>-optPreProcess</option>
 </arg>
 
 <arg choice="opt"><option>-optCPP=</option><replaceable class="parameter">path</replaceable>
@@ -90,8 +108,17 @@
 <arg choice="opt"><option>-optCPPOpts=</option><replaceable class="parameter">options</replaceable>
 </arg>
 
+<arg choice="opt"><option>-optFPP=</option><replaceable class="parameter">path</replaceable>
+</arg>
+
+<arg choice="opt"><option>-optFPPOpts=</option><replaceable class="parameter">options</replaceable>
+</arg>
+
+
 <arg choice="opt"><option>-optCPPReset=</option><replaceable class="parameter">options</replaceable>
 </arg>
+
+
 <arg choice="opt"><option>-optTauSelectFile=</option><replaceable class="parameter">file</replaceable>
         </arg>
         <arg choice="opt">
@@ -119,15 +146,27 @@
 
         <arg choice="opt">
                 <option>-optLinking=</option><replaceable class="parameter">opts</replaceable>
-        </arg>
+              </arg>
 
-        <arg choice="opt">
-                <option>-optLinkReset=</option><replaceable class="parameter">opts</replaceable>
+    <arg choice="opt">
+   <option>-optLinkReset=</option><replaceable class="parameter">opts</replaceable>
+        </arg>
+   <arg choice="opt">
+   <option>-optLinkPreserveLib=</option><replaceable class="parameter">opts</replaceable>
         </arg>
 
         <arg choice="opt">
                 <option>-optTauCC=</option><replaceable class="parameter">cc</replaceable>
         </arg>
+
+        <arg choice="opt">
+                <option>-optUseReturnFix</option>
+        </arg>
+
+        <arg choice="opt">
+                <option>-optLinkOnly</option>
+        </arg>
+
 
         <arg choice="opt">
                 <option>-optOpariTool=</option><replaceable class="parameter">path/opari</replaceable>
@@ -144,6 +183,11 @@
         <arg choice="opt">
                 <option>-optOpariReset=</option><replaceable class="parameter">opts</replaceable>
         </arg>
+
+        <arg choice="opt">
+                <option>-optOpariLibs=</option><replaceable class="parameter">opts</replaceable>
+        </arg>
+
 
         <arg choice="opt">
                 <option>-optOpari2Tool=</option><replaceable class="parameter">path/opari2</replaceable>
@@ -163,6 +207,11 @@
 
         <arg choice="opt">
                 <option>-optOpari2Reset=</option><replaceable class="parameter">opts</replaceable>
+              </arg>
+
+
+        <arg choice="opt">
+                <option>-optOpariNoInit</option>
         </arg>
 
         <arg choice="opt">
@@ -276,7 +325,15 @@ Options for C++ parser in PDT (cxxparse).  Typically
        Specify a different Fortran parser. For e.g.,
            <option>f90parse</option> instead of
            <option>f95parse</option>.
+         </para>
+
+   <para><option>-optPdtCxxParser=&lt;parser&gt;</option>
+       Specify a different C++ parser. For e.g.,
+           <option>cxxparse401</option> instead of
+           <option>cxxparse</option>.
    </para>
+
+
 
    <para><option>-optGnuFortranParser=&lt;parser&gt;</option>
        Specify the GNU <option>gfortran</option> Fortran parser
@@ -299,6 +356,9 @@ Options for C++ parser in PDT (cxxparse).  Typically
            <option>$(TAUROOT)/$(CONFIG_ARCH)/bin/tau_instrumentor</option>.
    </para>
 
+<para><option>-optContinueBeforeOMP</option>
+Insert a CONTINUE statement before !$OMP directives.
+</para>
 
 <para><option>-optIncludeMemory</option>
 Forinteral use only
@@ -307,10 +367,25 @@ Forinteral use only
 Adds tracking of the UPC runtime library.
 </para>
 
+<para><option>-optTrackDMAPP</option>
+Specify wrapping of Pthread library calls at link time.
+</para>
+
+<para><option>-optTrackPthread</option>
+Adds tracking of the UPC runtime library.
+</para>
+
+<para><option>-optNoTrackGOMP</option>
+Disable wrapping of GOMP library calls at link time
+</para>
+
+<para><option>-optTrackMPCThread</option>
+Specify wrapping of MPC Thread library calls at link time.
+</para>
+
    <para><option>-optPreProcess</option>
        Preprocess the source code before parsing. Uses
 /usr/bin/cpp-P by default.
-
 </para>
 
 <para><option>-optCPP=&lt;path&gt;</option>
@@ -329,6 +404,16 @@ sources.
 ResetC preprocessor options to the specified list.
 
 </para>
+
+<para><option>-optFPP=&lt;path&gt;</option>
+       Specify an alternative preprocessor and pre-process for Fortran sources.
+</para>
+
+<para><option>-optFPPOpts=&lt;options&gt;</option>
+
+   		Specify additional options to the Fortran pre-processor.
+    </para>
+
 <para><option>-optTauSelectFile=&lt;file&gt;</option>
        Specify selective instrumentation file for tau_instrumentor
    </para>
@@ -398,139 +483,145 @@ ResetC preprocessor options to the specified list.
    <para>
 
            <option>-optLinking=&lt;opts&gt;</option>
-
-
            Options passed to the linker. Typically
            <option>$(TAU_MPI_FLIBS) $(TAU_LIBS) $(TAU_CXXLIBS)
            </option>.
-
    </para>
 
    <para>
 
            <option>-optLinkReset=&lt;opts&gt;</option>
-
-
            Reset options to the linker to the given list.
-
    </para>
 
-   <para>
+ <para>
+           <option>-optLinkPreserveLib=&lt;opts&gt;</option>
+           Libraries which TAU should preserve the order of on the link line see "Moving these libraries to the end of the link line:". Default: none.
+   </para>
 
+
+
+   <para>
            <option>-optTauCC=&lt;cc&gt;</option>
-
-
            Specifies the C compiler used by TAU.
-
    </para>
 
-   <para>
+<para><option>-optUseReturnFix</option>
+  Specifies the use of a bug fix with ROSE parser using EDG v3.x
+</para>
 
+<para><option>-optLinkOnly</option>
+  Disable instrumentation during compilation, do link in the TAU libs
+</para>
+
+
+
+   <para>
            <option>-optOpariTool=&lt;path/opari&gt;</option>
-
-
            Specifies the location of the Opari tool.
-
    </para>
 
    <para>
-
            <option>-optOpariDir=&lt;path&gt;</option>
-
-
            Specifies the location of the Opari directory.
-
    </para>
 
    <para>
-
            <option>-optOpariOpts=&lt;opts&gt;</option>
-
-
            Specifies optional arguments to the Opari tool.
+   </para>
 
+      <para>
+           <option>-optOpariNoInit</option>
+          Do not initlize the POMP2 regions.
    </para>
 
    <para>
-
            <option>-optOpariReset=&lt;opts&gt;</option>
-
-
            Resets options passed to the Opari tool.
+         </para>
 
+    <para>
+           <option>-optOpariLibs=&lt;&gt;</option>
+          Specifies the libraries that have POMP2 regions. (Overrides optOpariNoInit).
    </para>
+    <para>
+           <option>-optOpari2Tool=&lt;path to opari2&gt;</option>
+          	Specifies the location of the Opari tool.
+          </para>
+
+         <para>
+                <option>-optOpari2ConfigTool=&lt;path/opari2-config&gt;</option>
+                Specifies the location of the Opari tool configuration file
+    </para>
+    <para>
+              <option>-optOpari2Opts=&lt;opts&gt;</option>
+              Specifies optional arguments to the Opari tool.
+    </para>
+
+    <para>
+              <option>-optOpari2Reset=&lt;opts&gt;</option>
+              Resets options passed to the Opari tool.
+     </para>
+
+     <para>
+              <option>-optOpari2Dirs=&lt;opts&gt;</option>
+              Specifies the location of the Opari directory
+    </para>
+
 
    <para>
-
            <option>-optNoMpi</option>
-
-
            Removes <option>-l*mpi*</option>
            libraries during linking (default).
-
    </para>
 
    <para>
-
            <option>-optMpi</option>
-
-
            Does not remove
            <option>-l*mpi*</option>
            libraries during linking.
-
    </para>
 
    <para>
-
            <option>-optNoRevert</option>
-
-
            Exit on error. THIS IS CRAZY Does not revert to the original compilation
 	rule on error.
-
    </para>
 
-<para>
-
+   <para>
            <option>-optRevert</option>
-
-
        Revert to the original compilation rule on error (default).
-
    </para>
 
-<para>
-
+    <para>
            <option>-optKeepFiles</option>
-
-
            Does not remove intermediate
            <option>.pdb</option> and
            <option>.inst.*</option> files.
+         </para>
 
+       <para>
+           <option>-optReuseFiles</option>
+		Reuses a pre-instrumented file and preserves them.
    </para>
+
 
    <para><option>-optAppCC</option>
-
        Sets the failsafe C compiler.
+     </para>
 
-   </para>
    <para><option>-optAppCXX</option>
-
        Sets the failsafe C++ compiler.
+     </para>
 
-   </para>
    <para><option>-optAppF90</option>
-
        Sets the failsafe F90 compiler
-
    </para>
    <para><option>-optShared</option>
-
        Use shared library version of TAU
+     </para>
 
-   </para>
    <para><option>-optCompInst</option>
 
        Use compiler-based instrumentation
@@ -541,15 +632,11 @@ ResetC preprocessor options to the specified list.
         Do not revert to compiler instrumentation if source instrumentation fails.
    </para>
    <para><option>-optPDTInst</option>
-
        Use PDT-based instrumentation
-
    </para>
 
    <para><option>-optHeaderInst</option>
-
       Enable instrumentation of headers
-
    </para>
 
    <para><option>-optDisableHeaderInst</option>
@@ -561,15 +648,19 @@ ResetC preprocessor options to the specified list.
    <para><option>-optTrackIO</option>
         Specify wrapping of POSIX I/O calls at link time.
 
+      </para>
+
+      <para><option>-optMICOffload</option>
+      Links code for Intel MIC offloading, requires both host and MIC TAU libraries
    </para>
    <para><option>-optWrappersDir=""</option>
 
       Specify the location of the link wrappers directory.
    </para>
+
+
       <para><option>-optTauUseCXXForC</option>
-
        Specifies the use of a C++ compiler for compiling C code
-
    </para>
 
       <para><option>-optTauWrapFile=&lt;filename&gt;</option>

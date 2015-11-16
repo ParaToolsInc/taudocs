@@ -74,7 +74,7 @@
 
   </bookinfo>
 
-  <preface>
+  <preface> <title> TAU preface </title>
     <para>TAU Performance System&reg;  is a portable profiling and tracing
       toolkit for performance analysis of parallel programs written in Fortran,
       C, C++, Java, and Python.

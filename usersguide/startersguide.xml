@@ -10,23 +10,23 @@
 	  <?dbfo list-presentation="blocks"?>
 		<varlistentry>
 			<term><literal><link linkend="tauex">tau_run</link></literal></term>
-			<listitem>TAU's binary instrumentation tool</listitem>
+      <listitem><para>TAU's binary instrumentation tool</para></listitem>
     </varlistentry>
 		<varlistentry>
       <term><literal>tau_cc.sh -tau_options=-optCompInst / tau_cxx.sh -tau_options=-optCompInst / tau_f90.sh -tau_options=-optCompInst /  tau_upc.sh -tau_options=-optCompInst / tau_f77.sh -tau_options=-optCompInst </literal></term>
-			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (Compiler instrumentation)</listitem>
+      <listitem><para> (Compiler instrumentation)</para></listitem>
     </varlistentry>
 		<varlistentry>
       <term><literal>tau_cc.sh / tau_cxx.sh / tau_f90.sh / tau_f77.sh / tau_upc.sh </literal></term>
-			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (PDT instrumentation)</listitem>
+      <listitem><para>(PDT instrumentation)</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>TAU_MAKEFILE</literal></term>
-			<listitem>Set instrumentation definition file</listitem>
+      <listitem><para>Set instrumentation definition file</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>TAU_OPTIONS</literal></term>
-			<listitem>Set instrumentation options</listitem>
+      <listitem><para>Set instrumentation options</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>dynamic phase name=<emphasis>'name'</emphasis>

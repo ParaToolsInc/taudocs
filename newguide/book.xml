@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <!DOCTYPE set PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-	  "../tools/docbook-xml-4.4/docbookx.dtd"> 
+	  "../tools/docbook-xml-4.4/docbookx.dtd">
 
 <set id="TauGuides">
   <title>TAU Guides</title>
-  
+
   <setinfo>
     <edition>Second</edition>
     <isbn>0-00000-000-0</isbn>
-         <authorgroup> 
-    
+         <authorgroup>
+
     <author>
     	<firstname>University of</firstname>
      	<surname>Oregon</surname>
            </author>
-    
+
          </authorgroup>
-         <pubdate>2012-03-26</pubdate>
-    
+         <pubdate>2015-11-15</pubdate>
+
     <copyright>
            <year>2021</year>
-           <holder>University of Oregon</holder> 
+           <holder>University of Oregon</holder>
     </copyright>
 
     <mediaobject>
@@ -28,17 +28,17 @@
 	<imagedata fileref="NewTauLogo.png" format="PNG"></imagedata>
       </imageobject>
     </mediaobject>
-    
+
 
 
     <legalnotice>
-      <para>Version 2.22.1</para>
-      
+      <para>Version 2.25</para>
+
       <para>Copyright &copy; 1997-2012
-      Department of Computer and Information Science, University of Oregon 
-      Advanced Computing Laboratory, LANL, NM 
+      Department of Computer and Information Science, University of Oregon
+      Advanced Computing Laboratory, LANL, NM
       Research Centre Julich, ZAM, Germany</para>
-      
+
       <para>Permission to use, copy, modify, and distribute this software and
 	its documentation for any purpose and without fee is hereby granted,
 	provided that the above copyright notice appear in all copies and that
@@ -91,10 +91,10 @@
   </setinfo>
 
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-	href="../usersguide/usersguide.xml" /> 
+	href="../usersguide/usersguide.xml" />
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-	href="../installguide/installguide.xml" /> 
+	href="../installguide/installguide.xml" />
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-	href="../referenceguide/referenceguide.xml" /> 
-	  
+	href="../referenceguide/referenceguide.xml" />
+
 </set>

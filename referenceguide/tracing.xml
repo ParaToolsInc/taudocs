@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
 
 <chapter id="tracingReference">
   <title>Tracing</title>
 
-	<sect1>
+  <sect1>
 	  <title>How to configure tracing</title>
 
 <para>TAU must be configured with the <literal>-TRACE</literal>
@@ -14,15 +14,15 @@
     traces are stored in a directory specified by the environment variable
     <literal>TRACEDIR</literal>, or the current directory, by default.
     The environment variables <literal>TAU_TRACEFILE</literal> may be used to
-    specify the name of Vampir trace file. When this variable is set, 
+    specify the name of Vampir trace file. When this variable is set,
     trace files are automatically merged and the tau2vtf is invoked to convert
-    the merged trace file to VTF3 trace format. This conversion takes place on 
+    the merged trace file to VTF3 trace format. This conversion takes place on
     node 0, thread 0. The intermediate trace files are deleted. To retain the
-    trace files, the user can set the environment variable 
-    <literal>TAU_KEEP_TRACEFILES</literal> to true. When 
+    trace files, the user can set the environment variable
+    <literal>TAU_KEEP_TRACEFILES</literal> to true. When
     <literal>TAU_TRACEFILE</literal> is not specified, the user needs to merge
-    and convert the traces as below. 
-    
+    and convert the traces as below.
+
 Example:</para>
 
     <screen>
@@ -35,7 +35,7 @@ Example:</para>
     <para>This generates files named</para>
 
     <screen>
-tautrace.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.trc and events.&lt;node&gt;.edf 
+tautrace.&lt;node&gt;.&lt;context&gt;.&lt;thread&gt;.trc and events.&lt;node&gt;.edf
     </screen>
 
     <para>When generating a Vampir Trace Format (otf or vtf) these
@@ -86,7 +86,7 @@ Usage: tau2otf [ -n  streams  ] [ -nomessage  ] [ -v  ] [ -z ]
 
     <screen>
 % tau2vtf
-Usage: tau2vtf &lt;TAU trace&gt; &lt;edf file&gt; &lt;out file&gt; [-a|-fa] 
+Usage: tau2vtf &lt;TAU trace&gt; &lt;edf file&gt; &lt;out file&gt; [-a|-fa]
                [-nomessage] [-v]
  -a         : ASCII VTF3 file format
  -fa        : FAST ASCII VTF3 file format
@@ -98,38 +98,38 @@ Usage: tau2vtf &lt;TAU trace&gt; &lt;edf file&gt; &lt;out file&gt; [-a|-fa]
 % tau2vtf matrix.trc tau.edf matrix.vpt.gz
 % vampir matrix.vpt.gz
   </screen>
-    
+
     <para>To generate slog2 trace files that may be visualized using Jumpshot,
           we recommend using the slog2 SDK and Jumpshot bundled with TAU. </para>
     <screen>
 % configure -slog2 -TRACE ...
-% tau2slog2 
-tau2slog2 converts a TAU formatted trace file to the SLOG2 format 
+% tau2slog2
+tau2slog2 converts a TAU formatted trace file to the SLOG2 format
           for Jumpshot trace visualizer
 Usage: tau2slog2 &lt;tau_tracefile&gt; &lt;edf_file&gt; -o &lt;slog_tracefile&gt;
-For e.g., 
+For e.g.,
 % tau2slog2 app.trc tau.edf -o app.slog2
     </screen>
 
-    <para>To generate traces that may be visualized using Vampir, we recommend 
+    <para>To generate traces that may be visualized using Vampir, we recommend
           using tau2vtf over the older tau_convert tool. tau2vtf can produce
           binary traces with user-defined events  (hardware performance counters
           from PAPI etc.) while tau_convert cannot do this. Binary traces load
           faster in Vampir. </para>
   <screen>
 % tau_convert
-usage: tau_convert [-alog | -SDDF | -dump | -paraver [-t] | -pv | 
-       -vampir [-longsymbolbugfix] [-compact] [-user|-class|-all] 
+usage: tau_convert [-alog | -SDDF | -dump | -paraver [-t] | -pv |
+       -vampir [-longsymbolbugfix] [-compact] [-user|-class|-all]
        [-nocomm]] inputtrc edffile [outputtrc]
  Note: -vampir option assumes multiple threads/node
- Note: -t option used in conjunction with -paraver option assumes 
+ Note: -t option used in conjunction with -paraver option assumes
        multiple threads/node
 </screen>
 
     <para>To view the dump of the trace in text form, use</para>
 
     <screen>
-% tau_convert -dump matrix.trc tau.edf 
+% tau_convert -dump matrix.trc tau.edf
 </screen>
 
     <para>tau_convert can also be used to convert traces to the <ulink
@@ -175,7 +175,7 @@ usage: tau_convert [-alog | -SDDF | -dump | -paraver [-t] | -pv |
 <screen>
 % vtf2profile -f matrix.vpt.gz -p profiledatadir
 % vtf2profile
-Usage: vtf2profile [options] 
+Usage: vtf2profile [options]
 ***************************HELP***************************
 * '-h' display this help text.                         *
 * '-c' open command line interface.                    *

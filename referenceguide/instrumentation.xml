@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
 
 <chapter id="instrumentationOptions">
   <title>TAU Instrumentation Options</title>
-	
-	<sect1>
+
+  <sect1>
 		<title>Selective Instrumentation Options</title>
 
     <variablelist id="SelectiveProfilingOverview">
@@ -14,8 +14,8 @@
         <para>The selective instrumentation file has the following sections,
 			  each preceded and followed by:</para></formalpara>
 
-      <varlistentry><term><literal>BEGIN_EXCLUDE_LIST</literal> / 
-        <literal>END_EXCLUDE_LIST</literal> or <literal>BEGIN_INCLUDE_LIST</literal> / 
+      <varlistentry><term><literal>BEGIN_EXCLUDE_LIST</literal> /
+        <literal>END_EXCLUDE_LIST</literal> or <literal>BEGIN_INCLUDE_LIST</literal> /
         <literal>END_INCLUDE_LIST</literal> </term>
         <listitem>
           <para>
@@ -29,28 +29,28 @@
             <literal>END_INCLUDE_LIST</literal>.
           </para>
         </listitem>
-      </varlistentry>  
-      <varlistentry><term><literal>BEGIN_FILE_EXCLUDE_LIST</literal> / 
-        <literal>END_FILE_EXCLUDE_LIST</literal> or <literal>BEGIN_FILE_INCLUDE_LIST</literal> / 
+      </varlistentry>
+      <varlistentry><term><literal>BEGIN_FILE_EXCLUDE_LIST</literal> /
+        <literal>END_FILE_EXCLUDE_LIST</literal> or <literal>BEGIN_FILE_INCLUDE_LIST</literal> /
         <literal>END_FILE_INCLUDE_LIST</literal> </term>
         <listitem>
           <para>
             Similarly, files can be included or
             excluded with the <literal>BEGIN_FILE_EXCLUDE_LIST, END_FILE_EXCLUDE_LIST,
-            BEGIN_FILE_INCLUDE_LIST, and END_FILE_INCLUDE_LIST </literal> lines. 
+            BEGIN_FILE_INCLUDE_LIST, and END_FILE_INCLUDE_LIST </literal> lines.
 		      </para>
         </listitem>
-      </varlistentry> 
+      </varlistentry>
       <varlistentry><term><literal>BEGIN_INSTRUMENT_SECTION</literal> /
 			  <literal>END_INSTRUMENT_SECTION</literal></term>
         <listitem>
           <para>Manually editing the selective instrumentation file gives you more
             options. These tags allow you to control the type of instrumentation
             performed in certain portions of your application.
-          </para>  
+          </para>
 				</listitem>
-      </varlistentry>      
-    </variablelist>        
+      </varlistentry>
+    </variablelist>
           <itemizedlist>
             <listitem>
               <para>Static and Dynamic timers can be set by specifying either
@@ -105,12 +105,12 @@ io file="foo.f90" routine="RINB"
             events are represented along with their call-stack; the length of which can
             be set with environment variable
             <literal>TAU_CALLPATH_DEPTH</literal>.
-          </para>  
-          <note> 
+          </para>
+          <note>
             <para>
               Due to the limitations of the some compilers (IBM xlf, PGI pgf90, GNU
-              gfortran),  the size of the memory reported for a Fortran Array is 
-              not the number of bytes but rather the number of elements. 
+              gfortran),  the size of the memory reported for a Fortran Array is
+              not the number of bytes but rather the number of elements.
             </para>
           </note>
    </sect1>
@@ -135,7 +135,7 @@ Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
     tau_run. However, the user can override this and specify another file
     using the -Xrun&lt;Taulibrary&gt;. In this case lib&lt;Taulibrary&gt;.so
     will be loaded using <literal>LD_LIBRARY_PATH</literal>. </para>
-	 
+
 
     <para>To use <literal>tau_run</literal>, TAU is configured with
     DyninstAPI as shown below:</para>
@@ -149,7 +149,7 @@ Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
 % pprof; paraprof
 </screen>
 
-    <!--para>Support for new platforms and compilers is being added and this DyninstAPI 
+    <!--para>Support for new platforms and compilers is being added and this DyninstAPI
     option is experimental for now. </para> -->
 
   </sect1>
@@ -158,36 +158,37 @@ Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
     <sect2 id="Maqao">
     <title>Using MAQAO</title>
     <para>TAU also allows you to rewrite  your application using
-		the MAQAO package included in PDToolkit 3.17 or above(http://tau.uoregon.edu/pdt.tgz). 
+		the MAQAO package included in PDToolkit 3.17 or above(http://tau.uoregon.edu/pdt.tgz).
 </para>
     <para>Install PDToolkit 3.17+ and configure TAU with -pdt= option
 		which will point TAU to where PDToolkit is installed. Use the
 		<literal>tau_rewrite</literal> tool to instrument your application.
-		(If TAU is not configured with PDT 3.17+, then <literal>tau_rewrite</literal> 
-		defaults to tau_run.) 
+		(If TAU is not configured with PDT 3.17+, then <literal>tau_rewrite</literal>
+		defaults to tau_run.)
 </para>
 
     <screen>
 % configure -pdt=/usr/local/packages/pdtoolkit-3.17
 % make install
-% tau_rewrite -T scorep,pdt  -loadlib=/tmp/libfoo.so ./a.out -o a.inst 
+% tau_rewrite -T scorep,pdt  -loadlib=/tmp/libfoo.so ./a.out -o a.inst
 </screen>
 </sect2>
-<sect2 title="PEBIL">
+<!--sect2 title="PEBIL"-->
+<sect2>
     <title>Using PEBIL</title>
     <para>TAU also allows you to rewrite  your application using
-		the PEBIL package included in PDToolkit 3.18.1 or above(http://tau.uoregon.edu/pdt.tgz). 
+		the PEBIL package included in PDToolkit 3.18.1 or above(http://tau.uoregon.edu/pdt.tgz).
 </para>
     <para>Install PDToolkit 3.18.1 and configure TAU with -pdt= option
 		which will point TAU to where PDToolkit is installed. Use the
 		<literal>tau_pebil_rewrite</literal> tool to instrument your application.
      </para>
     <screen>
-% tau_pebil_rewrite -T &lt;commands&gt; -f select.tau &lt;exe&gt; [-o] &lt;output_exe&gt; 
+% tau_pebil_rewrite -T &lt;commands&gt; -f select.tau &lt;exe&gt; [-o] &lt;output_exe&gt;
 </screen>
 <para>
-The select.tau file  supports outer-loop level instrumentation and exclude/include lists of functions just like tau_instrumentor's select.tau (same format). 
-Also,	-T &lt;options&gt; are identical to tau_exec -T options.  
+The select.tau file  supports outer-loop level instrumentation and exclude/include lists of functions just like tau_instrumentor's select.tau (same format).
+Also,	-T &lt;options&gt; are identical to tau_exec -T options.
 </para>
 
 </sect2>
@@ -196,12 +197,12 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
     <title>Profiling each call to a function</title>
     <para>
       By default TAU profiles the total time (inclusive/exclusive) spent on a
-      given function. Profiling each function call  
+      given function. Profiling each function call
       for an application that calls some function hundred of thousands of
       times, is impractical since the profile data would grow enormously. But
       configuring TAU with the <literal>-PROFILEPARAM</literal> option will have
       TAU profile select functions
-      each time they are called. But TAU will also 
+      each time they are called. But TAU will also
       group some of these function calls together according to the value of
       the parameter they are given. For example if a function mpisend(int i) is called 2000
       times 1000 times with 512 and 1000 times with 1024 then we will receive two
@@ -210,7 +211,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
       times.
     </para>
   </sect1>
-	<sect1>
+  <sect1>
 		<title>Profiling with Hardware counters</title>
     <para>LIST OF COUNTERS:</para>
 
@@ -241,23 +242,23 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
       <listitem><para><literal>TAU_MPI_MESSAGE_SIZE</literal> - For tracking
       the cumulative message size for all MPI operations by a node for each
       routine. </para></listitem>
-      
+
        <listitem><para><literal>ENERGY</literal> - For tracking
       the power use of the application in joules. Requires an -arch=craycnl configuration. </para></listitem>
-      
+
        <listitem><para><literal>ACCEL_ENERGY</literal> - For tracking
       the power use of the application on accelerators in joules. Requires an -arch=craycnl configuration. </para></listitem>
 
     </itemizedlist>
 
-      <note> <para>When TAU is configured with -TRACE -MULTIPLECOUNTERS and 
-      -papi=&lt;dir&gt; options, the COUNTER1 environment variable must be 
+      <note> <para>When TAU is configured with -TRACE -MULTIPLECOUNTERS and
+      -papi=&lt;dir&gt; options, the COUNTER1 environment variable must be
       set to GET_TIME_OF_DAY to allow TAU's tracing module to use a globally
       synchronized real-time clock for time-stamping event records. When we use
-      tracing with hardware performance counters, the counters specified in 
+      tracing with hardware performance counters, the counters specified in
       environment variables COUNTER[2-25] are accessed at routine transitions
-      and logged in the trace file. Use tau2vtf tool to convert TAU traces to 
-      VTF3 traces that may be loaded in the Vampir trace visualization tool. 
+      and logged in the trace file. Use tau2vtf tool to convert TAU traces to
+      VTF3 traces that may be loaded in the Vampir trace visualization tool.
       </para>
       </note>
 
@@ -266,7 +267,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
       linkend="PAPI_TABLE" /> and <xref linkend="PCL_TABLE" />. Example:</para>
 
       <itemizedlist>
-	
+
 	<listitem><para><literal>PCL_FP_INSTR</literal>       - For floating point operations using PCL (-pcl=&lt;dir&gt;)</para></listitem>
 
 	<listitem><para><literal>PAPI_FP_INS</literal>        - For floating point operations using PAPI (-papi=&lt;dir&gt;)</para></listitem>
@@ -727,7 +728,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
           </tbody>
       </tgroup>
     </table>
-    
+
 
 <para>
  For example to measure the floating point operations in routines using
@@ -735,7 +736,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
 
     <screen>
 % ./configure -pcl=/usr/local/packages/pcl-1.2
-% setenv PCL_EVENT PCL_FP_INSTR 
+% setenv PCL_EVENT PCL_FP_INSTR
 % mpirun -np 8 application
 </screen>
 
@@ -890,7 +891,7 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
             <row>
               <entry align='left'>PCL_DTLB_HIT</entry>
               <entry align='left'>Data TLB hits</entry>
-            </row>           
+            </row>
             <row>
               <entry align='left'>PCL_DTLB_MISS</entry>
               <entry align='left'>Data TLB misses</entry>
@@ -1051,10 +1052,10 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
     </para>
   </sect1>
 
-  
-  
 
-  
+
+
+
   <sect1 id="PerfLib">
     <title>Profiling with PerfLib</title>
 
@@ -1167,7 +1168,7 @@ pytau.stop(x)
     <screen>
 % pprof
 </screen>
-   
+
     <para>Its usage is explained below:</para>
 
      <screen>
@@ -1183,17 +1184,17 @@ usage: pprof [-c|-b|-m|-t|-e|-i] [-r] [-s] [-n num] [-f filename] \
   -r : Reverse sorting order
   -s : print only Summary profile information
   -n num : print only first num functions
-  -f filename : specify full path and Filename without node ids 
+  -f filename : specify full path and Filename without node ids
   -p : suPpress conversion to hh:mm:ss:mmm format
-  -l : List all functions and exit 
+  -l : List all functions and exit
   -d : Dump output format (for Racy) [node numbers] : prints only info about
 	all contexts/threads of given node numbers
- node numbers : prints information about all contexts/threads 
+ node numbers : prints information about all contexts/threads
  for specified nodes
 </screen>
 
   </sect1>
-  
+
     <sect1 id="RunningJAVA">
     <title>Running a JAVA application with TAU</title>
 
@@ -1215,11 +1216,11 @@ usage: pprof [-c|-b|-m|-t|-e|-i] [-r] [-s] [-n num] [-f filename] \
     <title>Using a tau.conf File</title>
 
     <para>If a tau.conf file is created, then code that uses that TAU lib will effected by the
-     settings in tau.conf.  For example, if a directory tau-2.21/tau_system_defaults is created and  
-     a tau.conf file is placed in  it, TAU will read that file before doing the measurements. A user 
-     of that TAU libs  can choose to override the contents of that file by placing a tau.conf in their 
-     own directory. But by default, if the sysadmin chooses to create this dir, all the users of the 
-     TAU libs will be globally affected by this tau.conf. 
+     settings in tau.conf.  For example, if a directory tau-2.21/tau_system_defaults is created and
+     a tau.conf file is placed in  it, TAU will read that file before doing the measurements. A user
+     of that TAU libs  can choose to override the contents of that file by placing a tau.conf in their
+     own directory. But by default, if the sysadmin chooses to create this dir, all the users of the
+     TAU libs will be globally affected by this tau.conf.
 
     </para>
     <para>For example, tau.conf could be:
@@ -1245,19 +1246,19 @@ Then anyone using TAU from that directory will get TAU_IBM_BG_HWP_COUNTERS=1, TA
     <para>TAU can be configured to use the  Score-P measurement infrastructure (www.score-p.org).
           To use Score-P, configure TAU with <literal>-scorep=</literal> option to point TAU to the Score-P
           installation.  (Please use Score-P version 1.0 beta or above.) You may then instrument and run your
-          application with TAU in a manor of your choosing.  
+          application with TAU in a manor of your choosing.
     </para>
-    <para>  Set the environment variable SCOREP_PROFILING_FORMAT to TAU_SNAPSHOT to produce TAU Snapshot files, 
+    <para>  Set the environment variable SCOREP_PROFILING_FORMAT to TAU_SNAPSHOT to produce TAU Snapshot files,
              which will be found in scorep*/tau/.  Also, the Score-P library must be found in LD_LIBRARY_PATH.
- 
+
     </para>
   </sect1>
     <sect1 id="UsingUPC">
     <title>Using UPC  with TAU</title>
-    <para> Please see examples/upc for more details. 
+    <para> Please see examples/upc for more details.
  </para>
-    <para>To instrument Berkeley UPC with GASP, configure TAU with <literal>-upcnetwork=&lt;option&gt;</literal> 
-where option is "mpi" or "udp". Then use a selective instrumentation file like the one shown below. 
+    <para>To instrument Berkeley UPC with GASP, configure TAU with <literal>-upcnetwork=&lt;option&gt;</literal>
+      /where option is "mpi" or "udp". Then use a selective instrumentation file like the one shown below.
     </para>
     <screen>
 BEGIN_INSTRUMENT_SECTION

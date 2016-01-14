@@ -1,56 +1,56 @@
 <?xml version="1.0"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-                 "../tools/docbook-xml-4.4/docbookx.dtd"> 
+                 "../tools/docbook-xml-4.4/docbookx.dtd">
 
 <chapter id="StartersGuide">
   <title>Quick Reference</title>
 
 
   <variablelist>
-	  <?dbfo list-presentation="blocks"?> 
+	  <?dbfo list-presentation="blocks"?>
 		<varlistentry>
 			<term><literal><link linkend="tauex">tau_run</link></literal></term>
-			<listitem>TAU's binary instrumentation tool</listitem>
+      <listitem><para>TAU's binary instrumentation tool</para></listitem>
     </varlistentry>
 		<varlistentry>
-			<term><literal>tau_cc.sh -tau_options=-optCompInst / tau_cxx.sh -tau_options=-optCompInst / tau_f90.sh -tau_options=-optCompInst</literal></term>
-			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (Compiler instrumentation)</listitem>
+      <term><literal>tau_cc.sh -tau_options=-optCompInst / tau_cxx.sh -tau_options=-optCompInst / tau_f90.sh -tau_options=-optCompInst /  tau_upc.sh -tau_options=-optCompInst / tau_f77.sh -tau_options=-optCompInst </literal></term>
+      <listitem><para> (Compiler instrumentation)</para></listitem>
     </varlistentry>
 		<varlistentry>
-			<term><literal>tau_cc.sh / tau_cxx.sh / tau_f90.sh</literal></term>
-			<listitem><link linkend='tau_compiler.sh'>Compiler wrappers</link> (PDT instrumentation)</listitem>
+      <term><literal>tau_cc.sh / tau_cxx.sh / tau_f90.sh / tau_f77.sh / tau_upc.sh </literal></term>
+      <listitem><para>(PDT instrumentation)</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>TAU_MAKEFILE</literal></term>
-			<listitem>Set instrumentation definition file</listitem>
+      <listitem><para>Set instrumentation definition file</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>TAU_OPTIONS</literal></term>
-			<listitem>Set instrumentation options</listitem>
+      <listitem><para>Set instrumentation options</para></listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>dynamic phase name=<emphasis>'name'</emphasis>
 		  file=<emphasis>'filename'</emphasis>
 			line=<emphasis>start_line_#</emphasis> to
-			line=<emphasis>end_line_#</emphasis>	
+			line=<emphasis>end_line_#</emphasis>
 			</literal></term>
 			<listitem>Specify dynamic Phase</listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>loops file=<emphasis>'filename'</emphasis>
-			routine=<emphasis>'routine name'</emphasis>	
+			routine=<emphasis>'routine name'</emphasis>
 			</literal></term>
 			<listitem>Instrument outer loops</listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>memory file=<emphasis>'filename'</emphasis>
-			routine=<emphasis>'routine name'</emphasis>	
+			routine=<emphasis>'routine name'</emphasis>
 			</literal></term>
 			<listitem>Track memory</listitem>
     </varlistentry>
 		<varlistentry>
 			<term><literal>io file=<emphasis>'filename'</emphasis>
-			routine=<emphasis>'routine name'</emphasis>	
+			routine=<emphasis>'routine name'</emphasis>
 			</literal></term>
 			<listitem>Track IO</listitem>
     </varlistentry>

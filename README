@@ -92,6 +92,7 @@ Here's a cheat sheet for the TAUdocs
 
 export CVSROOT=ix.cs.uoregon.edu:/research/paraducks2/cvs-src/master
 cvs co taudocs
+Make sure you are using java 7 or older. Java 8 hangs with the build system as currently implemented.
 
 To Make PDFs:
 cd referenceguide

@@ -428,6 +428,13 @@
 
     </listitem>
 
+    <listitem>
+<para><literal>-apex</literal></para>
+
+      <para>Specifies support for the apex framework. Requires configuration with either <literal>-pthread</literal> or <literal>-ompt=&lt;download&gt;</literal> to provide the communication layer.</para>
+
+    </listitem>
+
       <listitem>
 	<para><literal>-pthread</literal></para>
 

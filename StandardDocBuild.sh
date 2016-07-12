@@ -10,5 +10,5 @@ make pdf
 popd
 
 pushd newguide
-make html newguide-chunked
+make html html-chunked
 popd

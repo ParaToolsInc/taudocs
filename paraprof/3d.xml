@@ -44,7 +44,7 @@
 
     <figure id="paraprof.3dbarplot.figure"> <title>3-D Mesh Plot</title>
      <mediaobject>
-      <imageobject><imagedata fileref="3dvew1.png" scalefit="0" width="6in" align="center"/></imageobject>
+      <imageobject><imagedata fileref="3dview1.png" scalefit="0" width="6in" align="center"/></imageobject>
      </mediaobject>
     </figure>
 
@@ -69,7 +69,7 @@
     </figure>
 
     <para>This visualization method plots the value of each thread along up to
-      4 axes (each a different function/metric).  This view allows you to
+      4 axes. Each axis represents a different function and  metric.  This view allows you to
       discern clustering of values and relationships between functions across
       threads.</para>
 

@@ -62,7 +62,7 @@ Launching Jumpshot will bring up the main display window showing the entire trac
 to see more detail.</para>
     <figure id="jumpshot.overview.figure"> <title>Main Data Window</title>
       <mediaobject>
-	<imageobject><imagedata fileref="jumpshot-overview.gif" scalefit="0"
+	<imageobject><imagedata fileref="jumpshot-overview.png" scalefit="0"
 		       width="3.78in" align="center"/></imageobject>
       </mediaobject>
     </figure>

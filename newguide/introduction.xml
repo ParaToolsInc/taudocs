@@ -638,9 +638,9 @@ TAU integration. <listitem>
       </listitem>
 
             <listitem>
-	<para><literal>-scorep=&lt;directory&gt;</literal></para>
+	<para><literal>-scorep=&lt;directory&gt;</literal> or <literal>-scorep=&lt;download&gt;</literal></para>
           <para>
-	    Specify location of Score-P package.  Set the enviroment varible SCOREP_PROFILING_FORMAT
+	    Specify location of an existing Score-P package or download and configure a new install automatically.  Set the enviroment varible SCOREP_PROFILING_FORMAT
             to TAU_SNAPHOT so that Score-P will output Tau Snapsot profiles.
         </para>
       </listitem>
@@ -1366,7 +1366,7 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
 				<literal>-arch=craycnl</literal>On Cray T3E systems, KAI KCC and Cray CC compilers have been
         tested with TAU. On Cray SV-1 and X1 systems, Cray CC compilers
         have been tested with TAU. On Cray XT3, and RedStorm systems, PGI and
-        GNU compilers have been tested with TAU. </para>
+        GNU compilers have been tested with TAU. TAU has also been tested on Cray with KNLs and CCE compilers. </para>
 
       </listitem>
       <listitem>

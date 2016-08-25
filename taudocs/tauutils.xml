@@ -2431,6 +2431,9 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
      <varlistentry><term>-ebs_source=&lt;counter&gt; </term>
     <listitem><para>sets sampling metric (default "itimer")</para></listitem></varlistentry>
 
+ 	<varlistentry><term>-ptts</term>
+    <listitem><para>Launch ThreadSpotter. It must be available in the system path.</para></listitem></varlistentry>
+
      <varlistentry><term>-T&lt;option&gt; </term>
     <listitem><para>: specify TAU option</para></listitem></varlistentry>
 

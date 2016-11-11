@@ -200,7 +200,7 @@
 
 			</listitem>
 			<listitem>
-	<para><literal>-mpiinc=&lt;dir&gt;</literal></para>
+	<para><literal>-mpiinc=&lt;directory&gt;</literal></para>
 
         <para>Specifies the directory where MPI header files reside (such as
         mpi.h and mpif.h).  This option also generates the TAU MPI wrapper
@@ -213,10 +213,10 @@
 
     <listitem>
 
-      <para><literal>-mpilib=&lt;dir&gt;</literal></para>
+      <para><literal>-mpilib=&lt;directory&gt;</literal></para>
 
       <para>Specifies the directory where MPI library files reside. This option
-      should be used in conjunction with the -mpiinc=&lt;dir&gt; option to
+      should be used in conjunction with the -mpiinc=&lt;directory&gt; option to
       generate the TAU MPI wrapper library. </para>
 
     </listitem>
@@ -231,6 +231,21 @@
       thread-safe MPI library.</para>
 
     </listitem>
+    <listitem>
+	<para><literal>-mpit</literal></para>
+
+	<para>Activates MPI-T support in TAU. Use in conjunction with an MPI implementation that supports MPI-T such as MVAPICH or MPICH. 
+   To enable collection of PVARS, set TAU_TRACK_MPI_T_PVARS environment variable to 1. To set CVARs, use the two environment variables below in the following fashion:
+   </para><para><literal>bash$export TAU_MPI_T_CVAR_METRICS=MPIR_CVAR_VBUF_POOL_CONTROL,MPIR_CVAR_VBUF_POOL_REDUCED_VALUE[1]
+   </literal></para><para><literal>
+   bash$export TAU_MPI_T_CVAR_VALUES=1,1</literal></para><para>
+   Note that the METRICS should match exactly with the corresponding VALUES, and the name for the CVAR should be exactly as presented in TAU profiles.
+   Once the above variables are set, use this feature as follows:
+   <literal>mpirun -np 4 tau_exec -T mpi,mpit ./a.out</literal></para>
+
+			</listitem>
+
+
 			</itemizedlist>
 
 
@@ -335,7 +350,7 @@
 
     <listitem>
 
-      <para><literal>-epilog=&lt;dir&gt;</literal></para>
+      <para><literal>-epilog=&lt;directory&gt;</literal></para>
 
       <para>Specifies the directory where the EPILOG tracing package
       <ulink url="http://www.fz-juelich.de/zam/kojak/epilog/">EPILOG</ulink> is installed.This option should be used in conjunction with
@@ -421,17 +436,10 @@
 
 		<listitem>
 
-      <para><literal>-scalasca=&lt;dir&gt;</literal></para>
+      <para><literal>-scalasca=&lt;directory&gt;</literal></para>
 
       <para>Specifies the directory where the <ulink url="http://www.sclasca.org">SCALASCA</ulink> package
        is installed.</para>
-
-    </listitem>
-
-    <listitem>
-<para><literal>-apex</literal></para>
-
-      <para>Specifies support for the apex framework. Requires configuration with either <literal>-pthread</literal> or <literal>-ompt=&lt;download&gt;</literal> to provide the communication layer.</para>
 
     </listitem>
 
@@ -521,10 +529,10 @@ TAU integration. <listitem>
       <para>Same as papi, except uses threads to
       highlight how hardware performance counters may be used in a
       multi-threaded application. When it is used with PAPI, TAU should be
-      configured with -papi=&lt;dir&gt; -pthread autoinstrument Shows the use
+      configured with -papi=&lt;directory&gt; -pthread autoinstrument Shows the use
       of Program Database Toolkit (PDT) for automating the insertion of TAU
       macros in the source code. It requires configuring TAU with the
-      -pdt=&lt;dir&gt; option. The Makefile is modified to illustrate the use
+      -pdt=&lt;directory&gt; option. The Makefile is modified to illustrate the use
       of a source to source translator (tau_instrumentor). </para>
     </listitem>
 
@@ -532,7 +540,7 @@ TAU integration. <listitem>
 
 <!-- Set automatically <para><literal>-PAPIWALLCLOCK</literal></para>
 
-        <para>When used in conjunction with the -papi=&lt;dir&gt; option,
+        <para>When used in conjunction with the -papi=&lt;directory&gt; option,
         this option allows TAU to use high resolution, low overhead CPU
         timers for wallclock time based measurements. This can reduce
         the TAU overhead for accessing wallclock time for profile and
@@ -544,7 +552,7 @@ TAU integration. <listitem>
 
 	<para><literal>-PAPIVIRTUAL</literal></para>
 
-        <para>When used in conjunction with the -papi=&lt;dir&gt; option,
+        <para>When used in conjunction with the -papi=&lt;directory&gt; option,
         this option allows TAU to use the process virtual time (time spent
         in the "user" mode) for profile measurements, instead of the
         default wallclock time. (See NOTE below.)</para>
@@ -570,7 +578,7 @@ TAU integration. <listitem>
 
         <para>Allows TAU to track more than one quantity (multiple hardware
         counters, CPU- time, wallclock time, etc.) Configure with other options
-        such as -papi=&lt;dir&gt;, -pcl=&lt;dir&gt;, -LINUXTIMERS, -SGITIMERS,
+        such as -papi=&lt;directory&gt;, -pcl=&lt;directory&gt;, -LINUXTIMERS, -SGITIMERS,
         -CPUTIME, -PAPIVIRTUAL, etc.  See Section "Using Multiple Hardware
         Counters" in Chapter 4 for detailed instructions on setting the
         environment variables COUNTER&lt;1-25&gt; for this option. If
@@ -613,9 +621,25 @@ TAU integration. <listitem>
 
       </listitem>
 
+    <listitem>
+      <para><literal>-apex</literal></para>
+      <para>Specifies support for the APEX framework. Requires <literal>-pthread</literal> or <literal>-openmp -ompt=download</literal> to provide the communication layer. When running an application instrumented with APEX set the runtime environment variable APEX_SCREEN_OUTPUT to 1 to see APEX output. Set the runtime environment variable APEX_TAU to 1 to generate TAU profiles as well. See <literal>&lt;tau2&gt;/examples/apex/README</literal> for more information.</para>
+    </listitem>
+
+
+
       <listitem>
 
-	<para><literal>-dyninst=&lt;dir&gt;</literal></para>
+	<para><literal>-beacon=&lt;directory&gt;</literal></para>
+
+        <para>Build TAU with BEACON support. BEACON allows remote monitoring of performance events and control of program behavior through interfaces such as MPI_T.</para>
+
+      </listitem>
+
+
+      <listitem>
+
+	<para><literal>-dyninst=&lt;directory&gt;</literal></para>
 
         <para>Specifies the directory where the DynInst dynamic
         instrumentation package is installed. Using DynInst, a user can
@@ -689,13 +713,13 @@ TAU integration. <listitem>
 
 
     <listitem>
-      <para><literal>-shmeminc=&lt;dir&gt;</literal></para>
+      <para><literal>-shmeminc=&lt;directory&gt;</literal></para>
       <para>Specifies the directory where shmem.h resides and specifies the use of
       the TAU SHMEM interface.</para>
     </listitem>
 
     <listitem>
-      <para><literal>-shmemlib=&lt;dir&gt;</literal></para>
+      <para><literal>-shmemlib=&lt;directory&gt;</literal></para>
       <para>Specifies the directory where libsma.a resides and specifies the use
       of the TAU SHMEM interface.</para>
     </listitem>
@@ -719,7 +743,7 @@ TAU integration. <listitem>
 
      <listitem>
 
-      <para><literal>-cuda=&lt;dir&gt;</literal></para>
+      <para><literal>-cuda=&lt;directory&gt;</literal></para>
 
       <para>Specifies the location of the top level CUDA SDK</para>
 
@@ -727,7 +751,7 @@ TAU integration. <listitem>
 
      <listitem>
 
-      <para><literal>-gpi=&lt;dir&gt;</literal></para>
+      <para><literal>-gpi=&lt;directory&gt;</literal></para>
 
       <para>Specify use of TAU's GPI wrapper library. </para>
 <para> It works well with PDT and compiler based instrumentation of the source code and there is  a wrapper interposition library that is linked in to track the communication of GPI.  It is important to specify all TAU runtime options in the tau.conf file that must reside in the current working directory where the executable is stored and launched from. This is important because the worker tasks are spawned by the GPI daemon on remote nodes and do not inherit the user's working directory or the environment.
@@ -749,7 +773,7 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
      </listitem>
      <listitem>
 
-      <para><literal>-opencl=&lt;dir&gt;</literal></para>
+      <para><literal>-opencl=&lt;directory&gt;</literal></para>
 
       <para>Specifies the location of the OpenCL package</para>
 
@@ -757,7 +781,7 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
        <listitem>
 
-      <para><literal>-armci=&lt;dir&gt;</literal></para>
+      <para><literal>-armci=&lt;directory&gt;</literal></para>
 
       <para>Specifies the location of the ARMCI directory</para>
 
@@ -765,7 +789,7 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
 
     <listitem>
-      <para><literal>-epiloglib=&lt;dir&gt;</literal></para>
+      <para><literal>-epiloglib=&lt;directory&gt;</literal></para>
       <para>Specifies the directory of where the Epilog library is to be
         found. Ex: if directory structure is:
         <literal>/usr/local/epilog/fe/lib/</literal> let the install options be:
@@ -773,13 +797,13 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
       </para>
     </listitem>
     <listitem>
-      <para><literal>-epilogbin=&lt;dir&gt;</literal></para>
+      <para><literal>-epilogbin=&lt;directory&gt;</literal></para>
       <para>Specifies the directory of where the Epilog binaries are to be
       found.
       </para>
     </listitem>
     <listitem>
-      <para><literal>-epiloginc=&lt;dir&gt;</literal></para>
+      <para><literal>-epiloginc=&lt;directory&gt;</literal></para>
       <para>Specifies the directory of where the epilog's included sources headers are to be
       found.
       </para>
@@ -797,7 +821,7 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
     <listitem>
 
-      <para><literal>-pythoninc=&lt;dir&gt;</literal></para>
+      <para><literal>-pythoninc=&lt;directory&gt;</literal></para>
 
       <para>Specifies the location of the Python include directory. This is
       the directory   where Python.h header file is located. This option
@@ -814,12 +838,12 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
     <listitem>
 
-      <para><literal>-pythonlib=&lt;dir&gt;</literal></para>
+      <para><literal>-pythonlib=&lt;directory&gt;</literal></para>
 
       <para>Specifies the location of the Python lib directory. This is the
       directory where *.py and *.pyc files (and config directory) are located.
       This option is mandatory for IBM when Python bindings are used. For other
-      systems, this option may not be specified (but -pythoninc=&lt;dir&gt;
+      systems, this option may not be specified (but -pythoninc=&lt;directory&gt;
       needs to be specified).</para>
 
     </listitem>
@@ -937,8 +961,8 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
 
       <para>Specifies use of hardware performance counters for profiling
       under IRIX using the SGI R10000 perfex counter access interface. The
-      use of this option is deprecated in favor of the -pcl=&lt;dir&gt;
-      and -papi=&lt;dir&gt; options described above. </para>
+      use of this option is deprecated in favor of the -pcl=&lt;directory&gt;
+      and -papi=&lt;directory&gt; options described above. </para>
 
     </listitem>
 
@@ -949,7 +973,7 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
       <para>Specifies use of the free running nanosecond resolution on-chip
       timer on the R10000+. This timer has a lower overhead than the default
       timer on SGI, and is recommended for SGIs (similar to the
-      -papi=&lt;dir&gt; -PAPIWALLCLOCK options).</para>
+      -papi=&lt;directory&gt; -PAPIWALLCLOCK options).</para>
     </listitem>
 
     <listitem>
@@ -1097,8 +1121,8 @@ Usage: installtau [OPTIONS]
 -mpiinc=&lt;mpiincdir&gt;
 -mpilib=&lt;mpilibdir&gt;
 -mpilibrary=&lt;mpilibrary&gt;
--perfinc=&lt;dir&gt;
--perflib=&lt;dir&gt;
+-perfinc=&lt;directory&gt;
+-perflib=&lt;directory&gt;
 -perflibrary=&lt;library&gt;
 -mpi
 -tag=&lt;unique name&gt;
@@ -1107,8 +1131,8 @@ Usage: installtau [OPTIONS]
 -epiloginc=&lt;absolute path to epilog include dir&gt; (&lt;epilog&gt;/include default)
 -epilogbin=&lt;absolute path to epilog bin dir&gt; (&lt;epilog&gt;/bin default)
 -epiloglib=&lt;absolute path to epilog lib dir&gt; (&lt;epilog&gt;/lib default)
--prefix=&lt;dir&gt;
--exec-prefix=&lt;dir&gt;
+-prefix=&lt;directory&gt;
+-exec-prefix=&lt;directory&gt;
 -j=&lt;num processes for parallel make&gt;  (just -j for full parallel)
 
 ******************************************************************
@@ -1286,7 +1310,7 @@ Usage: installtau [OPTIONS]
     <listitem>
       <para>h) Profiling an OpenMP F90 program using IBM</para>
       <screen>
-% configure -c++=xlC -cc=xlc -fortran=ibm -mpi -opari=&lt;dir&gt; -pdt=&lt;dir&gt; -opari=&lt;dir&gt;
+% configure -c++=xlC -cc=xlc -fortran=ibm -mpi -opari=&lt;directory&gt; -pdt=&lt;directory&gt; -opari=&lt;directory&gt;
 % cd examples/taucompiler/opari_f90
 % make
 % setenv OMP_NUM_THREADS 2
@@ -1488,7 +1512,7 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
         ParaProf and PerfExplorer can be installed.  To do so, simple run either program
         with Java 1.4 in your path.  You will guided through the installation process.
         ParaProf does not
-        require -jdk=&lt;dir&gt; option to be specified during configuration. (This option
+        require -jdk=&lt;directory&gt; option to be specified during configuration. (This option
         is used for configuring TAU for analyzing Java applications.)</para>
 
       </listitem>

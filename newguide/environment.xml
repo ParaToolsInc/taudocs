@@ -5,9 +5,9 @@
 
 <!--xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="tracing.xml"/-->
 <appendix>
-    
+
     <title>Environment Variables</title>
-    
+
     <table frame='all' condition="html;fo">
         <title>TAU Environment Variables</title>
         <tgroup cols='2' align='left' colsep='1' rowsep='1'>
@@ -58,6 +58,10 @@
                             <entry>TAU_CALLPATH_DEPTH</entry>
                             <entry>Sets the depth of the callpath profiling. Use
                                 with TAU_CALLPATH environment variable.</entry>
+                        </row>
+                        <row>
+                            <entry>TAU_CALLSITE</entry>
+                            <entry>When set to 1 TAU will provide call site information for events in profile and trace output. Configure TAU with -bfd=download and -useropt="-g" .							</entry>
                         </row>
                         <row>
                             <entry>TAU_TRACK_MESSAGE</entry>
@@ -134,22 +138,22 @@
                                                 and std. dev. at the end of execution.
                                             </entry>
                                         </row>
-                                        
+
                                         <row>
                                             <entry>TAU_TRACK_MEMORY_FOOTPRINT</entry>
                                             <entry>When set TAU will track resident set size (VmRSS) and peak memory usage (VmHWM) or the
                                                 high water mark of resident set size, the same values provided by the 'top' command.
                                             </entry>
                                         </row>
-                                        
+
                                         <row>
                                             <entry>TAU_TRACK_POWER</entry>
                                             <entry>
                                                 Enables tracking of power consumption via periodic interrupt.
                                             </entry>
                                         </row>
-                                        
-                                        
+
+
                                         <row>
                                             <entry>TAU_SYNCHRONIZE_CLOCKS</entry>
                                             <entry>When set TAU will correct for any time discrepancies
@@ -160,7 +164,7 @@
                                         <row>
                                             <entry>TAU_SAMPLING</entry>
                                             <entry>
-                                                
+
                                                 <para>Default value is 0 (off). When TAU_SAMPLING is set, we collect
                                                     additional profile or trace information (depending on whether
                                                     TAU_PROFILE or TAU_TRACE is set respectively) via periodic sampling at
@@ -200,7 +204,7 @@
                                                 of system timer interrupts while for PAPI they occur in response to
                                                 PAPI counter overflow interrupts set to the value of the
                                                 TAU_EBS_PERIOD.
-                                                
+
                                             </entry>
                                         </row>
                                         <row>
@@ -250,10 +254,10 @@
                                             <entry>Set this variables to 1 to generate just min/max/stddev/mean
                                                 statistics instead of per-node data.  Use paraprof -dumpsummary and
                                                 then pprof -f profile.Max/Min to see the data.
-                                                
+
                                             </entry>
                                         </row>
-                                        
+
                                         <row>
                                             <entry>TAU_IBM_BG_HWP_COUNTERS</entry>
                                             <entry>Set this variable to 1 to include IBM's UPC
@@ -261,8 +265,8 @@
                                                 Requires the use of MPI.
                                             </entry>
                                         </row>
-                                        
-                                        
+
+
                                         <row>
                                             <entry>TAU_CUPTI_API</entry>
                                             <entry>Default: <literal>runtime</literal>, options:
@@ -295,5 +299,3 @@
                                 </tgroup>
                             </table>
                         </appendix>
-                        
-                        

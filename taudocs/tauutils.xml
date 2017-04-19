@@ -4079,6 +4079,51 @@ tau_pin -n 2 -r _MPI_.* -- mpitest.exe
 </refentry>
 
 
+<!-- tau_spark-submit -->
+<refentry id='tau_spark-submit'>
+  <refmeta>
+    <refentrytitle>tau_spark-submit</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+    <refname>tau_spark-submit</refname>
+    <refpurpose>
+           Launches PySpark applications with TAU instrumentation
+    </refpurpose>
+  </refnamediv>
+
+<refsect1><title>Notes</title>
+     <para>Tau can profile PySpark applications using Spark 2.2 or later and Python 2.7 or later with the numpy package installed. TAU must be configured with the -pythoninc and -pythonlib options specifying an appropriate Python installation.</para>
+<para>
+	The SPARK_HOME environment variable must be set to the location of your Spark installation. Replace spark-submit in your normal Spark application invocation with tau_spark-submit. Options for tau_spark-submit can be set using the TAU_SPARK_PYTHON_ARGS environment variable.
+</para>
+<para>
+  A PySpark application profiled using tau_spark-submit will generate one profile file per task executed.
+  </para>
+  </refsect1>
+<refsect1><title>Example</title>
+     <para>
+<screen>
+     export TAU_SPARK_PYTHON_ARGS="-T serial,python"
+</screen>
+<screen>
+    tau_spark-submit --master local[4] ./als.py
+</screen>
+</para>
+  </refsect1>
+
+  <refsect1>
+    <title>Documentation</title>
+    <para>
+      Additional documentation and examples can be found in the pyspark subdirectory of the examples directory in your TAU installation.
+    </para>
+  </refsect1>
+
+</refentry>
+
+
+
 
  <!-- <refsect1>
     <title>Examples</title>

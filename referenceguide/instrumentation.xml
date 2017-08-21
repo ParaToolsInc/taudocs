@@ -106,6 +106,9 @@ io file="foo.f90" routine="RINB"
             be set with environment variable
             <literal>TAU_CALLPATH_DEPTH</literal>.
           </para>
+	<para>
+            Selective instrumention can be set at compile time by setting <literal>-tau_options=-optTauSelectFile=&lt;file&gt;</literal> in the TAU_OPTIONS environment variable when compiling with the TAU compiler wrapper scripts. Alternatively an application can be selectively instrumented at runtime by setting the TAU_SELECT_FILE environment variable to the selective instrumentation file's location in the application's execution environment.
+          </para>
           <note>
             <para>
               Due to the limitations of the some compilers (IBM xlf, PGI pgf90, GNU

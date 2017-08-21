@@ -635,8 +635,8 @@ CXX=$(TAU_COMPILER) g++
 			application you can use the <literal>-tau_options=-optTauSelectFile=&lt;file&gt;</literal>
 			option to enable selective instrumentation.
     </para>
-    <note><para>Selective instrumentation is only available when using source-level
-        instrumentation (PDT).</para></note>
+    <note><para>Selective instrumentation may be specified at runtime by setting the TAU_SELECT_FILE environment variable to the location of a valid selective instrumentation file in the instrumented application's run environment. <!--Selective instrumentation is only available when using source-level
+        instrumentation (PDT).--></para></note>
   <para>To specify a selective instrumentation file, create a text file and use
     the following guide to fill it in:</para>
 			<itemizedlist>

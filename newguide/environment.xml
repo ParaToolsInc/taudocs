@@ -124,6 +124,11 @@
                                                 be stored. See <xref linkend="GeneratingEventTraces" /></entry>
                                         </row>
                                         <row>
+                                            <entry>TAU_SELECT_FILE</entry>
+                                            <entry>When set to the location of a valid selective instrumentation file TAU will include/exclude the specified source at runtime. 
+                                            </entry>
+                                        </row>
+                                        <row>
                                             <entry>TAU_VERBOSE</entry>
                                             <entry>When set TAU will print out information about the
                                                 its configuration when running a instrumented application.

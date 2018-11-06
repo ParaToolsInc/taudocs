@@ -2447,7 +2447,7 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
     <listitem><para>flags to pass to PT TS report_ts command. Overrides TAU_TS_REPORT_FLAGS env. var.</para></listitem></varlistentry>
 
     <varlistentry><term>-ebs</term>
-    <listitem><para> enable Event-based sampling.  See README.sampling for more information</para></listitem></varlistentry>
+    <listitem><para> enable Event-based sampling to capture runtime event profiles without instrumentation.  See README.sampling for more information</para></listitem></varlistentry>
 
     <varlistentry><term>-ebs_period=&lt;count &gt; </term>
     <listitem><para>sampling period (default 1000)</para></listitem></varlistentry>
@@ -2479,6 +2479,12 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
     <varlistentry><term>-gdb</term>
     <listitem><para>run program in gdb debugger</para></listitem></varlistentry>
 
+    <varlistentry><term>-rocm</term>
+    <listitem><para>capture events and metadata from the ROCm performance API</para></listitem></varlistentry>
+
+    <varlistentry><term>-tau_ebs_resolution=&lt;file|function|line&gt;</term>
+    <listitem><para>process sampled events at the file/function/line level depending on the given argument. line is the default. the environment variable TAU_EBS_RESOLUTION can be set to one of these options to achieve the same effect.</para></listitem></varlistentry>
+
     </variablelist>
   </refsect1>
 
@@ -2493,6 +2499,9 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
 			<para>OPENCL kernel tracking is included, if A OPENCL SYNC call is made after
 			each kernel launch and <literal>clReleaseContext()</literal> is called before the exit of each thread that uses CUDA.
 			</para>
+      <para>
+        tau_python is similar to tau_exec and can replace the 'python' command when launching a python application. The -tau_python_interpreter=&lt;interpreter&gt; argument allows specification of a python interpreter other than the one used to configure TAU.
+      </para>
   </refsect1>
 
   <refsect1><title>Examples</title>

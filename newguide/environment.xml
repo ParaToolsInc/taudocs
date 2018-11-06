@@ -125,7 +125,7 @@
                                         </row>
                                         <row>
                                             <entry>TAU_SELECT_FILE</entry>
-                                            <entry>When set to the location of a valid selective instrumentation file TAU will include/exclude the specified source at runtime. 
+                                            <entry>When set to the location of a valid selective instrumentation file TAU will include/exclude the specified source at runtime.
                                             </entry>
                                         </row>
                                         <row>
@@ -249,6 +249,11 @@
                                             </entry>
                                         </row>
                                         <row>
+                                            <entry>TAU_EBS_RESOLUTION</entry>
+                                            <entry>Can be set to file, function or line. Is line by default. Event based sampling will resolve to the selected level of granularity.
+                                            </entry>
+                                        </row>
+                                        <row>
                                             <entry>TAU_TRACK_SIGNALS</entry>
                                             <entry>Set this variables to 1 to capture callstack as metadata at
                                                 point of failure.
@@ -300,6 +305,13 @@
                                             <entry>Set this to the value(s) you want assigned to the variable(s) specified in <literal>TAU_MPI_T_CVAR_METRICS</literal>
                                             </entry>
                                         </row>
+
+                                        <row>
+                                            <entry>TAU_SET_NODE</entry>
+                                            <entry>Set this to 0 to allow MPI configurations of TAU to work correctly with serial codes.
+                                            </entry>
+                                        </row>
+
                                     </tbody>
                                 </tgroup>
                             </table>

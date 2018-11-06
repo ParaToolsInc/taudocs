@@ -234,7 +234,7 @@
     <listitem>
 	<para><literal>-mpit</literal></para>
 
-	<para>Activates MPI-T support in TAU. Use in conjunction with an MPI implementation that supports MPI-T such as MVAPICH or MPICH. 
+	<para>Activates MPI-T support in TAU. Use in conjunction with an MPI implementation that supports MPI-T such as MVAPICH or MPICH.
    To enable collection of PVARS, set TAU_TRACK_MPI_T_PVARS environment variable to 1. To set CVARs, use the two environment variables below in the following fashion:
    </para><para><literal>bash$export TAU_MPI_T_CVAR_METRICS=MPIR_CVAR_VBUF_POOL_CONTROL,MPIR_CVAR_VBUF_POOL_REDUCED_VALUE[1]
    </literal></para><para><literal>
@@ -347,6 +347,17 @@
 		  <ulink url="http://icl.cs.utk.edu/papi/">PAPI</ulink>
 				</para>
       </listitem>
+
+      <listitem>
+
+	<para><literal>-rocm</literal></para>
+
+        <para>Specifies configuration with support for AMD ROCm profiling. This option can also be submitted with a directory (-rocm=&lt;directory&gt;) if ROCm is installed somewhere other than the default location of /opt/rocm. When TAU is configured with this option tau_exec can be run with -rocm to automatically capture events and metadata from the ROCm profiling API.
+
+		  <ulink url="https://rocm.github.io/">ROCm</ulink>
+				</para>
+      </listitem>
+
 
     <listitem>
 

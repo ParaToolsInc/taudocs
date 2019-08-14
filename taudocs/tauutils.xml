@@ -1223,7 +1223,7 @@ The tau2otf trace converter takes a TAU formatted tracefile (*.trc) and a TAU ev
   <refsect1>
     <title>Examples</title>
 
-		<para>The program must be run with the tau trace, tau event and otf output files specified in the command line in that order. Any additional arguments follow. The following will produced an OTF file, a pp.otf and other related event and definition files, from the TAU trace and event files merged.trc and tau.edf trace file:
+		<para>The program must be run with the tau trace, tau event and otf output files specified in the command line in that order. Any additional arguments follow. The following will produce an OTF file, a pp.otf and other related event and definition files, from the TAU trace and event files merged.trc and tau.edf:
   	<screen>
 tau2otf merged.trc tau.edf app.otf
 </screen>
@@ -1238,6 +1238,8 @@ tau2otf merged.trc tau.edf app.otf
     </para>
   </refsect1>
 </refentry>
+
+<!-- tau2otf2 -->
 <refentry id='tau2otf2'>
   <refmeta>
     <refentrytitle>tau2otf2</refentrytitle>
@@ -1297,7 +1299,7 @@ Trace Format (OTF2). The user may specify the number of output streams for OTF2.
 
 		<para>The program must be run with the tau trace, tau event and otf2 output
 		files specified in the command line in that order. Any additional arguments
-		follow. The following will produced an OTF2 file, a pp.otf2 and other related event and definition files, from the TAU trace and event files merged.trc and tau.edf trace file:
+		follow. The following will produce an OTF2 file, a pp.otf2 and other related event and definition files, from the TAU trace and event files tau.trc and tau.edf:
   	<screen>
 tau2otf2 merged.trc tau.edf app.otf2
 </screen>
@@ -1312,6 +1314,103 @@ tau2otf2 merged.trc tau.edf app.otf2
     </para>
   </refsect1>
 </refentry>
+
+
+
+
+<!-- tau_trace2json -->
+<refentry id='tau_trace2json'>
+  <refmeta>
+    <refentrytitle>tau_trace2json</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+    <refname>tau2otf2</refname> <refpurpose>convert TAU tracefiles to json
+	 tracefiles for Chrome tracing or other viewers
+	 </refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>tau_trace2json</command>
+
+      <arg choice="opt">
+	<option>-o</option>
+	<replaceable class="parameter">output file</replaceable>
+      </arg>
+
+      <arg choice="opt">
+	<option>-chrome</option>
+      </arg>
+
+      <arg choice="opt">
+	<option>-v</option>
+      </arg>
+
+     <arg choice="opt">
+	<option>-ignoreatomic</option>
+      </arg>
+
+      <arg choice="opt">
+	<option>-nostate</option>
+      </arg>
+
+ <arg choice="opt">
+	<option>-nomessage</option>
+      </arg>
+
+   <arg choice="opt">
+	<option>-nojson</option>
+      </arg>
+
+ <arg choice="opt">
+	<option>-print</option>
+      </arg>
+
+  </cmdsynopsis></refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+	 
+The tau_trace2json trace converter takes a TAU formatted tracefile (*.trc) and a TAU
+event description file (*.edf) and produces an output trace file in json. The user may specify the creation of a json file readable by Chrome's trace viewer. If no output file name is specified with the -o option output will be created in an events.json file in the current directory.
+
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Options</title>
+    <para>
+    <option>-chrome</option> Output Chrome readable trace output.
+    <option>-ignoreatomic</option> Do not include atomic events in json output. TAU traces include metadata as atomic events so using this option is advised in general. 
+    <option>-o</option>Specify an output file other than the default events.json
+	 <option>-nomessage</option> Suppresses printing of message information in the trace.
+
+	 <option>-v</option> Verbose mode sends trace event descriptions to the standard output as they are converted.
+	 </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+		<para>The program must be run with the tau trace, tau event input first followed by any arguments. The following will produce a json file, trace.json, from the TAU trace and event files tau.trc and tau.edf:
+  	<screen>
+tau_trace2json  ./tau.trc ./tau.edf -chrome -ignoreatomic -o trace.json
+</screen>
+
+    </para>
+
+ </refsect1>
+ <refsect1>
+    <title>See Also</title>
+    <para>
+ 				tau2vtf(1), trace2profile(1), vtf2profile(1), tau_merge(1), tau_convert(1)
+    </para>
+  </refsect1>
+</refentry>
+
 
 <!-- perf2tau -->
 <refentry id='perf2tau'>

@@ -639,18 +639,31 @@ TAU integration. <listitem>
 
 
 
-      <listitem>
+  <listitem>
+  <para><literal>-sos=&lt;directory&gt;</literal> or <literal>-sos=&lt;download&gt;</literal></para>
+  <para>
+  Specify location of an existing SOS_flow or download and configure a new install automatically.
+  </para>
+  </listitem>
 
-	<para><literal>-beacon=&lt;directory&gt;</literal></para>
+  <listitem>
+  <para><literal>-soscomm=&lt;option&gt;</literal></para>
+
+    <para>When building SOS_flow with -sos=download specifies the communication system to use. The options are <literal>sockets, mpi, or evpath</literal>. The default is mpi.</para>
+  </listitem>
+
+
+      <listitem>
+	    <para><literal>-beacon=&lt;directory&gt;</literal></para>
 
         <para>Build TAU with BEACON support. BEACON allows remote monitoring of performance events and control of program behavior through interfaces such as MPI_T.</para>
-
       </listitem>
 
 
-      <listitem>
 
-	<para><literal>-dyninst=&lt;directory&gt;</literal></para>
+
+      <listitem>
+	    <para><literal>-dyninst=&lt;directory&gt;</literal></para>
 
         <para>Specifies the directory where the DynInst dynamic
         instrumentation package is installed. Using DynInst, a user can

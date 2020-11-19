@@ -358,6 +358,16 @@
 				</para>
       </listitem>
 
+      <listitem>
+
+        <para><literal>-level_zero</literal></para>
+
+        <para>Specifies configuration with support for Intel OneAPI's Level Zero. This option can also be submitted with a directory (-level_zero=&lt;directory&gt;). Use in conjunction with the -opencl configuration option as needed.
+
+                  <ulink url="https://spec.oneapi.com/level-zero/latest/core/INTRO.html">Level Zero</ulink>
+                                </para>
+      </listitem>
+
 
     <listitem>
 

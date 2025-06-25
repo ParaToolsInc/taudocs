@@ -356,7 +356,32 @@
 
 		  <ulink url="https://rocm.github.io/">ROCm</ulink>
 				</para>
-      </listitem>
+			</listitem>
+	<listitem>
+
+        <para><literal>-rocprofiler=&lt;directory&gt;</literal></para>
+
+        <para>Specifies configuration with support for AMD ROCProfiler data collection. Must be used in conjuction with the -rocm option. Not compatible with the -roctracer option.
+                                </para>
+			</listitem>
+
+
+        <listitem>
+
+        <para><literal>-roctracer=&lt;directory&gt;</literal></para>
+
+        <para>Specifies configuration with support for AMD ROCTracer data collection. Must be used in conjuction with the -rocm option. Not compatible with the -rocprofiler option.
+                                </para>
+       </listitem>
+
+
+        <listitem>
+
+        <para><literal>-rocprofsdk</literal></para>
+
+        <para>In conjunction with -rocm provides the functionality of both rocprofile and roctracer, plus rocm pc sampling with the -rocm_pc option for tau_exec. Requires ROCm 6.2 or greater.</para>
+       </listitem>
+
 
       <listitem>
 
@@ -673,10 +698,11 @@ TAU integration. <listitem>
 
 
       <listitem>
-	    <para><literal>-dyninst=&lt;directory&gt;</literal></para>
+	    <para><literal>-dyninst=&lt;directory&gt;</literal> or <literal>-dyninst=&lt;download&gt;</literal></para>
 
         <para>Specifies the directory where the DynInst dynamic
-        instrumentation package is installed. Using DynInst, a user can
+	instrumentation package is installed, or instructs TAU to download
+	and configure a new install automatically. Using DynInst, a user can
         invoke tau_run to instrument an executable program at runtime or
         prior to execution by rewriting it.
         <ulink url="http://www.dyninst.org/">DyninstAPI</ulink><ulink
@@ -762,6 +788,11 @@ TAU integration. <listitem>
       <para><literal>-shmemlibrary=&lt;lib&gt;</literal></para>
       <para>By default, TAU uses -lsma as the shmem/pshmem library. This option
       allows the user to specify a different shmem library.</para>
+    </listitem>
+
+    <listitem>
+      <para><literal>-ittnotify</literal></para>
+      <para>Enables the -ittnotify option for tau_exec. This allows TAU to capture timers instrumented with Intels ITTNotify library. See examples/ittnotify and examples/pytorch/ittnotify.</para>
     </listitem>
 
     <listitem>
@@ -851,6 +882,15 @@ So, options such as TAU_TRACE=1, and sampling must be specified in the tau.conf 
       events that call MPI routines. Do not use this option with the -TRACE
       option. </para>
     </listitem>
+
+
+      <listitem>
+      <para><literal>-python[3][=&lt;directory&gt;]</literal></para>
+      <para>Configure TAU with Python instrumentation support based on the python[3]
+      detected in the environment. Alternatively provide a path to the location of
+      a python interpreter to configure TAU to use that install of Python.</para>
+    </listitem>
+
 
 
     <listitem>

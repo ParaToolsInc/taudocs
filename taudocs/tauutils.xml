@@ -2480,8 +2480,11 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
 <refsect1>
   <title>Description</title>
   <para>
-    Use this script to perform memory or IO tracking on either an instrumented or
-      uninstrumented executable.
+    Use this script to perform runtime performance tracking on either an instrumented or
+	  uninstrumented executable. Options include memory and IO tracking, event based sampling,
+	  hardware accelerator tracking
+	  and data collection from library-provided instrumention API's such as mpi communication events and
+	  RAJA and Kokkos instrumention hooks.
   </para>
 </refsect1>
 <refsect1>
@@ -2511,6 +2514,9 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
 
        <varlistentry><term>-cupti</term>
     <listitem><para>track GPU events via Nvidia's CUPTI interface (Must be configured with -cupti=&lt;dir&gt;, Preferred for CUDA 4.1 or later).</para></listitem></varlistentry>
+
+ <varlistentry><term>-cupti_pc</term>
+    <listitem><para>track pc sampling events through cupti. Mutually exclusive with the -cupti option. Control hardware buffer size and sampling period with TAU_CUPTI_PC_HWB and TAU_CUPTI_PC_PERIOD environment variables. Generates CUBIN files which may be deleted. Compile application with -lineinfo or -G to make source lines available for PC samples.</para></listitem></varlistentry>
 
      <varlistentry><term>-um</term>
     <listitem><para>in conjunction with -cupti adds support for the Unified Memory GPUs. Requires CUDA 6.5 or later.</para></listitem></varlistentry>
@@ -2555,7 +2561,10 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
     <listitem><para>sets sampling metric (default "itimer")</para></listitem></varlistentry>
 
 		<varlistentry><term>-ebs_resolution=&lt;file|function|line&gt; </term>
-    <listitem><para>sets sampling granularity (default "function")</para></listitem></varlistentry>
+			<listitem><para>sets sampling granularity (default "function")</para></listitem></varlistentry>
+
+    <varlistentry><term>-syscall</term>
+    <listitem><para>track SYSCALL</para></listitem></varlistentry>
 
  	<varlistentry><term>-ptts</term>
     <listitem><para>Launch ThreadSpotter. It must be available in the system path.</para></listitem></varlistentry>
@@ -2583,11 +2592,55 @@ tcsh : ./tau_validate --html x86_64 &gt;&amp; results.html
 
     <varlistentry><term>-rocm</term>
     <listitem><para>capture events and metadata from the ROCm performance API</para></listitem></varlistentry>
+	
+    <varlistentry><term>-rocm_pc</term>
+    <listitem><para>captures the events provided by -rocm along with PC sampling from the ROCm api</para></listitem></varlistentry>	
 
     <varlistentry><term>-tau_ebs_resolution=&lt;file|function|line&gt;</term>
     <listitem><para>process sampled events at the file/function/line level depending on the given argument. line is the default. the environment variable TAU_EBS_RESOLUTION can be set to one of these options to achieve the same effect.</para></listitem></varlistentry>
 
+<varlistentry><term>-monitoring</term>
+	<listitem><para>monitors hardware counters and other commands by polling periodically as specified in a tau_monitoring.json file included in the run directory. Example:</para></listitem>
+		 </varlistentry>
+
+
     </variablelist>
+
+<programlisting>
+{
+  "periodic": true,
+  "periodicity seconds": 1.0,
+  "/proc/stat": {
+    "comment": "This will exclude all core-specific readings.",
+    "exclude": ["^cpu[0-9]+.*"]
+  },
+  "/proc/meminfo": {
+    "comment": "This will include three readings.",
+    "include": [".*MemAvailable.*", ".*MemFree.*", ".*MemTotal.*"]
+  },
+  "/proc/net/dev": {
+    "disable": true,
+    "comment": "This will include only the first ethernet device.",
+    "include": [".*eno1.*"]
+  },
+  "lmsensors": {
+    "disable": true,
+    "comment": "This will include all power readings.",
+    "include": [".*power.*"]
+  },
+  "net": {
+    "disable": true,
+    "comment": "This will include only the first ethernet device.",
+    "include": [".*eno1.*"]
+  },
+  "nvml": {
+    "disable": false,
+    "comment": "This will include only the utilization metrics.",
+    "include": [".*utilization.*"]
+  }
+</programlisting>
+
+
   </refsect1>
 
 

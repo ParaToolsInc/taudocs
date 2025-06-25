@@ -11,6 +11,6 @@ scp -r ./tau-installguide.pdf ./tau-usersguide.pdf ./tau-referenceguide.pdf newg
 #scp -r referenceguide/referenceguide-chunked/* ix:~/hold-tau-docs/newguide-chunked
 ssh ix "cp -r /research/paraducks/tauwww/docs/newguide hold-tau-docs/newguide.bak.$(date +%Y%m%d_%H%M%S); cp -r hold-tau-docs/newguide-chunked/* /research/paraducks/tauwww/docs/newguide; cp -r hold-tau-docs/*.pdf /research/paraducks/tauwww/"
 
-
+echo "Don't forget to update ix:/research/paraducks/tauwww/docs.php"
 
 

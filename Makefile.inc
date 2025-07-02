@@ -90,7 +90,8 @@ XSLT_PARAM_FO = fop.extensions=1 \
 	admon.graphics.path=$(IMAGE_ROOT)/ \
         preferred.mediaobject.role="fo" \
         profile.condition="fo" \
-	refentry.xref.manvolnum="0"
+	refentry.xref.manvolnum="0" \
+	draft.mode="no"
 
 
 ##### ----- USER BUILD STUFF ----- #####

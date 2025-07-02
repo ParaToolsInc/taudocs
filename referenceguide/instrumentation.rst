@@ -13,6 +13,13 @@ Selective Instrumentation Options
     excluded, the user can specify the list of routines that are to be
     instrumented using the include list, one routine name per line,
     enclosed by ``BEGIN_INCLUDE_LIST`` and ``END_INCLUDE_LIST``.
+    Additionally, a group of routines sharing the same prefix or suffix 
+    can be selected using the wildcard ``#``.
+
+In the image shown below, there is an example with multiple includes and
+excludes, with the result of applying the lists.
+
+|BEGIN EXIN LIST|
 
 ``BEGIN_FILE_EXCLUDE_LIST`` / ``END_FILE_EXCLUDE_LIST`` or
 ``BEGIN_FILE_INCLUDE_LIST`` / ``END_FILE_INCLUDE_LIST``
@@ -920,3 +927,5 @@ TAU can also build the DMAPP wrapper using Cray CCE compilers. When the
 -optDMAPP option is used when building the application with TAU using
 TAU\_OPTIONS, DMAPP events are automatically instrumented with
 tau\_upc.sh.
+
+.. |BEGIN EXIN LIST| image:: inexlist.png

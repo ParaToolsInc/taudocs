@@ -27,6 +27,10 @@
             that are to be instrumented using the include list, one routine name per
             line, enclosed by <literal>BEGIN_INCLUDE_LIST</literal> and
             <literal>END_INCLUDE_LIST</literal>.
+            Additionally, a group of routines sharing the same prefix or suffix 
+            can be selected using the wildcard <literal>#</literal>. In 
+            <xref linkend="inexlist.instrumentation.figure"/>, there is an example with multiple includes and
+excludes, with the result of applying the lists.
           </para>
         </listitem>
       </varlistentry>
@@ -50,6 +54,12 @@
           </para>
 				</listitem>
       </varlistentry>
+      <figure id="inexlist.instrumentation.figure"> <title>Main Data Window</title>
+        <mediaobject>
+          <imageobject><imagedata fileref="inexlist.png" scalefit="0"
+           align="center"/></imageobject>
+        </mediaobject>
+      </figure>
     </variablelist>
           <itemizedlist>
             <listitem>

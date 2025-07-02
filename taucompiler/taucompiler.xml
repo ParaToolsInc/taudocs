@@ -448,7 +448,7 @@ CXX=$(TAU_COMPILER) g++
 
 	  <table>
 		  <title>Different methods of instrumenting applications</title>
-		  <tgroup cols='8'>
+		  <tgroup cols='9'>
       <thead>
 				<row>
 					<entry><emphasis>Method</emphasis></entry><entry>Requires

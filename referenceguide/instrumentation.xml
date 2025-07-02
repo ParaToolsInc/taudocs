@@ -54,7 +54,7 @@ excludes, with the result of applying the lists.
           </para>
 				</listitem>
       </varlistentry>
-      <figure id="inexlist.instrumentation.figure"> <title>Main Data Window</title>
+      <figure id="inexlist.instrumentation.figure"> <title>Selective Instrumentation Example</title>
         <mediaobject>
           <imageobject><imagedata fileref="inexlist.png" scalefit="0"
            align="center"/></imageobject>

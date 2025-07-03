@@ -40,7 +40,29 @@ SAX_CMD = java -Xmx512m \
 
 JAVACMD = $(shell which java)
 
-FOP_CMD = env JAVACMD=$(JAVACMD) $(TOOLS)/fop.sh
+#FOP_CMD = env JAVACMD=$(JAVACMD) $(TOOLS)/fop.sh
+
+FOP_VERSION = 2.11
+#FOP_DIR = $(TOOLS)/fop-$(FOP_VERSION)/fop
+FOP_TARBALL = fop-$(FOP_VERSION)-bin.tar.gz
+FOP_URL = https://dlcdn.apache.org/xmlgraphics/fop/binaries/$(FOP_TARBALL)
+
+#FOP_CMD = env JAVACMD=$(JAVACMD) $(FOP_DIR)/fop
+
+#FOP_CMD = $(FOP_DIR)/fop
+
+# The top-level directory that gets created when unzipping
+FOP_INSTALL_DIR = $(TOOLS)/fop-$(FOP_VERSION)
+
+# The full, explicit path to the FOP executable script
+FOP_CMD = $(FOP_INSTALL_DIR)/fop/fop
+
+# Rule to create the FOP directory by downloading and unzipping
+$(FOP_CMD):
+	@echo "--- FOP not found. Downloading from Apache... ---"
+	curl -L -o $(TOOLS)/$(FOP_TARBALL) $(FOP_URL)
+	tar -xzf $(TOOLS)/$(FOP_TARBALL) -C $(TOOLS)
+	rm $(TOOLS)/$(FOP_TARBALL)
 
 ##### ----- XSLT STYLESHEET PARAMETER SETTINGS ----- #####
 
@@ -84,14 +106,14 @@ XSLT_PARAM_CHUNKEDHTML = chunk.fast=1 \
         profile.condition="html" \
 	refentry.xref.manvolnum="0"
 
-
-XSLT_PARAM_FO = fop.extensions=1 \
+#collect.xref.targets="yes"
+XSLT_PARAM_FO = fop1.extensions=1 \
 	callout.graphics.path=$(IMAGE_ROOT)/callouts/ \
 	admon.graphics.path=$(IMAGE_ROOT)/ \
         preferred.mediaobject.role="fo" \
         profile.condition="fo" \
 	refentry.xref.manvolnum="0" \
-	draft.mode="no"
+	draft.mode="no" indent="yes"
 
 
 ##### ----- USER BUILD STUFF ----- #####
@@ -162,7 +184,7 @@ $(TARGET)-chunked: $(TARGET)-chunked/index.html
 
 
 $(TARGET)-chunked/index.html: $(XML_SRCS) $(DXSL_DIR)
-	-mkdir $(@D)
+	-mkdir -p $(@D)
 	$(SAX_CMD) $< $(TOOLS)/html_chunked_custom.xsl \
 		$(XSLT_PARAM) $(XSLT_PARAM_CHUNKEDHTML) \
 		base.dir=$(TARGET)-chunked/ 
@@ -174,8 +196,7 @@ $(TARGET)-chunked/index.html: $(XML_SRCS) $(DXSL_DIR)
 $(TARGET).xhtml: $(XML_SRCS) $(DXSL_DIR)
 
 clean:
-	-rm -f $(TARGET).pdf $(HEAD).fo $(TARGET).html $(TARGET).xhtml $(TARGET).txt \
-		$(TARGET)-chunked/*
+	-rm -rf $(TARGET).pdf $(HEAD).fo $(TARGET).html $(TARGET).xhtml $(TARGET).txt $(TARGET)-chunked 
 
 realclean: clean
 	-rm -rf $(DXSL_DIR) $(TARGET)-chunked
@@ -216,10 +237,10 @@ $(TARGET).xhtml: $(HEAD).xml $(DXSL_DIR)
 		$(XSLT_PARAM) \
 		$(XSLT_PARAM_XHTML)
 
-$(TARGET).pdf: $(HEAD).fo $(DXSL_DIR)
+$(TARGET).pdf: $(HEAD).fo $(DXSL_DIR) $(FOP_CMD)
 	$(FOP_CMD) -fo $< -pdf $@
 
-$(TARGET).ps: $(HEAD).fo $(DXSL_DIR)
+$(TARGET).ps: $(HEAD).fo $(DXSL_DIR) $(FOP_CMD)
 	$(FOP_CMD) -fo $< -ps $@
 
 $(TARGET).txt: $(TARGET).html

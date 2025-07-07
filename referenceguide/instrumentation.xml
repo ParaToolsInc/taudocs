@@ -56,8 +56,8 @@ excludes, with the result of applying the lists.
       </varlistentry>
       <figure id="inexlist.instrumentation.figure"> <title>Selective Instrumentation Example</title>
         <mediaobject>
-          <imageobject><imagedata fileref="inexlist.png" scalefit="0"
-           align="center"/></imageobject>
+          <imageobject><imagedata fileref="inexlist.png" scalefit="1"
+           width="100%" align="center"/></imageobject>
         </mediaobject>
       </figure>
     </variablelist>

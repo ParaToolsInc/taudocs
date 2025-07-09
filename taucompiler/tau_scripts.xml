@@ -98,7 +98,7 @@ Specify wrapping of UPC runtime calls at link time.
 Specify wrapping of Cray DMAPP library calls at link time.
 <screen>-optTrackPthread</screen>
 Specify wrapping of Pthread library calls at link time.
-<screen>-optTrackGOMP>
+<screen>-optTrackGOMP></screen>
 Specify wrapping of GOMP library calls at link time. (default)
 <screen>-optNoTrackGOMP</screen>
 Disable wrapping of GOMP library calls at link time.

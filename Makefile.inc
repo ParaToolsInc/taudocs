@@ -108,6 +108,7 @@ XSLT_PARAM_CHUNKEDHTML = chunk.fast=1 \
 
 #collect.xref.targets="yes"
 XSLT_PARAM_FO = fop1.extensions=1 \
+	table.omit.header.at.break=1 \
 	callout.graphics.path=$(IMAGE_ROOT)/callouts/ \
 	admon.graphics.path=$(IMAGE_ROOT)/ \
         preferred.mediaobject.role="fo" \
@@ -238,7 +239,15 @@ $(TARGET).xhtml: $(HEAD).xml $(DXSL_DIR)
 		$(XSLT_PARAM_XHTML)
 
 $(TARGET).pdf: $(HEAD).fo $(DXSL_DIR) $(FOP_CMD)
-	$(FOP_CMD) -fo $< -pdf $@
+	sed 's/content-width="auto"/content-width="scale-to-fit"/g' $< | \
+	sed 's/\bwidth="auto"/width="100%"/g' | \
+	sed 's/keep-with-next.within-column="always"//g' | \
+	sed 's/keep-together.within-column="always"/keep-together.within-column="auto"/g' | \
+	sed 's/border-before-width.conditionality="retain"//g' | \
+	sed 's/<fo:table-header start-indent="0pt" end-indent="0pt">/<fo:table-header start-indent="0pt" end-indent="0pt" keep-with-next.within-column="auto">/g' | \
+	sed 's/<fo:table-body start-indent="0pt" end-indent="0pt">/<fo:table-body start-indent="0pt" end-indent="0pt" keep-together.within-page="auto" page-break-inside="auto">/g' \
+	> $(HEAD).fo.fixed
+	$(FOP_CMD) -fo $(HEAD).fo.fixed -pdf $@
 
 $(TARGET).ps: $(HEAD).fo $(DXSL_DIR) $(FOP_CMD)
 	$(FOP_CMD) -fo $< -ps $@

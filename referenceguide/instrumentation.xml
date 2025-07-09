@@ -27,6 +27,10 @@
             that are to be instrumented using the include list, one routine name per
             line, enclosed by <literal>BEGIN_INCLUDE_LIST</literal> and
             <literal>END_INCLUDE_LIST</literal>.
+            Additionally, a group of routines sharing the same prefix or suffix 
+            can be selected using the wildcard <literal>#</literal>. In 
+            <xref linkend="inexlist.instrumentation.figure"/>, there is an example with multiple includes and
+excludes, with the result of applying the lists.
           </para>
         </listitem>
       </varlistentry>
@@ -50,6 +54,12 @@
           </para>
 				</listitem>
       </varlistentry>
+      <figure id="inexlist.instrumentation.figure"> <title>Selective Instrumentation Example</title>
+        <mediaobject>
+          <imageobject><imagedata fileref="inexlist.png" scalefit="0"
+           width="4in" align="center"/></imageobject>
+        </mediaobject>
+      </figure>
     </variablelist>
           <itemizedlist>
             <listitem>
@@ -161,7 +171,7 @@ Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
     <sect2 id="Maqao">
     <title>Using MAQAO</title>
     <para>TAU also allows you to rewrite  your application using
-		the MAQAO package included in PDToolkit 3.17 or above(http://tau.uoregon.edu/pdt.tgz).
+		the MAQAO package included in PDToolkit 3.17 or above( http://tau.uoregon.edu/pdt.tgz ).
 </para>
     <para>Install PDToolkit 3.17+ and configure TAU with -pdt= option
 		which will point TAU to where PDToolkit is installed. Use the
@@ -180,7 +190,7 @@ Usage: tau_run [-Xrun&lt;Taulibrary&gt; ][-v][-o outfile] \
 <sect2>
     <title>Using PEBIL</title>
     <para>TAU also allows you to rewrite  your application using
-		the PEBIL package included in PDToolkit 3.18.1 or above(http://tau.uoregon.edu/pdt.tgz).
+		the PEBIL package included in PDToolkit 3.18.1 or above( http://tau.uoregon.edu/pdt.tgz ).
 </para>
     <para>Install PDToolkit 3.18.1 and configure TAU with -pdt= option
 		which will point TAU to where PDToolkit is installed. Use the
@@ -195,6 +205,53 @@ Also,	-T &lt;options&gt; are identical to tau_exec -T options.
 </para>
 
 </sect2>
+
+<sect2>
+    <title>Using DynInstAPI</title>
+    <para>TAU also allows you to rewrite  your application using
+		the DyninstAPI package.
+</para>
+    <para>To install the DynInstAPI, configure TAU with -dyninst= options which 
+    will point TAU to where dyninst is installed, you can also use -dyninst=download, and TAU will automatically
+    download and install DynInstAPI and its dependencies.
+     </para>
+     <para> When configuring TAU with DynInstAPI, it will show the environment variables you need to set, which are
+     <literal>DYNINSTAPI_RT_LIB</literal> and <literal>LD_LIBRARY_PATH</literal>.
+     </para>
+    
+    <screen>
+% ./configure -dyninst=download -bfd=download
+% make install
+% tau_run -T &lt;commands&gt; -f select.tau &lt;exe&gt; [-o] &lt;output_exe&gt;
+</screen>
+<para>
+The select.tau file  supports exclude/include lists of functions just like tau_instrumentor's select.tau (same format).
+Also,	-T &lt;options&gt; are identical to tau_exec -T options.
+</para>
+<para>
+In some cases, flags such as <literal>-O2</literal> can prevent DynInstAPI from reading the binaries, if possible,
+applications or libraries should be compiled with the flags <literal> -g -fno-ipa-sra -fno-ipa-ra -fno-ipa-vrp
+ -fno-omit-frame-pointer </literal> 
+</para>
+
+
+
+<sect3>
+ <title>Library Instrumentation with DynInstAPI</title>
+<para>With DynInstAPI instrumentation can be inserted into libraries. The limitations are that the
+ library should be included in an application using RUNPATH instead of RPATH.
+</para>
+<para> To instrument libraries, tau_run is used with the flag <literal>-l</literal>. Also, the flag <literal>-v</literal>
+is useful if selective instrumentation is used.
+</para>
+% tau_run -T &lt;commands&gt; -f select.tau -v -l library.so -o INSTRUMENTED_PATH/library.so
+% tau_exec -loadlib=&lt;INSTRUMENTED_PATH/library.so&gt;  [ options ] [--] { exe } [ exe options ]
+<para>
+LD_LIBRARY_PATH can be used instead of -loadlib, but the user must ensure that the correct library is used by the binary.
+</para>
+</sect3>
+</sect2>
+
   </sect1>
   <sect1 id="ProfilingParam">
     <title>Profiling each call to a function</title>

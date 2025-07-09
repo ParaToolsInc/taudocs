@@ -13,6 +13,13 @@ Selective Instrumentation Options
     excluded, the user can specify the list of routines that are to be
     instrumented using the include list, one routine name per line,
     enclosed by ``BEGIN_INCLUDE_LIST`` and ``END_INCLUDE_LIST``.
+    Additionally, a group of routines sharing the same prefix or suffix 
+    can be selected using the wildcard ``#``.
+
+In the image shown below, there is an example with multiple includes and
+excludes, with the result of applying the lists.
+
+|BEGIN EXIN LIST|
 
 ``BEGIN_FILE_EXCLUDE_LIST`` / ``END_FILE_EXCLUDE_LIST`` or
 ``BEGIN_FILE_INCLUDE_LIST`` / ``END_FILE_INCLUDE_LIST``
@@ -151,6 +158,43 @@ The select.tau file supports outer-loop level instrumentation and
 exclude/include lists of functions just like tau\_instrumentor's
 select.tau (same format). Also, -T <options> are identical to tau\_exec
 -T options.
+
+Using DyninstAPI
+----------------
+
+TAU also allows you to rewrite  your application using the DyninstAPI package.
+
+To install the DynInstAPI, configure TAU with -dyninst= options which 
+will point TAU to where dyninst is installed, you can also use ``-dyninst=download``, and TAU will automatically
+download and install DynInstAPI and its dependencies.
+
+When configuring TAU with DynInstAPI, it will show the environment variables you need to set, which are
+``DYNINSTAPI_RT_LIB`` and ``LD_LIBRARY_PATH``
+
+::
+
+    % ./configure -dyninst=download -bfd=download
+    % make install
+    % tau_run -T <commands> -f select.tau <exe> [-o] <output_exe>;
+
+The select.tau file  supports exclude/include lists of functions just like tau_instrumentor's select.tau (same format).
+Also,	-T <options> are identical to tau_exec -T options.
+In some cases, flags such as ``-O2`` can prevent DynInstAPI from reading the binaries, if possible,
+applications or libraries should be compiled with the flags 
+``-g -fno-ipa-sra -fno-ipa-ra -fno-ipa-vrp -fno-omit-frame-pointer`` 
+
+Library Instrumentation with DynInstAPI
+----------------
+With DynInstAPI instrumentation can be inserted into libraries. The limitations are that the
+library should be included in an application using RUNPATH instead of RPATH.
+
+To instrument libraries, tau_run is used with the flag ``-l``. Also, the flag ``-v``
+is useful if selective instrumentation is used.
+::
+    % tau_run -T <commands> -f select.tau -v -l library.so -o INSTRUMENTED_PATH/library.so
+    % tau_exec -loadlib=<INSTRUMENTED_PATH/library.so>  [ options ] [--] { exe } [ exe options ]
+
+LD_LIBRARY_PATH can be used instead of ``-loadlib``, but the user must ensure that the correct library is used by the binary.
 
 Profiling each call to a function
 =================================
@@ -883,3 +927,5 @@ TAU can also build the DMAPP wrapper using Cray CCE compilers. When the
 -optDMAPP option is used when building the application with TAU using
 TAU\_OPTIONS, DMAPP events are automatically instrumented with
 tau\_upc.sh.
+
+.. |BEGIN EXIN LIST| image:: inexlist.png

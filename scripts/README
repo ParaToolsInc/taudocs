@@ -1,0 +1,1 @@
+Move the whole docbook repo into an original_docbook directory. Execute migrate.py in the same directory as original_docbook

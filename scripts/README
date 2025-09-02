@@ -1,1 +1,1 @@
-Move the whole docbook repo into an original_docbook directory. Execute migrate.py in the same directory as original_docbook
+Move the whole docbook repo into an original_docbook directory inside a checkout of https://github.com/UO-OACISS/tau2-documentation. Move this scripts directory into the top level tau2-documentation directory.  Execute scripts/migrate.py in the top level directory.
